@@ -26,8 +26,8 @@ public class test_auto  extends LinearOpMode {
         waitForStart();
 
 
-        G3GSS G3GSS = new G3GSS(this);
-        G3GSS.init(hardwareMap);
+        TESTG3S TESTG3S = new TESTG3S(this);
+        TESTG3S.init(hardwareMap);
 
         telemetry.addData("Status", "initialized");
         telemetry.update();
@@ -55,10 +55,10 @@ public class test_auto  extends LinearOpMode {
                         telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                         telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
                     }
-                    double currentHeading = G3GSS.getHeading();
+                    double currentHeading = TESTG3S.getHeading();
 
                     if (detection.ftcPose.range >= 12) {
-                        G3GSS.driveStraight(0.3, 0.3, 300, currentHeading + detection.ftcPose.bearing, 3000);
+                        TESTG3S.driveStraight(0.3, 0.3, 300, currentHeading + detection.ftcPose.bearing, 3000);
                     }
 
 
