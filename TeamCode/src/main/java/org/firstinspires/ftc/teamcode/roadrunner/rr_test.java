@@ -28,7 +28,7 @@ public class rr_test extends LinearOpMode {
         telemetry.update();
         {
             Trajectory trajectory = drive.trajectoryBuilder(new Pose2d())
-                    .forward(30)
+                    .forward(50)
                     .build();
 
             waitForStart();
