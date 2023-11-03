@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.roadrunner.opmode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 /*
  * Op mode for preliminary tuning of the follower PID coefficients (located in the drive base
@@ -33,14 +36,55 @@ public class rr_testtt extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Trajectory trajectoryForward = drive.trajectoryBuilder(new Pose2d())
-                .forward(30)
-                .build();
+        Pose2d startPose = new Pose2d(-56, -12, 0);
+
+        drive.setPoseEstimate(startPose);
+
+         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(new Pose2d())
+            .forward(15)
+//                 .lineToLinearHeading(new Pose2d(40, 40, Math.toRadians(90)))
+                         .build();
+
+
+
+
+
+//        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
+//                .forward(15)
+//
+//                .build();
+
+//        TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
+//                .turn(Math.toRadians(45)) // Turns 45 degrees counter-clockwise
+//                .build();
+//
+//        Trajectory traj3 = drive.trajectoryBuilder(new Pose2d())
+//                .forward(-)
+//                .build();
+
+//        TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
+//                .splineToConstantHeading(new Vector2d(-36, 0), Math.toRadians(0))
+//                .build();
+
+
+
+//        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(startPose)
+//                .turn(Math.toRadians(30)) // Turns 45 degrees counter-clockwise
+//                .build();
+
+
+
 
         waitForStart();
 
+
+
         while (opModeIsActive() && !isStopRequested()) {
-            drive.followTrajectory(trajectoryForward);
+            drive.followTrajectorySequence(traj1);
+            sleep(10000);
+//
+//            drive.followTrajectorySequence(ts);
+//            drive.followTrajectory(traj3);
 
         }
     }

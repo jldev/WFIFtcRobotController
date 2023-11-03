@@ -60,6 +60,11 @@ public class test_teleop  extends LinearOpMode {
                 TESTG3S.right2.setPower(righty);
             }
 
+            if(gamepad2.a) {
+                TESTG3S.hook.setPosition(0.6);
+            } else {
+                TESTG3S.hook.setPosition(0);
+            }
 
         }
     }

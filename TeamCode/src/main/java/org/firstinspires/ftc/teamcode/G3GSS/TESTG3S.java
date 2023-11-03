@@ -31,6 +31,7 @@ public class TESTG3S {
     public DcMotor right1 = null;
     public DcMotor right2 = null;
     public BNO055IMU imu = null;
+    public Servo hook = null;
 
     double gyrotarget = 0;
 
@@ -59,6 +60,7 @@ public class TESTG3S {
         right1 = hwMap.dcMotor.get("right1");
         right2 = hwMap.dcMotor.get("right2");
         left2 = hwMap.dcMotor.get("left2");
+        hook = hwMap.servo.get("hook");
 
         left1.setDirection(DcMotor.Direction.REVERSE);
         right1.setDirection(DcMotor.Direction.REVERSE);
@@ -86,6 +88,9 @@ public class TESTG3S {
         right1.setPower(0);
         left2.setPower(0);
         right2.setPower(0);
+
+        hook.scaleRange(0, 1);
+        hook.setPosition(.6);
 
 
         //gyro
