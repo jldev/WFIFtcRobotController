@@ -54,7 +54,7 @@ Adjust the orientations here to match your robot. See the FTC SDK documentation 
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    public static double WHEEL_RADIUS = 1.8898000000000001; // in
+    public static double WHEEL_RADIUS = 2;//1.8898000000000001; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
     public static double TRACK_WIDTH = 16.00    ; // in
 
