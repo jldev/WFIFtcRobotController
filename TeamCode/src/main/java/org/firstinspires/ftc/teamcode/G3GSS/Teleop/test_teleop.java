@@ -11,6 +11,7 @@ public class test_teleop  extends LinearOpMode {
 //    private static final boolean USE_WEBCAM = true;
 //    private AprilTagProcessor aprilTag;
 //    private VisionPortal visionPortal;
+    private boolean hookstate = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -60,11 +61,15 @@ public class test_teleop  extends LinearOpMode {
                 TESTG3S.right2.setPower(righty);
             }
 
-            if(gamepad2.a) {
-                TESTG3S.hook.setPosition(0.6);
-            } else {
-                TESTG3S.hook.setPosition(0);
+            if(gamepad2.a ) {
+                hookstate = true;
             }
+            if (hookstate == true) {
+                TESTG3S.hook.setPosition(0);
+            } else {
+                TESTG3S.hook.setPosition(0.6);
+            }
+
 
         }
     }

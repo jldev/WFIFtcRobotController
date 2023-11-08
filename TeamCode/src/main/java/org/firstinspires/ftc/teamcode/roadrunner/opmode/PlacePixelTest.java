@@ -44,7 +44,7 @@ public class PlacePixelTest extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         //Set these based on the detection of the prop on the spike marks
-        Pose2d pixelPlacementTraj = rightSpikeMarkPlacement;
+        Pose2d pixelPlacementTraj = centerSpikeMarkPlacement;
         Pose2d backdropPlacementTraj = centerBackstopPlacement;
 
 

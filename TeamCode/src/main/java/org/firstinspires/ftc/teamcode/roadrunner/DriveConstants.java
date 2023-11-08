@@ -56,7 +56,7 @@ Adjust the orientations here to match your robot. See the FTC SDK documentation 
      */
     public static double WHEEL_RADIUS = 2;//1.8898000000000001; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 16.00    ; // in
+    public static double TRACK_WIDTH = 16.00; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using

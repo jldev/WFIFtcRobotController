@@ -90,7 +90,7 @@ public class TESTG3S {
         right2.setPower(0);
 
         hook.scaleRange(0, 1);
-        hook.setPosition(.6);
+        hook.setPosition(0.6);
 
 
         //gyro
