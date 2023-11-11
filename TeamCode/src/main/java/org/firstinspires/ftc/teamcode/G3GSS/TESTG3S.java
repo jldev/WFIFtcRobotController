@@ -62,7 +62,7 @@ public class TESTG3S {
         left2 = hwMap.dcMotor.get("left2");
         hook = hwMap.servo.get("hook");
 
-        left1.setDirection(DcMotor.Direction.REVERSE);
+        left1.setDirection(DcMotor.Direction.FORWARD);
         right1.setDirection(DcMotor.Direction.REVERSE);
         left2.setDirection(DcMotor.Direction.REVERSE);
         right2.setDirection(DcMotor.Direction.FORWARD);
@@ -90,7 +90,7 @@ public class TESTG3S {
         right2.setPower(0);
 
         hook.scaleRange(0, 1);
-        hook.setPosition(0.6);
+        hook.setPosition(0.75);
 
 
         //gyro

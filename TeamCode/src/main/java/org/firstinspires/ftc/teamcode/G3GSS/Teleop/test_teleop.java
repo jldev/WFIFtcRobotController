@@ -61,13 +61,13 @@ public class test_teleop  extends LinearOpMode {
                 TESTG3S.right2.setPower(righty);
             }
 
-            if(gamepad2.a ) {
+            if(gamepad1.a ) {
                 hookstate = true;
+                telemetry.addData("Status", "hookActivated");
+                telemetry.update();
             }
             if (hookstate == true) {
                 TESTG3S.hook.setPosition(0);
-            } else {
-                TESTG3S.hook.setPosition(0.6);
             }
 
 
