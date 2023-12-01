@@ -62,56 +62,88 @@ public class RedRightAuto extends LinearOpMode {
                 String pawnLocation = getPawnLocation();
                 telemetry.addData("Pawn Location:", pawnLocation);
                 telemetry.update();
+
+
+
+                //     Positions we would need for left, right, and center prop locations.
+                Pose2d startPose = new Pose2d(-12, 62, Math.toRadians(270));
+
+                Pose2d initialTrajPosition = new Pose2d(-12, 46, Math.toRadians(270));
+
+                Pose2d leftSpikeMarkPlacement = new Pose2d(0, 35, Math.toRadians(315));
+                Pose2d centerSpikeMarkPlacement = new Pose2d(-12, 32, Math.toRadians(270));
+                Pose2d rightSpikeMarkPlacement = new Pose2d(-12, 29, Math.toRadians(225));
+
+                Pose2d leftBackstopPlacement = new Pose2d(-48, 36, Math.toRadians(0));
+                Pose2d centerBackstopPlacement = new Pose2d(-48, 36, Math.toRadians(0));
+                Pose2d rightBackstopPlacement = new Pose2d(-48, 36, Math.toRadians(0));
+
+                drive.setPoseEstimate(startPose);
+
+                //Set these based on the detection of the prop on the spike marks
+                Pose2d pixelPlacementTraj = centerSpikeMarkPlacement;
+                Pose2d backdropPlacementTraj = centerBackstopPlacement;
+
+
+
+                //     We've located the team prop, and are now driving to the spike mark, then backdrop.
+                if(pawnLocation == LEFT)
+                {
+                    pixelPlacementTraj = leftSpikeMarkPlacement;
+                    backdropPlacementTraj = leftBackstopPlacement;
+                } else if(pawnLocation == CENTER)
+                {
+                    pixelPlacementTraj = centerSpikeMarkPlacement;
+                    backdropPlacementTraj = centerBackstopPlacement;
+                } else if(pawnLocation == RIGHT)
+                {
+                    pixelPlacementTraj = rightSpikeMarkPlacement;
+                    backdropPlacementTraj = rightBackstopPlacement;
+                }
+
+
+
+                Trajectory initialTraj = drive.trajectoryBuilder(startPose)
+                        .lineToSplineHeading(initialTrajPosition)
+
+                        .build();
+
+                Trajectory placePixelTraj = drive.trajectoryBuilder(initialTrajPosition)
+                        .lineToSplineHeading(pixelPlacementTraj)
+
+                        .build();
+
+                Trajectory driveToBackboardTraj = drive.trajectoryBuilder(pixelPlacementTraj)
+                        .lineToSplineHeading(backdropPlacementTraj)
+                        .build();
+
+                Pose2d poseEstimate = drive.getPoseEstimate();
+                telemetry.addData("finalX", poseEstimate.getX());
+                telemetry.addData("finalY", poseEstimate.getY());
+                telemetry.addData("finalHeading", poseEstimate.getHeading());
+                telemetry.update();
+
+
+
+
+                if (isStopRequested()) return;
+
+                drive.followTrajectory(initialTraj);
+                drive.followTrajectory(placePixelTraj);
+                drive.followTrajectory(driveToBackboardTraj);
+
+                poseEstimate = drive.getPoseEstimate();
+                telemetry.addData("finalX", poseEstimate.getX());
+                telemetry.addData("finalY", poseEstimate.getY());
+                telemetry.addData("finalHeading", poseEstimate.getHeading());
+                telemetry.update();
+
+
+
                 sleep(5000);
             }
         }
                 visionPortal.close();
-//
-//
-//
-//        Pose2d startPose = new Pose2d(-12, 62, Math.toRadians(270));
-//
-//        Pose2d leftSpikeMarkPlacement = new Pose2d(-6.5, 40, Math.toRadians(315));
-//        Pose2d centerSpikeMarkPlacement = new Pose2d(-23, 30, Math.toRadians(315));
-//        Pose2d centerBackstopPlacement = new Pose2d(-48, 36, Math.toRadians(0));
-//        Pose2d rightSpikeMarkPlacement = new Pose2d(-17.5, 40, Math.toRadians(315));
-//
-//        drive.setPoseEstimate(startPose);
-//
-//        //Set these based on the detection of the prop on the spike marks
-//        Pose2d pixelPlacementTraj = centerSpikeMarkPlacement;
-//        Pose2d backdropPlacementTraj = centerBackstopPlacement;
-//
-//
-//        Trajectory placePixelTraj = drive.trajectoryBuilder(startPose)
-//                .lineToSplineHeading(pixelPlacementTraj)
-//
-//                .build();
-//
-//        Trajectory driveToBackboardTraj = drive.trajectoryBuilder(pixelPlacementTraj)
-//                .lineToSplineHeading(backdropPlacementTraj)
-//                .build();
-//
-//        Pose2d poseEstimate = drive.getPoseEstimate();
-//        telemetry.addData("finalX", poseEstimate.getX());
-//        telemetry.addData("finalY", poseEstimate.getY());
-//        telemetry.addData("finalHeading", poseEstimate.getHeading());
-//        telemetry.update();
-//
-//
-//
-//
-//        if (isStopRequested()) return;
-//
-//        drive.followTrajectory(placePixelTraj);
-//        drive.followTrajectory(driveToBackboardTraj);
-//
-//        poseEstimate = drive.getPoseEstimate();
-//        telemetry.addData("finalX", poseEstimate.getX());
-//        telemetry.addData("finalY", poseEstimate.getY());
-//        telemetry.addData("finalHeading", poseEstimate.getHeading());
-//        telemetry.update();
-
     }
 
     private String getPawnLocation() {
