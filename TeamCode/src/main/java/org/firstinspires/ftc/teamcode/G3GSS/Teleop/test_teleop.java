@@ -12,6 +12,7 @@ public class test_teleop  extends LinearOpMode {
 //    private AprilTagProcessor aprilTag;
 //    private VisionPortal visionPortal;
     private boolean hookstate = false;
+    private boolean pokerstate = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -61,7 +62,7 @@ public class test_teleop  extends LinearOpMode {
                 TESTG3S.right2.setPower(righty);
             }
 
-            if(gamepad1.a ) {
+            if(gamepad2.dpad_down) {
                 hookstate = true;
                 telemetry.addData("Status", "hookActivated");
                 telemetry.update();
@@ -69,6 +70,30 @@ public class test_teleop  extends LinearOpMode {
             if (hookstate == true) {
                 TESTG3S.hook.setPosition(0);
             }
+
+            if(gamepad2.a){
+
+                if (pokerstate == true) {
+                    pokerstate = false;
+                }
+                else {
+                    pokerstate = true;
+                }
+                while (gamepad2.a){
+
+                }
+            }
+
+            if (pokerstate == true) {
+
+                TESTG3S.poker.setPosition(.5);
+
+            }
+
+            else{
+                TESTG3S.poker.setPosition(.55);
+            }
+
 
 
         }
