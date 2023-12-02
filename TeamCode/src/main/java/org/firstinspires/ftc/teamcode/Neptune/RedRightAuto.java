@@ -65,56 +65,70 @@ public class RedRightAuto extends LinearOpMode {
 
 
 
-                //     Positions we would need for left, right, and center prop locations.
-                Pose2d startPose = new Pose2d(-12, 62, Math.toRadians(270));
+                //     The position we start at
+                Pose2d start = new Pose2d(-12, 62, Math.toRadians(270));
 
-                Pose2d initialTrajPosition = new Pose2d(-12, 46, Math.toRadians(270));
+                //     The position we go to after locating the team prop, lining up to go to the correct spike mark
+                Pose2d initialSpike = new Pose2d(-12, 46, Math.toRadians(270));
 
-                Pose2d leftSpikeMarkPlacement = new Pose2d(0, 35, Math.toRadians(315));
-                Pose2d centerSpikeMarkPlacement = new Pose2d(-12, 32, Math.toRadians(270));
-                Pose2d rightSpikeMarkPlacement = new Pose2d(-12, 29, Math.toRadians(225));
+                //     The left, center, and right spike mark locations
+                Pose2d leftSpike = new Pose2d(0, 35, Math.toRadians(315));
+                Pose2d centerSpike = new Pose2d(-12, 32, Math.toRadians(270));
+                Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(225));
 
-                Pose2d leftBackstopPlacement = new Pose2d(-48, 36, Math.toRadians(0));
-                Pose2d centerBackstopPlacement = new Pose2d(-48, 36, Math.toRadians(0));
-                Pose2d rightBackstopPlacement = new Pose2d(-48, 36, Math.toRadians(0));
+                //     The left, center, and right backdrop locations
+                Pose2d leftBackdrop = new Pose2d(-36, 36, Math.toRadians(0));
+                Pose2d centerBackdrop = new Pose2d(-48, 36, Math.toRadians(0));
+                Pose2d rightBackdrop = new Pose2d(-60, 36, Math.toRadians(0));
 
-                drive.setPoseEstimate(startPose);
+                //     The point in between the backdrop and stack, to help guide the robot
+                Pose2d stageIn = new Pose2d(0, 0, Math.toRadians(0));
+                Pose2d stageOut = new Pose2d(0, 0, Math.toRadians(0));
 
-                //Set these based on the detection of the prop on the spike marks
-                Pose2d pixelPlacementTraj = centerSpikeMarkPlacement;
-                Pose2d backdropPlacementTraj = centerBackstopPlacement;
+                //     The position we go to after we deliver a pixel, where we choose which stack to go to. We either go through the inside or outside trusses
+                Pose2d initialStackIn = new Pose2d(0, 0, Math.toRadians(0));
+                Pose2d initialStackOut = new Pose2d(0, 0, Math.toRadians(0));
+
+                //     The locations we need to collect from the left, center, and right stacks
+                Pose2d leftStack = new Pose2d(0, 0, Math.toRadians(0));
+                Pose2d centerStack = new Pose2d(0, 0, Math.toRadians(0));
+                Pose2d rightStack = new Pose2d(0, 0, Math.toRadians(0));
+
+                drive.setPoseEstimate(start);
+
+                //     The needed locations, based on where the team prop is
+                Pose2d neededSpike = centerSpike;
+                Pose2d neededBackdrop = centerBackdrop;
 
 
 
                 //     We've located the team prop, and are now driving to the spike mark, then backdrop.
                 if(pawnLocation == LEFT)
                 {
-                    pixelPlacementTraj = leftSpikeMarkPlacement;
-                    backdropPlacementTraj = leftBackstopPlacement;
+                    neededSpike = leftSpike;
+                    neededBackdrop = leftBackdrop;
                 } else if(pawnLocation == CENTER)
                 {
-                    pixelPlacementTraj = centerSpikeMarkPlacement;
-                    backdropPlacementTraj = centerBackstopPlacement;
+                    neededSpike = centerSpike;
+                    neededBackdrop = centerBackdrop;
                 } else if(pawnLocation == RIGHT)
                 {
-                    pixelPlacementTraj = rightSpikeMarkPlacement;
-                    backdropPlacementTraj = rightBackstopPlacement;
+                    neededSpike = rightSpike;
+                    neededBackdrop = rightBackdrop;
                 }
 
 
-
-                Trajectory initialTraj = drive.trajectoryBuilder(startPose)
-                        .lineToSplineHeading(initialTrajPosition)
-
+                //     A chain of positions to drive to
+                Trajectory initialTraj = drive.trajectoryBuilder(start)
+                        .lineToSplineHeading(initialSpike)
                         .build();
 
-                Trajectory placePixelTraj = drive.trajectoryBuilder(initialTrajPosition)
-                        .lineToSplineHeading(pixelPlacementTraj)
-
+                Trajectory placePixelTraj = drive.trajectoryBuilder(initialSpike)
+                        .lineToSplineHeading(neededSpike)
                         .build();
 
-                Trajectory driveToBackboardTraj = drive.trajectoryBuilder(pixelPlacementTraj)
-                        .lineToSplineHeading(backdropPlacementTraj)
+                Trajectory driveToBackboardTraj = drive.trajectoryBuilder(neededSpike)
+                        .lineToSplineHeading(neededBackdrop)
                         .build();
 
                 Pose2d poseEstimate = drive.getPoseEstimate();
