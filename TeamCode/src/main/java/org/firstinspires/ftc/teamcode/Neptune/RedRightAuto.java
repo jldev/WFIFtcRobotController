@@ -56,10 +56,14 @@ public class RedRightAuto extends LinearOpMode {
 
         waitForStart();
 
-
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                String pawnLocation = getPawnLocation();
+                String pawnLocation = LEFT;
+//                while (getPawnLocation() == null && opModeIsActive()) {
+//                    sleep(50);
+//                }
+//                pawnLocation = getPawnLocation();
+
                 telemetry.addData("Pawn Location:", pawnLocation);
                 telemetry.update();
 
@@ -77,9 +81,9 @@ public class RedRightAuto extends LinearOpMode {
                 Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(225));
 
                 //     The left, center, and right backdrop locations
-                Pose2d leftBackdrop = new Pose2d(-36, 36, Math.toRadians(0));
-                Pose2d centerBackdrop = new Pose2d(-48, 36, Math.toRadians(0));
-                Pose2d rightBackdrop = new Pose2d(-60, 36, Math.toRadians(0));
+                Pose2d leftBackdrop = new Pose2d(-55, 28, Math.toRadians(0));
+                Pose2d centerBackdrop = new Pose2d(-55, 35, Math.toRadians(0));
+                Pose2d rightBackdrop = new Pose2d(-55, 42, Math.toRadians(0));
 
                 //     The point in between the backdrop and stack, to help guide the robot
                 Pose2d stageIn = new Pose2d(0, 0, Math.toRadians(0));
@@ -103,15 +107,15 @@ public class RedRightAuto extends LinearOpMode {
 
 
                 //     We've located the team prop, and are now driving to the spike mark, then backdrop.
-                if(pawnLocation == LEFT)
+                if(pawnLocation.equals(LEFT))
                 {
                     neededSpike = leftSpike;
                     neededBackdrop = leftBackdrop;
-                } else if(pawnLocation == CENTER)
+                } else if(pawnLocation.equals(CENTER))
                 {
                     neededSpike = centerSpike;
                     neededBackdrop = centerBackdrop;
-                } else if(pawnLocation == RIGHT)
+                } else if(pawnLocation.equals(RIGHT))
                 {
                     neededSpike = rightSpike;
                     neededBackdrop = rightBackdrop;
@@ -135,6 +139,7 @@ public class RedRightAuto extends LinearOpMode {
                 telemetry.addData("finalX", poseEstimate.getX());
                 telemetry.addData("finalY", poseEstimate.getY());
                 telemetry.addData("finalHeading", poseEstimate.getHeading());
+
                 telemetry.update();
 
 
@@ -163,7 +168,7 @@ public class RedRightAuto extends LinearOpMode {
     private String getPawnLocation() {
 
 
-        for (int i = 0; i < 20; i++) {
+
             List<Recognition> currentRecognitions = tfod.getRecognitions();
 
 //            telemetry.addData("# Objects Detected", currentRecognitions.size());
@@ -179,16 +184,17 @@ public class RedRightAuto extends LinearOpMode {
                 telemetry.addData("- Position", "%.0f / %.0f", x, y);
                 telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
                 telemetry.update();
-                if (x > 400) {
+                if (x > 400) { // - && y > 200 - this may not work
                     return RIGHT;
+                } else if (x < 100) {
+                    return LEFT;
                 } else {
                     return CENTER;
                 }
 
             }
-            sleep(50);
-        }
-        return LEFT;
+
+        return null;
     }
 
 
