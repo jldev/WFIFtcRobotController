@@ -39,7 +39,7 @@ public class RedRightAuto extends LinearOpMode {
 
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
-     */
+x     */
     private TfodProcessor tfod;
 
     /**
@@ -58,11 +58,15 @@ public class RedRightAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                String pawnLocation = LEFT;
-//                while (getPawnLocation() == null && opModeIsActive()) {
-//                    sleep(50);
-//                }
-//                pawnLocation = getPawnLocation();
+                String pawnLocation;
+                double startTime = getRuntime();
+                while (getPawnLocation() == null && opModeIsActive() && (getRuntime() - startTime) > 2){
+                    sleep(50);
+                }
+                pawnLocation = getPawnLocation();
+                if (pawnLocation == null ){
+                    pawnLocation = LEFT;
+                }
 
                 telemetry.addData("Pawn Location:", pawnLocation);
                 telemetry.update();
@@ -70,20 +74,20 @@ public class RedRightAuto extends LinearOpMode {
 
 
                 //     The position we start at
-                Pose2d start = new Pose2d(-12, 62, Math.toRadians(270));
+                Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
 
                 //     The position we go to after locating the team prop, lining up to go to the correct spike mark
-                Pose2d initialSpike = new Pose2d(-12, 46, Math.toRadians(270));
+                Pose2d initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
 
                 //     The left, center, and right spike mark locations
-                Pose2d leftSpike = new Pose2d(0, 35, Math.toRadians(315));
-                Pose2d centerSpike = new Pose2d(-12, 32, Math.toRadians(270));
-                Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(225));
+                Pose2d leftSpike = new Pose2d(0, 35, Math.toRadians(135));
+                Pose2d centerSpike = new Pose2d(-12, 32, Math.toRadians(90));
+                Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
 
                 //     The left, center, and right backdrop locations
-                Pose2d leftBackdrop = new Pose2d(-55, 28, Math.toRadians(0));
-                Pose2d centerBackdrop = new Pose2d(-55, 35, Math.toRadians(0));
-                Pose2d rightBackdrop = new Pose2d(-55, 42, Math.toRadians(0));
+                Pose2d leftBackdrop = new Pose2d(-50, 28, Math.toRadians(0));
+                Pose2d centerBackdrop = new Pose2d(-50, 35, Math.toRadians(0));
+                Pose2d rightBackdrop = new Pose2d(-50, 42, Math.toRadians(0));
 
                 //     The point in between the backdrop and stack, to help guide the robot
                 Pose2d stageIn = new Pose2d(0, 0, Math.toRadians(0));
@@ -96,7 +100,7 @@ public class RedRightAuto extends LinearOpMode {
                 //     The locations we need to collect from the left, center, and right stacks
                 Pose2d leftStack = new Pose2d(0, 0, Math.toRadians(0));
                 Pose2d centerStack = new Pose2d(0, 0, Math.toRadians(0));
-                Pose2d rightStack = new Pose2d(0, 0, Math.toRadians(0));
+                Pose2d rightStack = new Pose2d(60, 12, Math.toRadians(0));
 
                 drive.setPoseEstimate(start);
 
@@ -123,17 +127,27 @@ public class RedRightAuto extends LinearOpMode {
 
 
                 //     A chain of positions to drive to
-                Trajectory initialTraj = drive.trajectoryBuilder(start)
+                Trajectory initialTraj = drive.trajectoryBuilder(start, true)
                         .lineToSplineHeading(initialSpike)
                         .build();
 
-                Trajectory placePixelTraj = drive.trajectoryBuilder(initialSpike)
+                Trajectory placePixelTraj = drive.trajectoryBuilder(initialSpike, true)
                         .lineToSplineHeading(neededSpike)
                         .build();
 
-                Trajectory driveToBackboardTraj = drive.trajectoryBuilder(neededSpike)
+                Trajectory driveToBackboardTraj = drive.trajectoryBuilder(neededSpike, true)
                         .lineToSplineHeading(neededBackdrop)
                         .build();
+
+                 Trajectory driveToStageIn = drive.trajectoryBuilder(neededBackdrop, true)
+                        .lineToSplineHeading(stageIn)
+                        .build();
+
+                Trajectory driveToRightStack = drive.trajectoryBuilder(stageIn, true)
+                        .lineToSplineHeading(rightStack)
+                        .build();
+
+
 
                 Pose2d poseEstimate = drive.getPoseEstimate();
                 telemetry.addData("finalX", poseEstimate.getX());
@@ -150,6 +164,8 @@ public class RedRightAuto extends LinearOpMode {
                 drive.followTrajectory(initialTraj);
                 drive.followTrajectory(placePixelTraj);
                 drive.followTrajectory(driveToBackboardTraj);
+                drive.followTrajectory(driveToStageIn);
+                drive.followTrajectory(driveToRightStack);
 
                 poseEstimate = drive.getPoseEstimate();
                 telemetry.addData("finalX", poseEstimate.getX());
