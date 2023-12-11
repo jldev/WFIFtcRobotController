@@ -14,7 +14,7 @@ public class NeptuneTeleop  extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        Neptune Neptune = new Neptune(hardwareMap);
+        Neptune neptune = new Neptune(hardwareMap);
 
         waitForStart();
 
@@ -32,13 +32,13 @@ public class NeptuneTeleop  extends LinearOpMode {
             righty = Range.clip(righty, -0.85, 0.85);
 
             if (gamepad1.left_bumper) {
-                Neptune.setMotorPowers(-.75, .75, -.75, .75);
+                neptune.setMotorPowers(-.75, .75, -.75, .75);
 
             } else if (gamepad1.right_bumper) {
-                Neptune.setMotorPowers(.75, -.75, .75, -.75);
+                neptune.setMotorPowers(.75, -.75, .75, -.75);
 
             } else {
-                Neptune.setMotorPowers(lefty,lefty, righty, righty );
+                neptune.setMotorPowers(lefty,lefty, righty, righty );
             }
 
         }

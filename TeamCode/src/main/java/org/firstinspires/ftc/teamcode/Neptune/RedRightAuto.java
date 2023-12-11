@@ -72,7 +72,6 @@ x     */
                 telemetry.update();
 
 
-
                 //     The position we start at
                 Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
 
