@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class LiftableIntake extends SubsystemBase {
-
-    private final Servo mIntakeLiftServo;
-    private final Motor mIntakeMotor;
-
-    enum LiftableIntakePosition{
+    public enum LiftableIntakePosition{
         POSITION_1,
         POSITION_2,
     };
+    private final Servo mIntakeLiftServo;
+    private final Motor mIntakeMotor;
+
+
 
     public LiftableIntake(Motor intakeMotor, Servo liftServo){
         mIntakeMotor = intakeMotor;

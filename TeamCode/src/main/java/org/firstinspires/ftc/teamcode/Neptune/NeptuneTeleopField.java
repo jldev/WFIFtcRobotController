@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Neptune_Teleop")
+@TeleOp(name = "Neptune_Teleop_Field")
 public class NeptuneTeleopField extends LinearOpMode {
     //    private static final boolean USE_WEBCAM = true;
 //    private AprilTagProcessor aprilTag;

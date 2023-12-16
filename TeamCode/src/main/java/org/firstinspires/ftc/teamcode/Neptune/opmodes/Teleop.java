@@ -20,8 +20,12 @@ public class Teleop extends CommandOpMode {
 
     @Override
     public void initialize() {
-        drive = new MecanumDriveSubsystem(new SampleMecanumDrive(hardwareMap), false);
+        drive = new MecanumDriveSubsystem(new SampleMecanumDrive(hardwareMap), true);
         driverOp = new GamepadEx(gamepad1);
+
+        // FIGURE OUT HOW TO HANDLE THIS WHEN NOT TESTING
+        Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
+        drive.setPoseEstimate(start);
 
         schedule(new RunCommand(() -> {
             drive.update();

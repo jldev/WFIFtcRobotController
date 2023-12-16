@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Config
-@Autonomous(group = "drive")
+@Autonomous(group = "drive", name = "Red Right Auto")
 public class RedRightAuto extends CommandOpMode {
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
