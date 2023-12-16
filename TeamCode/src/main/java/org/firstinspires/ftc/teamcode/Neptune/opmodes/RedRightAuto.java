@@ -56,9 +56,11 @@ public class RedRightAuto extends CommandOpMode {
 
         schedule(
                 detectPawnCommand.withTimeout(2000).whenFinished(() -> {
-                    Trajectories.PropPlacement propLocation = detectPawnCommand.getPropLocation();
+                    Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation();
+                    telemetry.addData("Pawn Location:", pawnLocation);
+                    telemetry.update();
                     schedule(
-                            new TrajectoryFollowerCommand(drive, trajectories.getPlacePixelTrajectory(propLocation))
+                            new TrajectoryFollowerCommand(drive, trajectories.getPlacePixelTrajectory(pawnLocation))
                     );
             })
         );

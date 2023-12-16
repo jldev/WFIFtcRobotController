@@ -34,18 +34,19 @@ public class Trajectories {
         switch (placement){
             case LEFT:
                 return mDrive.trajectoryBuilder(mStartPosition)
-                        .splineTo(initialSpike.vec(), initialSpike.getHeading())
-                        .splineTo(leftSpike.vec(), leftSpike.getHeading())
+                        .lineToSplineHeading(initialSpike)
+//                        .splineTo(initialSpike.vec(), initialSpike.getHeading())
+//                        .splineTo(leftSpike.vec(), leftSpike.getHeading())
                         .build();
             case RIGHT:
                 return mDrive.trajectoryBuilder(mStartPosition)
                         .splineTo(initialSpike.vec(), initialSpike.getHeading())
-                        .splineTo(rightSpike.vec(), rightSpike.getHeading())
+//                        .splineTo(rightSpike.vec(), rightSpike.getHeading())
                         .build();
             case CENTER:
                 return mDrive.trajectoryBuilder(mStartPosition)
                         .splineTo(initialSpike.vec(), initialSpike.getHeading())
-                        .splineTo(centerSpike.vec(), centerSpike.getHeading())
+//                        .splineTo(centerSpike.vec(), centerSpike.getHeading())
                         .build();
             default:
                 break;
@@ -54,7 +55,7 @@ public class Trajectories {
         }
         return mDrive.trajectoryBuilder(mStartPosition)
                 .splineTo(initialSpike.vec(), initialSpike.getHeading())
-                .splineTo(leftSpike.vec(), leftSpike.getHeading())
+//                .splineTo(leftSpike.vec(), leftSpike.getHeading())
                 .build();
     }
 
