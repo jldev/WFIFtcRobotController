@@ -46,4 +46,8 @@ public class SimpleLinearLift {
     public int getPosition() {
        return mSlideMotor.getCurrentPosition();
     }
+
+    public boolean atTargetPosition(){
+        return mSlideMotor.atTargetPosition();
+    }
 }

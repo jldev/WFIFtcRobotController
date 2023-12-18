@@ -38,8 +38,11 @@ public class Teleop extends CommandOpMode {
         driverOp = new GamepadEx(gamepad1);
         MotorEx liftMotor = new MotorEx(hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312);
         MotorEx hangMotor = new MotorEx(hardwareMap, "leftEncoder", Motor.GoBILDA.RPM_312);
+        // We may need to tweak this value hangMotor.setPositionCoefficient();
         liftMotor.setInverted(false);
         liftMotor.encoder.setDirection(Motor.Direction.FORWARD);
+        // We may need to tweak this value liftMotor.setPositionCoefficient();
+
         slideController = new PIDSlidesController(new SimpleLinearLift(liftMotor));
         hangController = new PIDSlidesController(new SimpleLinearLift(hangMotor));
         slideController.resetStage();
@@ -66,10 +69,17 @@ public class Teleop extends CommandOpMode {
         );
 
         liftButton.whenPressed(new InstantCommand(() -> {
-           slideController.setStageOne();
+            slideController.setStageOne();
+            while(!slideController.atTargetPosition()) {
+                slideController.setStageOne();
+            }
         }));
-                liftButtonDown.whenPressed(new InstantCommand(() -> {
+
+        liftButtonDown.whenPressed(new InstantCommand(() -> {
             slideController.resetStage();
+            while(!slideController.atTargetPosition()) {
+                slideController.resetStage();
+            }
         }));
 
         Button hangButton = new GamepadButton(

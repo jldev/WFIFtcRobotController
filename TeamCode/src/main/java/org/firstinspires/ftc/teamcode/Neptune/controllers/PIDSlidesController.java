@@ -39,4 +39,8 @@ public class PIDSlidesController {
     public int getPosition() {
        return m_lift.getPosition();
     }
+
+    public boolean atTargetPosition(){
+        return m_lift.atTargetPosition();
+    }
 }
