@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
-public class Slides extends SubsystemBase {
-    public enum LiftableIntakePosition {
+public class SlidesSubsystem extends SubsystemBase {
+    public enum SlidesPosition {
         POSITION_1,
         POSITION_2,
+        HOME_POS,
     }
 
     ;
@@ -17,7 +15,7 @@ public class Slides extends SubsystemBase {
     private final MotorEx mFourBarMotor;
 
 
-    public Slides(MotorEx slidemotor, MotorEx fourbarmotor) {
+    public SlidesSubsystem(MotorEx slidemotor, MotorEx fourbarmotor) {
         mSlideMotor = slidemotor;
         mFourBarMotor = fourbarmotor;
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
@@ -26,11 +24,23 @@ public class Slides extends SubsystemBase {
         resetPositionCounter();
     }
 
-
-    public void moveToPosition(int position) {
+    private void moveToPosition(int position) {
         mSlideMotor.setTargetPosition(position);
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
         mSlideMotor.set(position);
+    }
+
+    public void moveToPosition(SlidesPosition position){
+        if (position == SlidesPosition.POSITION_1){
+            moveToPosition(1400);
+        }
+        if(position == SlidesPosition.HOME_POS){
+            moveToPosition(0);
+        }
+    }
+
+    public boolean isBusy (){
+        return !mSlideMotor.atTargetPosition();
     }
 
 

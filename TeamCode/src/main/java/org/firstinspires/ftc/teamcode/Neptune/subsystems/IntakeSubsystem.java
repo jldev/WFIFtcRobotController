@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class LiftableIntake extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
     public enum LiftableIntakePosition{
         POSITION_1,
         POSITION_2,
@@ -16,7 +14,7 @@ public class LiftableIntake extends SubsystemBase {
 
 
 
-    public LiftableIntake(Motor intakeMotor, Servo liftServo){
+    public IntakeSubsystem(Motor intakeMotor, Servo liftServo){
         mIntakeMotor = intakeMotor;
         mIntakeLiftServo = liftServo;
     }

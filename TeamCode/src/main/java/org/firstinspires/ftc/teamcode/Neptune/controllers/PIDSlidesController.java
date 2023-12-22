@@ -4,6 +4,8 @@ public class PIDSlidesController {
 
     private SimpleLinearLift m_lift;
 
+    private int liftPosition = 0;
+
     public final int STAGE_CONSTANT;
 
     public PIDSlidesController(SimpleLinearLift lift) {
@@ -17,7 +19,8 @@ public class PIDSlidesController {
     // but, further stages require further ticks because of gravity
 
     public void setStageOne() {
-        m_lift.moveToPosition(STAGE_CONSTANT);
+        liftPosition = STAGE_CONSTANT;
+//        m_lift.moveToPosition(STAGE_CONSTANT);
     }
 
     public void setStageTwo() {
@@ -29,7 +32,12 @@ public class PIDSlidesController {
     }
 
     public void resetStage() {
-        m_lift.moveToPosition(0);
+        liftPosition = 0;
+//        m_lift.moveToPosition(0);
+    }
+
+    public void pidUpdate(){
+        m_lift.moveToPosition(liftPosition);
     }
 
     public void power(double speed) {
