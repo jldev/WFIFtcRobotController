@@ -18,11 +18,11 @@ public class SlidePositionCommand extends CommandBase {
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() { slides.moveToPosition(this.position);}
 
     @Override
     public void execute() {
-       slides.moveToPosition(this.position);
+       slides.update();
     }
 
     @Override

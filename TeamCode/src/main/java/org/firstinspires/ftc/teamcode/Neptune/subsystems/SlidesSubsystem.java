@@ -4,6 +4,9 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 
 public class SlidesSubsystem extends SubsystemBase {
+
+    private double setOuput = 0.0;
+
     public enum SlidesPosition {
         POSITION_1,
         POSITION_2,
@@ -24,10 +27,15 @@ public class SlidesSubsystem extends SubsystemBase {
         resetPositionCounter();
     }
 
+    public void update() {
+        mSlideMotor.set(setOuput);
+    }
+
     private void moveToPosition(int position) {
         mSlideMotor.setTargetPosition(position);
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
         mSlideMotor.set(position);
+        setOuput = position;
     }
 
     public void moveToPosition(SlidesPosition position){
