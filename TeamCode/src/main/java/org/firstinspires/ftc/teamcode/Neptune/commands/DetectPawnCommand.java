@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.ObjectDetectionSubsyste
 
 public class DetectPawnCommand extends CommandBase {
 
-    private ObjectDetectionSubsystem objectDetectionSubsystem;
+    private final ObjectDetectionSubsystem objectDetectionSubsystem;
 
     public DetectPawnCommand(ObjectDetectionSubsystem ods){
         this.objectDetectionSubsystem = ods;
@@ -16,15 +16,8 @@ public class DetectPawnCommand extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        objectDetectionSubsystem.detect();
-    }
-
-    @Override
     public void end(boolean interrupted) {
-        if (interrupted) {
-            objectDetectionSubsystem.stop();
-        }
+        objectDetectionSubsystem.stop();
     }
 
     @Override

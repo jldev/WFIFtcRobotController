@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -38,7 +35,8 @@ public class ObjectDetectionSubsystem  extends SubsystemBase {
         initTfod();
     }
 
-    public void detect(){
+    @Override
+    public void periodic(){
         this.recognitions = tfod.getRecognitions();
     }
 
