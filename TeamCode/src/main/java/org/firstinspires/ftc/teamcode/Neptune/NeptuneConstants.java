@@ -16,4 +16,5 @@ public class NeptuneConstants {
     public static int NEPTUNE_SLIDE_MOTOR_POS_TOLERANCE = 20;
     public static int NEPTUNE_VBAR_MOTOR_TARGET_POSITION_UP = 500;
     public static int NEPTUNE_VBAR_MOTOR_TARGET_POSITION_DOWN = 0;
+    public static double NEPTUNE_HANG_MOTOR_POWER = 0.5;
 }
