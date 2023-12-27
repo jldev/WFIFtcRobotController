@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
@@ -32,7 +33,9 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlideMotor = slideMotor;
         mVBarMotor = vBarMotor;
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+        mSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         mVBarMotor.setRunMode(MotorEx.RunMode.PositionControl);
+        mVBarMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         mSlideMotor.setPositionCoefficient(NeptuneConstants.NEPTUNE_SLIDE_MOTOR_POS_COEFFICIENT);
         mSlideMotor.setPositionTolerance(NeptuneConstants.NEPTUNE_SLIDE_MOTOR_POS_TOLERANCE);
