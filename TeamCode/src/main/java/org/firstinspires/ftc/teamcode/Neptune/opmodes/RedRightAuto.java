@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SelectCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -39,16 +40,18 @@ public class RedRightAuto extends CommandOpMode {
             "Pawn",
     };
 
-    private MecanumDriveSubsystem drive;
+//    private MecanumDriveSubsystem drive;
     private Trajectories trajectories;
 
     private Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
-
+    private Neptune neptune;
 
     @Override
     public void initialize() {
-        drive = new MecanumDriveSubsystem(new SampleMecanumDrive(hardwareMap), false);
-        trajectories = new Trajectories(drive, start);
+        neptune = new Neptune(this);
+        neptune.setStartPosition(start);
+//        drive = new MecanumDriveSubsystem(new SampleMecanumDrive(hardwareMap), false);
+        trajectories = new Trajectories(neptune.drive, start);
 
         DetectPawnCommand detectPawnCommand = new DetectPawnCommand(
                 new VisionSubsystem(hardwareMap.get(WebcamName.class, "Webcam 1"), TFOD_MODEL_ASSET, LABELS)
@@ -59,8 +62,16 @@ public class RedRightAuto extends CommandOpMode {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation();
                     telemetry.addData("Pawn Location:", pawnLocation);
                     telemetry.update();
-                    schedule(
-                            new TrajectoryFollowerCommand(drive, trajectories.getPlacePixelTrajectory(pawnLocation))
+                    schedule( new SequentialCommandGroup(
+                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
+                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation)),
+                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getPixelFromStack())
+                            )
+                            .whenFinished(() -> {
+                                        telemetry.addLine("trajectory is finished");
+                                        telemetry.update();
+
+                                    })
                     );
             })
         );

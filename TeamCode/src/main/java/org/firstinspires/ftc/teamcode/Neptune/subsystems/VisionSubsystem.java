@@ -140,7 +140,8 @@ public class VisionSubsystem  extends SubsystemBase {
         visionPortal.resumeStreaming();
     }
     public void stop() {
-        visionPortal.stopStreaming();
+        //TODO: Figure out a way to stop streaming after inital auto.
+//        visionPortal.stopStreaming();
 //        visionPortal.close();
     }
 

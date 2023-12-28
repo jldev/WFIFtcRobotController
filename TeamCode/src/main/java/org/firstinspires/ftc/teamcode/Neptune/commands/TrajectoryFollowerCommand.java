@@ -23,9 +23,7 @@ public class TrajectoryFollowerCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if (interrupted) {
-            drive.stop();
-        }
+        drive.stop();
     }
 
     @Override
