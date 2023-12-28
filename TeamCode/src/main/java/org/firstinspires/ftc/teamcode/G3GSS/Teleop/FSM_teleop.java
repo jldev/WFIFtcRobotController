@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.G3GSS.Teleop;//package org.firstinspires.ftc.teamcode.GSS.G3GSS;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @TeleOp(name="FSM_teleop")
 public class FSM_teleop extends OpMode {
 

@@ -19,6 +19,20 @@ public class Neptune {
     public final GamepadEx gunnerOp;
     private final MotorEx hangMotor;
     public PIDSlidesController hangController;
+    public Pose2d startPos;
+
+    public enum FieldPos {
+        LEFT,
+        RIGHT
+    }
+
+    public FieldPos fieldPos;
+    public AllianceColor allianceColor;
+
+    public enum AllianceColor {
+        RED,
+        BLUE
+    }
 
     public Neptune(CommandOpMode opMode) {
 
@@ -32,7 +46,24 @@ public class Neptune {
 
     }
 
-    public void setStartPosition(Pose2d start) {
-        drive.setPoseEstimate(start);
+    public void setStartPosition(FieldPos fp, AllianceColor ac) {
+        this.fieldPos = fp;
+        this.allianceColor = ac;
+
+        if (fp == FieldPos.RIGHT && ac == AllianceColor.RED){
+            this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
+
+        }
+        else if (fp == FieldPos.LEFT && ac == AllianceColor.RED){
+            this.startPos = (new Pose2d(42, 62, Math.toRadians(90)));
+
+        } else if (fp == FieldPos.RIGHT && ac == AllianceColor.BLUE){
+            this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
+
+        } else {
+            this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
+
+        }
+        drive.setPoseEstimate(this.startPos);
     }
 }

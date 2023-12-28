@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.G3GSS.Teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.G3GSS.TESTG3S;
 
+@Disabled
 @TeleOp(name = "test_teleop")
 public class test_teleop  extends LinearOpMode {
 //    private static final boolean USE_WEBCAM = true;

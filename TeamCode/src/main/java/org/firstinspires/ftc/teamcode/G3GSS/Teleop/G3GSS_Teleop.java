@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.G3GSS.Teleop;
 //
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.G3GSS.G3GSS;
 import org.firstinspires.ftc.teamcode.G3GSS.Logger;
+@Disabled
 @TeleOp (name = "G3GSS_Teleop")
 public class G3GSS_Teleop extends LinearOpMode {
 

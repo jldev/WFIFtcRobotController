@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 
+import java.util.logging.Level;
+
 @TeleOp(name = "Teleop")
 public class Teleop extends CommandOpMode {
 
@@ -23,12 +25,6 @@ public class Teleop extends CommandOpMode {
     @Override
     public void initialize() {
         neptune = new Neptune(this);
-        // FIGURE OUT HOW TO HANDLE THIS WHEN NOT TESTING
-        // THIS WILL NEED TO BE REMOVED, THE POSITION WILL BE SET AFTER AUTO COMPLETES
-        //START REMOVE ME
-        Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
-        neptune.setStartPosition(start);
-        //END REMOVE ME
 
         schedule(new RunCommand(() -> {
 //            Pose2d poseEstimate = neptune.drive.getPoseEstimate();
