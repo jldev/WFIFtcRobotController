@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
@@ -30,11 +31,13 @@ public class Teleop extends CommandOpMode {
         //END REMOVE ME
 
         schedule(new RunCommand(() -> {
-            Pose2d poseEstimate = neptune.drive.getPoseEstimate();
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.addData("slide_position", neptune.slides.getSlidePosition());
+//            Pose2d poseEstimate = neptune.drive.getPoseEstimate();
+//            telemetry.addData("x", poseEstimate.getX());
+//            telemetry.addData("y", poseEstimate.getY());
+//            telemetry.addData("heading", poseEstimate.getHeading());
+//            telemetry.addData("slide_position", neptune.slides.getSlidePosition());
+//            telemetry.update();
+            neptune.slides.addTelemetry(telemetry);
             telemetry.update();
         }));
 

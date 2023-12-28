@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Neptune.commands.TrajectoryFollowerCommand
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.Neptune.subsystems.ObjectDetectionSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
@@ -51,7 +51,7 @@ public class RedRightAuto extends CommandOpMode {
         trajectories = new Trajectories(drive, start);
 
         DetectPawnCommand detectPawnCommand = new DetectPawnCommand(
-                new ObjectDetectionSubsystem(hardwareMap.get(WebcamName.class, "Webcam 1"), TFOD_MODEL_ASSET, LABELS)
+                new VisionSubsystem(hardwareMap.get(WebcamName.class, "Webcam 1"), TFOD_MODEL_ASSET, LABELS)
         );
 
         schedule(

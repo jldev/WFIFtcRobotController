@@ -50,134 +50,134 @@ x     */
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Neptune drive = new Neptune(hardwareMap);
-
-        initTfod();
-
-        waitForStart();
-
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-                String pawnLocation;
-                double startTime = getRuntime();
-                while (getPawnLocation() == null && opModeIsActive() && (getRuntime() - startTime) > 2){
-                    sleep(50);
-                }
-                pawnLocation = getPawnLocation();
-                if (pawnLocation == null ){
-                    pawnLocation = LEFT;
-                }
-
-                telemetry.addData("Pawn Location:", pawnLocation);
-                telemetry.update();
-
-
-                //     The position we start at
-                Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
-
-                //     The position we go to after locating the team prop, lining up to go to the correct spike mark
-                Pose2d initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
-
-                //     The left, center, and right spike mark locations
-                Pose2d leftSpike = new Pose2d(0, 35, Math.toRadians(135));
-                Pose2d centerSpike = new Pose2d(-12, 32, Math.toRadians(90));
-                Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
-
-                //     The left, center, and right backdrop locations
-                Pose2d leftBackdrop = new Pose2d(-50, 28, Math.toRadians(0));
-                Pose2d centerBackdrop = new Pose2d(-50, 35, Math.toRadians(0));
-                Pose2d rightBackdrop = new Pose2d(-50, 42, Math.toRadians(0));
-
-                //     The point in between the backdrop and stack, to help guide the robot
-                Pose2d stageIn = new Pose2d(0, 0, Math.toRadians(0));
-                Pose2d stageOut = new Pose2d(0, 0, Math.toRadians(0));
-
-                //     The position we go to after we deliver a pixel, where we choose which stack to go to. We either go through the inside or outside trusses
-                Pose2d initialStackIn = new Pose2d(0, 0, Math.toRadians(0));
-                Pose2d initialStackOut = new Pose2d(0, 0, Math.toRadians(0));
-
-                //     The locations we need to collect from the left, center, and right stacks
-                Pose2d leftStack = new Pose2d(0, 0, Math.toRadians(0));
-                Pose2d centerStack = new Pose2d(0, 0, Math.toRadians(0));
-                Pose2d rightStack = new Pose2d(60, 12, Math.toRadians(0));
-
-                drive.setPoseEstimate(start);
-
-                //     The needed locations, based on where the team prop is
-                Pose2d neededSpike = centerSpike;
-                Pose2d neededBackdrop = centerBackdrop;
-
-
-
-                //     We've located the team prop, and are now driving to the spike mark, then backdrop.
-                if(pawnLocation.equals(LEFT))
-                {
-                    neededSpike = leftSpike;
-                    neededBackdrop = leftBackdrop;
-                } else if(pawnLocation.equals(CENTER))
-                {
-                    neededSpike = centerSpike;
-                    neededBackdrop = centerBackdrop;
-                } else if(pawnLocation.equals(RIGHT))
-                {
-                    neededSpike = rightSpike;
-                    neededBackdrop = rightBackdrop;
-                }
-
-
-                //     A chain of positions to drive to
-                Trajectory initialTraj = drive.trajectoryBuilder(start, true)
-                        .lineToSplineHeading(initialSpike)
-                        .build();
-
-                Trajectory placePixelTraj = drive.trajectoryBuilder(initialSpike, true)
-                        .lineToSplineHeading(neededSpike)
-                        .build();
-
-                Trajectory driveToBackboardTraj = drive.trajectoryBuilder(neededSpike, true)
-                        .lineToSplineHeading(neededBackdrop)
-                        .build();
-
-                 Trajectory driveToStageIn = drive.trajectoryBuilder(neededBackdrop, true)
-                        .lineToSplineHeading(stageIn)
-                        .build();
-
-                Trajectory driveToRightStack = drive.trajectoryBuilder(stageIn, true)
-                        .lineToSplineHeading(rightStack)
-                        .build();
-
-
-
-                Pose2d poseEstimate = drive.getPoseEstimate();
-                telemetry.addData("finalX", poseEstimate.getX());
-                telemetry.addData("finalY", poseEstimate.getY());
-                telemetry.addData("finalHeading", poseEstimate.getHeading());
-
-                telemetry.update();
-
-
-
-
-                if (isStopRequested()) return;
-
-                drive.followTrajectory(initialTraj);
-                drive.followTrajectory(placePixelTraj);
-                drive.followTrajectory(driveToBackboardTraj);
-                drive.followTrajectory(driveToStageIn);
-                drive.followTrajectory(driveToRightStack);
-
-                poseEstimate = drive.getPoseEstimate();
-                telemetry.addData("finalX", poseEstimate.getX());
-                telemetry.addData("finalY", poseEstimate.getY());
-                telemetry.addData("finalHeading", poseEstimate.getHeading());
-                telemetry.update();
-
-
-
-                sleep(5000);
-            }
-        }
-                visionPortal.close();
+//        Neptune drive = new Neptune(hardwareMap);
+//
+//        initTfod();
+//
+//        waitForStart();
+//
+//        if (opModeIsActive()) {
+//            while (opModeIsActive()) {
+//                String pawnLocation;
+//                double startTime = getRuntime();
+//                while (getPawnLocation() == null && opModeIsActive() && (getRuntime() - startTime) > 2){
+//                    sleep(50);
+//                }
+//                pawnLocation = getPawnLocation();
+//                if (pawnLocation == null ){
+//                    pawnLocation = LEFT;
+//                }
+//
+//                telemetry.addData("Pawn Location:", pawnLocation);
+//                telemetry.update();
+//
+//
+//                //     The position we start at
+//                Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
+//
+//                //     The position we go to after locating the team prop, lining up to go to the correct spike mark
+//                Pose2d initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
+//
+//                //     The left, center, and right spike mark locations
+//                Pose2d leftSpike = new Pose2d(0, 35, Math.toRadians(135));
+//                Pose2d centerSpike = new Pose2d(-12, 32, Math.toRadians(90));
+//                Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
+//
+//                //     The left, center, and right backdrop locations
+//                Pose2d leftBackdrop = new Pose2d(-50, 28, Math.toRadians(0));
+//                Pose2d centerBackdrop = new Pose2d(-50, 35, Math.toRadians(0));
+//                Pose2d rightBackdrop = new Pose2d(-50, 42, Math.toRadians(0));
+//
+//                //     The point in between the backdrop and stack, to help guide the robot
+//                Pose2d stageIn = new Pose2d(0, 0, Math.toRadians(0));
+//                Pose2d stageOut = new Pose2d(0, 0, Math.toRadians(0));
+//
+//                //     The position we go to after we deliver a pixel, where we choose which stack to go to. We either go through the inside or outside trusses
+//                Pose2d initialStackIn = new Pose2d(0, 0, Math.toRadians(0));
+//                Pose2d initialStackOut = new Pose2d(0, 0, Math.toRadians(0));
+//
+//                //     The locations we need to collect from the left, center, and right stacks
+//                Pose2d leftStack = new Pose2d(0, 0, Math.toRadians(0));
+//                Pose2d centerStack = new Pose2d(0, 0, Math.toRadians(0));
+//                Pose2d rightStack = new Pose2d(60, 12, Math.toRadians(0));
+//
+//                drive.setPoseEstimate(start);
+//
+//                //     The needed locations, based on where the team prop is
+//                Pose2d neededSpike = centerSpike;
+//                Pose2d neededBackdrop = centerBackdrop;
+//
+//
+//
+//                //     We've located the team prop, and are now driving to the spike mark, then backdrop.
+//                if(pawnLocation.equals(LEFT))
+//                {
+//                    neededSpike = leftSpike;
+//                    neededBackdrop = leftBackdrop;
+//                } else if(pawnLocation.equals(CENTER))
+//                {
+//                    neededSpike = centerSpike;
+//                    neededBackdrop = centerBackdrop;
+//                } else if(pawnLocation.equals(RIGHT))
+//                {
+//                    neededSpike = rightSpike;
+//                    neededBackdrop = rightBackdrop;
+//                }
+//
+//
+//                //     A chain of positions to drive to
+//                Trajectory initialTraj = drive.trajectoryBuilder(start, true)
+//                        .lineToSplineHeading(initialSpike)
+//                        .build();
+//
+//                Trajectory placePixelTraj = drive.trajectoryBuilder(initialSpike, true)
+//                        .lineToSplineHeading(neededSpike)
+//                        .build();
+//
+//                Trajectory driveToBackboardTraj = drive.trajectoryBuilder(neededSpike, true)
+//                        .lineToSplineHeading(neededBackdrop)
+//                        .build();
+//
+//                 Trajectory driveToStageIn = drive.trajectoryBuilder(neededBackdrop, true)
+//                        .lineToSplineHeading(stageIn)
+//                        .build();
+//
+//                Trajectory driveToRightStack = drive.trajectoryBuilder(stageIn, true)
+//                        .lineToSplineHeading(rightStack)
+//                        .build();
+//
+//
+//
+//                Pose2d poseEstimate = drive.getPoseEstimate();
+//                telemetry.addData("finalX", poseEstimate.getX());
+//                telemetry.addData("finalY", poseEstimate.getY());
+//                telemetry.addData("finalHeading", poseEstimate.getHeading());
+//
+//                telemetry.update();
+//
+//
+//
+//
+//                if (isStopRequested()) return;
+//
+//                drive.followTrajectory(initialTraj);
+//                drive.followTrajectory(placePixelTraj);
+//                drive.followTrajectory(driveToBackboardTraj);
+//                drive.followTrajectory(driveToStageIn);
+//                drive.followTrajectory(driveToRightStack);
+//
+//                poseEstimate = drive.getPoseEstimate();
+//                telemetry.addData("finalX", poseEstimate.getX());
+//                telemetry.addData("finalY", poseEstimate.getY());
+//                telemetry.addData("finalHeading", poseEstimate.getHeading());
+//                telemetry.update();
+//
+//
+//
+//                sleep(5000);
+//            }
+//        }
+//                visionPortal.close();
     }
 
     private String getPawnLocation() {
