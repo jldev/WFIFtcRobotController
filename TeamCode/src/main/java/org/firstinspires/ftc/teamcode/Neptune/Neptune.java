@@ -5,15 +5,19 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.SimpleLinearLift;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 
 public class Neptune {
     public final MecanumDriveSubsystem drive;
+    public final OutakeSubsystem outake;
     public final SlidesSubsystem slides;
     public final GamepadEx driverOp;
     public final GamepadEx gunnerOp;
@@ -37,6 +41,7 @@ public class Neptune {
     public Neptune(CommandOpMode opMode) {
 
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
+        outake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outakeServo"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 new MotorEx(opMode.hardwareMap, "vbarMotor", Motor.GoBILDA.RPM_312));
         driverOp = new GamepadEx(opMode.gamepad1);

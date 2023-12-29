@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 
 import java.util.logging.Level;
@@ -46,6 +48,10 @@ public class Teleop extends CommandOpMode {
                 neptune.driverOp, GamepadKeys.Button.Y
         );
 
+        Button outakeButton = new GamepadButton(
+                neptune.driverOp, GamepadKeys.Button.B
+        );
+
         liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
 
         liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
@@ -75,6 +81,10 @@ public class Teleop extends CommandOpMode {
                 neptune.drive, () -> -neptune.driverOp.getLeftY(),
                 neptune.driverOp::getLeftX, neptune.driverOp::getRightX
         );
+
+        outakeButton.whileHeld(new OutakeStateCommand(neptune.outake, OutakeSubsystem.OutakeState.OPENED));
+        outakeButton.whenReleased(new OutakeStateCommand(neptune.outake, OutakeSubsystem.OutakeState.CLOSED));
+
 
         schedule(driveCommand);
     }

@@ -72,9 +72,9 @@ public class SlidesSubsystem extends SubsystemBase {
                     break;
                 case HOME_POS:
                     // home we have to wait for vbar to come down
-//                    if (mVBarMotor.atTargetPosition() && mVBarPosition == VBarPosition.DOWN) {
+                    if (mVBarMotor.atTargetPosition() && mVBarPosition == VBarPosition.DOWN) {
                         mSlideMotorTargetPosition = 0;
-//                      }
+                      }
                     break;
             }
             mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
