@@ -48,9 +48,7 @@ public class Teleop extends CommandOpMode {
 
         liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
 
-
         liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
-
 
         Button hangButton = new GamepadButton(
                 neptune.driverOp, GamepadKeys.Button.DPAD_UP

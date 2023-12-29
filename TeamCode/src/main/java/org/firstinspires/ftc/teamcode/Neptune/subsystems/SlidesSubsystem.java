@@ -45,14 +45,15 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
         mSlideMotor.resetEncoder();
         mSlidePosition = SlidesPosition.HOME_POS;
-
-//        mVBarMotor.setRunMode(MotorEx.RunMode.PositionControl);
-//        mVBarMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-//        mVBarMotor.setPositionCoefficient(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT);
-//        mVBarMotor.setPositionTolerance(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_TOLERANCE);
-//        mVBarMotor.resetEncoder();
-//        mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
-//        mVBarPosition = VBarPosition.DOWN;
+        mSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        mSlideMotor.encoder.setDirection(Motor.Direction.REVERSE);
+        mVBarMotor.setRunMode(MotorEx.RunMode.PositionControl);
+        mVBarMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        mVBarMotor.setPositionCoefficient(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT);
+        mVBarMotor.setPositionTolerance(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_TOLERANCE);
+        mVBarMotor.resetEncoder();
+        mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
+        mVBarPosition = VBarPosition.DOWN;
 
     }
 
@@ -73,36 +74,28 @@ public class SlidesSubsystem extends SubsystemBase {
                     // home we have to wait for vbar to come down
 //                    if (mVBarMotor.atTargetPosition() && mVBarPosition == VBarPosition.DOWN) {
                         mSlideMotorTargetPosition = 0;
-//                    }
+//                      }
                     break;
             }
             mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
         }
 
-//        if(mVBarMotor.atTargetPosition()) {
-//            switch (mVBarPosition) {
-//                case UP:
-//                    //up we have to wait for the slides to extend
-//                    if (mSlideMotor.atTargetPosition() && mSlidePosition != SlidesPosition.HOME_POS) {
-//                        mVBarMotorTargetPosition = NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_UP;
-//                    }
-//                    break;
-//                case DOWN:
-//                    mVBarMotorTargetPosition = NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_DOWN;
-//                    break;
-//            }
-////            moveToPosition(mVBarMotor, mVBarMotorTargetPosition);
-//        } else {
-//            mVBarMotor.set(NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
-//        }
-    }
-
-    private void moveToPosition(int position) {
-//        motor.setTargetPosition(position);
-
-//        motor.setRunMode(MotorEx.RunMode.PositionControl);
-//        double output = slidePidController.calculate(mSlideMotor.getCurrentPosition());
-//        mSlideMotor.motor.setPower(output);
+        if(mVBarMotor.atTargetPosition()) {
+            switch (mVBarPosition) {
+                case UP:
+                    //up we have to wait for the slides to extend
+                    if (mSlideMotor.atTargetPosition() && mSlidePosition != SlidesPosition.HOME_POS) {
+                        mVBarMotorTargetPosition = NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_UP;
+                    }
+                    break;
+                case DOWN:
+                    mVBarMotorTargetPosition = NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_DOWN;
+                    break;
+            }
+            mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
+        } else {
+            mVBarMotor.set(NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
+        }
     }
 
     public void moveToPosition(SlidesPosition position){
@@ -132,5 +125,10 @@ public class SlidesSubsystem extends SubsystemBase {
         telemetry.addLine(String.format("current_position - %d", mSlideMotor.getCurrentPosition()));
         telemetry.addLine(String.format("current_power %.2f", mSlideMotor.motor.getPower()));
         telemetry.addLine(String.format("target_position %d", mSlideMotorTargetPosition));
+
+        telemetry.addLine(String.format("vbar_setting - %s", mVBarPosition.toString()));
+        telemetry.addLine(String.format("vbarcurrentpos - %d", mVBarMotor.getCurrentPosition()));
+        telemetry.addLine(String.format("vbarcurrentpwr %.2f", mVBarMotor.motor.getPower()));
+        telemetry.addLine(String.format("vbarcurrentpos %d", mVBarMotorTargetPosition));
     }
 }

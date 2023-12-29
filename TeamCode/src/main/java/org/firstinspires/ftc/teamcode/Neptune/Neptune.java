@@ -37,11 +37,11 @@ public class Neptune {
     public Neptune(CommandOpMode opMode) {
 
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
-        slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_223),
-                new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_223));
+        slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
+                new MotorEx(opMode.hardwareMap, "vbarMotor", Motor.GoBILDA.RPM_312));
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
-        hangMotor = new MotorEx(opMode.hardwareMap, "leftEncoder", Motor.GoBILDA.RPM_312);
+        hangMotor = new MotorEx(opMode.hardwareMap, "hangMotor", Motor.GoBILDA.RPM_312);
         hangController = new PIDSlidesController(new SimpleLinearLift(hangMotor));
 
     }
