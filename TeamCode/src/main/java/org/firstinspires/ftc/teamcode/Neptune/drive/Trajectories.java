@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 public class Trajectories {
 
@@ -178,6 +179,22 @@ public class Trajectories {
     public Trajectory getTrajectory(Pose2d pose2d){
         Trajectory traj = mDrive.trajectoryBuilder(mStartPosition)
                 .lineToSplineHeading(pose2d)
+                .build();
+
+        mStartPosition = traj.end();
+        return traj;
+    }
+
+    public Trajectory getTrajectoryForAprilTag(AprilTagPoseFtc pose, int distanceFromTag){
+
+        double  rangeError      = (pose.range - distanceFromTag);
+        double  newHeading    = mStartPosition.getHeading() + pose.bearing;
+        double  yawError        = pose.yaw;
+
+        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition)
+                .splineToConstantHeading(mStartPosition.vec(), newHeading)
+                .strafeRight(-yawError)
+                .forward(rangeError)
                 .build();
 
         mStartPosition = traj.end();
