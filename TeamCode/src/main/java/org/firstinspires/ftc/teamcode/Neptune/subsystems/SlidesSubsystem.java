@@ -53,6 +53,7 @@ public class SlidesSubsystem extends SubsystemBase {
         mVBarMotor.setPositionTolerance(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_TOLERANCE);
         mVBarMotor.resetEncoder();
         mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
+
         mVBarPosition = VBarPosition.DOWN;
 
     }
@@ -94,7 +95,7 @@ public class SlidesSubsystem extends SubsystemBase {
             }
             mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
         } else {
-            mVBarMotor.set(NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
+            mVBarMotor.set(NeptuneConstants.MAX_VBAR_MOTOR_POWER);
         }
     }
 

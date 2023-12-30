@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class NeptuneConstants {
     public static double MAX_SLIDE_MOTOR_POWER = 1.0;
+    public static double MAX_VBAR_MOTOR_POWER = 0.5;
     public static double NEPTUNE_INTAKE_MOTOR_INTAKE_POWER = 0.5;
     public static double NEPTUNE_INTAKE_MOTOR_EJECT_POWER = -0.5;
     public static double NEPTUNE_INTAKE_SERVO_POS1 = 0.0;

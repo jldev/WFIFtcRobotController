@@ -5,6 +5,7 @@ import android.util.Size;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilderKt;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SelectCommand;
@@ -24,6 +25,8 @@ import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.HashMap;
@@ -60,6 +63,7 @@ public class RedRightAuto extends CommandOpMode {
         schedule(
                 detectPawnCommand.withTimeout(2000).whenFinished(() -> {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation();
+
                     telemetry.addData("Pawn Location:", pawnLocation);
                     telemetry.update();
                     schedule( new SequentialCommandGroup(
@@ -68,6 +72,7 @@ public class RedRightAuto extends CommandOpMode {
                                 new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24,0))),
                                 new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(51,0))),
                                 new TrajectoryFollowerCommand(neptune.drive, trajectories.getPixelFromStack(Trajectories.StackPos.RIGHTSTACK))
+
                             )
                             .whenFinished(() -> {
                                         telemetry.addLine("trajectory is finished");
