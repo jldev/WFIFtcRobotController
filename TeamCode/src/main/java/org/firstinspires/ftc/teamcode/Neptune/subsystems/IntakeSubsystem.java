@@ -9,18 +9,20 @@ import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 public class IntakeSubsystem extends SubsystemBase {
 
     public enum LiftableIntakePosition{
-        POSITION_1,
-        POSITION_2,
+        RAISE,
+        LOWER,
     }
 
-    private final Servo mIntakeLiftServo;
+    private final Servo mIntakeLiftServo1;
+    private final Servo mIntakeLiftServo2;
     private final Motor mIntakeMotor;
 
 
 
-    public IntakeSubsystem(Motor intakeMotor, Servo liftServo){
+    public IntakeSubsystem(Motor intakeMotor, Servo liftServo, Servo liftServo2 ){
         mIntakeMotor = intakeMotor;
-        mIntakeLiftServo = liftServo;
+        mIntakeLiftServo1 = liftServo;
+        mIntakeLiftServo2 = liftServo2;
     }
 
     public enum IntakeState {
@@ -30,7 +32,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     IntakeState intakeState = IntakeState.NEUTRAL;
-    LiftableIntakePosition intakeLiftState = LiftableIntakePosition.POSITION_1;
+    LiftableIntakePosition intakeLiftState = LiftableIntakePosition.RAISE;
     @Override
     public void periodic(){
         if (intakeFull()){
@@ -48,11 +50,13 @@ public class IntakeSubsystem extends SubsystemBase {
                 break;
         }
         switch(intakeLiftState){
-            case POSITION_1:
-                mIntakeLiftServo.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1);
+            case RAISE:
+                mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2);
+                mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1);
                 break;
-            case POSITION_2:
-                mIntakeLiftServo.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2);
+            case LOWER:
+                mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1);
+                mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2);
                 break;
         }
     }
@@ -72,7 +76,11 @@ public class IntakeSubsystem extends SubsystemBase {
         return false;
     }
 
-    public void intakeLift(LiftableIntakePosition position){
+    public void setIntakeState(IntakeSubsystem.IntakeState state){
+        intakeState = state;
+    }
+
+    public void setIntakeLiftState(LiftableIntakePosition position){
         intakeLiftState = position;
     }
 }

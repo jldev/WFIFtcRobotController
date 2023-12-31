@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.SimpleLinearLift;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 public class Neptune {
     public final MecanumDriveSubsystem drive;
     public final OutakeSubsystem outake;
+    public final IntakeSubsystem intake;
     public final SlidesSubsystem slides;
     public final GamepadEx driverOp;
     public final GamepadEx gunnerOp;
@@ -42,8 +44,10 @@ public class Neptune {
 
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outakeServo"));
+        intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_312),
+                opMode.hardwareMap.get(Servo.class, "intakeServo1" ), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
-                new MotorEx(opMode.hardwareMap, "vbarMotor", Motor.GoBILDA.RPM_312));
+                new MotorEx(opMode.hardwareMap, "vbarMotor", 537.6, 340));
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
         hangMotor = new MotorEx(opMode.hardwareMap, "hangMotor", Motor.GoBILDA.RPM_312);
