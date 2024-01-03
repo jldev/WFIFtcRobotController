@@ -44,7 +44,7 @@ public class Neptune {
 
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outakeServo"));
-        intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_312),
+        intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_1620),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1" ), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 new MotorEx(opMode.hardwareMap, "vbarMotor", 537.6, 340));
