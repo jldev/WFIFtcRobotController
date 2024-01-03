@@ -23,6 +23,10 @@ public class IntakeSubsystem extends SubsystemBase {
         mIntakeMotor = intakeMotor;
         mIntakeLiftServo1 = liftServo;
         mIntakeLiftServo2 = liftServo2;
+
+        mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1_START);
+        mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2_START);
+
     }
 
     public enum IntakeState {
@@ -50,11 +54,11 @@ public class IntakeSubsystem extends SubsystemBase {
                 break;
         }
         switch(intakeLiftState){
-            case RAISE:
+            case LOWER:
                 mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2);
                 mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1);
                 break;
-            case LOWER:
+            case RAISE:
                 mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1);
                 mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2);
                 break;

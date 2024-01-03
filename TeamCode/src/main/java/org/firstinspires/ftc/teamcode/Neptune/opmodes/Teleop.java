@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
+import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeLiftCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
@@ -58,6 +59,10 @@ public class Teleop extends CommandOpMode {
                 neptune.driverOp, GamepadKeys.Button.DPAD_RIGHT
         );
 
+        Button intakeliftbutton = new GamepadButton(
+                neptune.driverOp, GamepadKeys.Button.RIGHT_BUMPER
+        );
+
 
 
 
@@ -95,7 +100,12 @@ public class Teleop extends CommandOpMode {
         outakeButton.whileHeld(new OutakeStateCommand(neptune.outake, OutakeSubsystem.OutakeState.OPENED));
         outakeButton.whenReleased(new OutakeStateCommand(neptune.outake, OutakeSubsystem.OutakeState.CLOSED));
 
+        intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
+        intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
+
         intakeButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
+
+
 
 
         schedule(driveCommand);
