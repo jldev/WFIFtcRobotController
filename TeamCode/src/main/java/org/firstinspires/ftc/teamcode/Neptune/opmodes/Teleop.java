@@ -42,73 +42,29 @@ public class Teleop extends CommandOpMode {
             telemetry.update();
         }));
 
+        neptune.liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
+        neptune.liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
 
-        Button liftButton = new GamepadButton(
-                neptune.driverOp, GamepadKeys.Button.X
-        );
+        neptune.hangButton.whenPressed(new InstantCommand(() -> {neptune.hangController.power(0.3);}));
+        neptune.hangButton.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
 
-        Button liftButtonDown = new GamepadButton(
-                neptune.driverOp, GamepadKeys.Button.Y
-        );
+        neptune.hangButtonDown.whenPressed(new InstantCommand(() -> {neptune.hangController.power(-0.3);}));
+        neptune.hangButtonDown.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
 
-        Button outakeButton = new GamepadButton(
-                neptune.driverOp, GamepadKeys.Button.B
-        );
+        neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));
+        neptune.outtakeButton.whenReleased(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED));
 
-        Button intakeButton = new GamepadButton(
-                neptune.driverOp, GamepadKeys.Button.DPAD_RIGHT
-        );
+        neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
+        neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
 
-        Button intakeliftbutton = new GamepadButton(
-                neptune.driverOp, GamepadKeys.Button.RIGHT_BUMPER
-        );
-
-
-
-
-
-        liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
-
-        liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
-
-        Button hangButton = new GamepadButton(
-                neptune.driverOp, GamepadKeys.Button.DPAD_UP
-        );
-
-        Button hangButtonDown = new GamepadButton(
-                neptune.driverOp, GamepadKeys.Button.DPAD_DOWN
-        );
-
-        hangButton.whenPressed(new InstantCommand(() -> {
-            neptune.hangController.power(0.3);
-        })); hangButton.whenReleased(new InstantCommand(() -> {
-            neptune.hangController.power(0);
-        }));
-
-        hangButtonDown.whenPressed(new InstantCommand(() -> {
-            neptune.hangController.power(-0.3);
-        })); hangButtonDown.whenReleased(new InstantCommand(() -> {
-            neptune.hangController.power(0);
-        }));
-
+        neptune.intakeButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
 
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
                 neptune.drive, () -> -neptune.driverOp.getLeftY(),
                 neptune.driverOp::getLeftX, neptune.driverOp::getRightX
         );
+        neptune.drive.setDefaultCommand(driveCommand);
 
-        outakeButton.whileHeld(new OutakeStateCommand(neptune.outake, OutakeSubsystem.OutakeState.OPENED));
-        outakeButton.whenReleased(new OutakeStateCommand(neptune.outake, OutakeSubsystem.OutakeState.CLOSED));
-
-        intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
-        intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
-
-        intakeButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
-
-
-
-
-        schedule(driveCommand);
     }
 
 }

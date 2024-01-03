@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode.Neptune;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.button.Button;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -18,12 +21,19 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 
 public class Neptune {
     public final MecanumDriveSubsystem drive;
-    public final OutakeSubsystem outake;
+    public final OutakeSubsystem outtake;
     public final IntakeSubsystem intake;
     public final SlidesSubsystem slides;
     public final GamepadEx driverOp;
     public final GamepadEx gunnerOp;
     private final MotorEx hangMotor;
+    public final GamepadButton liftButton;
+    public final GamepadButton liftButtonDown;
+    public final GamepadButton outtakeButton;
+    public final GamepadButton intakeButton;
+    public final GamepadButton intakeliftbutton;
+    public final GamepadButton hangButton;
+    public final GamepadButton hangButtonDown;
     public PIDSlidesController hangController;
     public Pose2d startPos;
 
@@ -43,7 +53,7 @@ public class Neptune {
     public Neptune(CommandOpMode opMode) {
 
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
-        outake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outakeServo"));
+        outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outakeServo"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_1620),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1" ), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
@@ -52,6 +62,23 @@ public class Neptune {
         gunnerOp = new GamepadEx(opMode.gamepad2);
         hangMotor = new MotorEx(opMode.hardwareMap, "hangMotor", Motor.GoBILDA.RPM_312);
         hangController = new PIDSlidesController(new SimpleLinearLift(hangMotor));
+
+        // register subsystems
+        opMode.register(drive);
+        opMode.register(outtake);
+        opMode.register(intake);
+        opMode.register(slides);
+
+        // driver button setup
+        liftButton = new GamepadButton(driverOp, GamepadKeys.Button.X);
+        liftButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.Y);
+        outtakeButton = new GamepadButton(driverOp, GamepadKeys.Button.B);
+        intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_RIGHT);
+        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
+        hangButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
+        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+
+        // gunner button setup
 
     }
 
