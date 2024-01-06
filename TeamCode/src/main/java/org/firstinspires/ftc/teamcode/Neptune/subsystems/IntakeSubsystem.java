@@ -23,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
         mIntakeMotor = intakeMotor;
         mIntakeLiftServo1 = liftServo;
         mIntakeLiftServo2 = liftServo2;
-        mIntakeLiftServo2.setDirection(Servo.Direction.REVERSE);
+        mIntakeLiftServo1.setDirection(Servo.Direction.REVERSE);
         mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
         mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
 
@@ -36,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     IntakeState intakeState = IntakeState.NEUTRAL;
-    LiftableIntakePosition intakeLiftState = LiftableIntakePosition.RAISE;
+    LiftableIntakePosition intakeLiftState = LiftableIntakePosition.LOWER;
     @Override
     public void periodic(){
         if (intakeFull()){

@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
+import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
+import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeLiftCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
@@ -45,20 +47,22 @@ public class Teleop extends CommandOpMode {
         neptune.liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
         neptune.liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
 
-        neptune.hangButton.whenPressed(new InstantCommand(() -> {neptune.hangController.power(0.3);}));
+        neptune.hangButton.whenPressed(new InstantCommand(() -> {neptune.hangController.power(NeptuneConstants.NEPTUNE_HANG_MOTOR_POWER);}));
         neptune.hangButton.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
 
-        neptune.hangButtonDown.whenPressed(new InstantCommand(() -> {neptune.hangController.power(-0.3);}));
+        neptune.hangButtonDown.whenPressed(new InstantCommand(() -> {neptune.hangController.power(-NeptuneConstants.NEPTUNE_HANG_MOTOR_POWER);}));
         neptune.hangButtonDown.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
 
         neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));
         neptune.outtakeButton.whenReleased(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED));
+        neptune.outtakeButton.whileHeld(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED));
+        neptune.outtakeButton.whenReleased(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.CLOSED));
 
         neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
         neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
 
         neptune.intakeButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
-
+        neptune.intakeReverseButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.EJECTING));
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
                 neptune.drive, () -> -neptune.driverOp.getLeftY(),
                 neptune.driverOp::getLeftX, neptune.driverOp::getRightX

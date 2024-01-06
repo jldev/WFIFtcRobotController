@@ -11,43 +11,54 @@ public class OutakeSubsystem extends SubsystemBase {
 
 
     private final Servo mOutakeServo;
+    private final Servo mAutoOutakeServo;
 
 
 
-    public OutakeSubsystem(Servo outakeServo){
+    public OutakeSubsystem(Servo outakeServo, Servo autoOutakeServo){
         mOutakeServo = outakeServo;
+        mAutoOutakeServo = autoOutakeServo;
     }
 
     public enum OutakeState {
         OPENED,
         CLOSED,
-//        NEUTRAL
     }
 
-//    OutakeState outakeState = OutakeState.NEUTRAL;
+    public enum AutoOutakeState {
+        OPENED,
+        CLOSED,
+    }
+
       OutakeState outakeState = OutakeState.CLOSED;
+     AutoOutakeState autoOutakeState = AutoOutakeState.CLOSED;
 
     @Override
     public void periodic(){
-//        if (intakeFull()){
-//            outakeState = outakeState   .NEUTRAL;
-//        }
         switch(outakeState) {
             case OPENED:
-//                mOutakeServo.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_INTAKE_POWER);
                 mOutakeServo.setPosition(NeptuneConstants.OUTAKE_OPEN_POSITION);
                 break;
             case CLOSED:
-//                mOutakeServo.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_EJECT_POWER);
                 mOutakeServo.setPosition(NeptuneConstants.OUTAKE_CLOSED_POSITION);
                 break;
-//            case NEUTRAL:
-//                mIntakeMotor.stopMotor();
-//                break;
+        }
+
+
+        switch(autoOutakeState) {
+            case OPENED:
+                mAutoOutakeServo.setPosition(NeptuneConstants.OUTAKE_OPEN_POSITION);
+                break;
+            case CLOSED:
+                mOutakeServo.setPosition(NeptuneConstants.OUTAKE_CLOSED_POSITION);
+                break;
         }
         }
 
     public void setOutakeState(OutakeState state){
         outakeState = state;
+    }
+    public void setAutoOutakeState(AutoOutakeState state){
+        autoOutakeState = state;
     }
 }
