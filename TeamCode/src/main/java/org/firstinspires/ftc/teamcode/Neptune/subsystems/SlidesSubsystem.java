@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
+import org.opencv.dnn.Net;
 
 public class SlidesSubsystem extends SubsystemBase {
     private int mSlideMotorTargetPosition = 0;
@@ -30,12 +31,9 @@ public class SlidesSubsystem extends SubsystemBase {
     VBarPosition mVBarPosition;
 
     private final MotorEx mSlideMotor;
-    private final MotorEx mVBarMotor;
+    private final PIDMotor mVBarMotor;
 
-//    private final PIDFController slidePidController =
-//            new PIDFController(NeptuneConstants.SLIDE_kP,
-//                    NeptuneConstants.SLIDE_kI, NeptuneConstants.SLIDE_kD, NeptuneConstants.SLIDE_kF);
-    public SlidesSubsystem(MotorEx slideMotor, MotorEx vBarMotor) {
+    public SlidesSubsystem(MotorEx slideMotor, PIDMotor vBarMotor) {
         mSlideMotor = slideMotor;
         mVBarMotor = vBarMotor;
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
@@ -49,7 +47,10 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlideMotor.encoder.setDirection(Motor.Direction.REVERSE);
         mVBarMotor.setRunMode(MotorEx.RunMode.PositionControl);
         mVBarMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        mVBarMotor.setPositionCoefficient(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT);
+//        mVBarMotor.setPositionCoefficient(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT);
+        mVBarMotor.setPIDCoefficients(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_P,
+                NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_I,
+                NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_D);
         mVBarMotor.setPositionTolerance(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_TOLERANCE);
         mVBarMotor.resetEncoder();
         mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
