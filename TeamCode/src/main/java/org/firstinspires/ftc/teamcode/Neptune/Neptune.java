@@ -72,8 +72,8 @@ public class Neptune {
         opMode.register(slides);
 
         // driver button setup
-        liftButton = new GamepadButton(driverOp, GamepadKeys.Button.X);
-        liftButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.Y);
+        liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
+        liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
         outtakeButton = new GamepadButton(driverOp, GamepadKeys.Button.B);
         intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_RIGHT);
         intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);

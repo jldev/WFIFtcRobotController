@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -18,11 +19,16 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
+import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -68,10 +74,16 @@ public class RedRightAuto extends CommandOpMode {
                     telemetry.update();
                     schedule( new SequentialCommandGroup(
                                 new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
+                                new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
                                 new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation)),
-                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24,0))),
-                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(51,0))),
-                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getPixelFromStack(Trajectories.StackPos.RIGHTSTACK))
+                                new WaitCommand(1000),
+                                new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
+                                new WaitCommand(2000),
+                                new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED)
+
+//                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24,0))),
+//                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(51,0))),
+//                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getPixelFromStack(Trajectories.StackPos.RIGHTSTACK))
 
                             )
                             .whenFinished(() -> {

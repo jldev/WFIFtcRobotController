@@ -55,8 +55,8 @@ public class Teleop extends CommandOpMode {
 
         neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));
         neptune.outtakeButton.whenReleased(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED));
-        neptune.outtakeButton.whileHeld(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED));
-        neptune.outtakeButton.whenReleased(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.CLOSED));
+        //neptune.outtakeButton.whenPressed(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED));
+        //neptune.outtakeButton.whenReleased(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.CLOSED));
 
         neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
         neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));

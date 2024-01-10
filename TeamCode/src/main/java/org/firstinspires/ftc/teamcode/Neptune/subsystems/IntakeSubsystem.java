@@ -11,6 +11,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public enum LiftableIntakePosition{
         RAISE,
         LOWER,
+        INIT
     }
 
     private final Servo mIntakeLiftServo1;
@@ -36,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     IntakeState intakeState = IntakeState.NEUTRAL;
-    LiftableIntakePosition intakeLiftState = LiftableIntakePosition.LOWER;
+    LiftableIntakePosition intakeLiftState = LiftableIntakePosition.INIT;
     @Override
     public void periodic(){
         if (intakeFull()){
@@ -61,6 +62,10 @@ public class IntakeSubsystem extends SubsystemBase {
             case RAISE:
                 mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1);
                 mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS1);
+                break;
+            case INIT:
+                mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
+                mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
                 break;
         }
     }

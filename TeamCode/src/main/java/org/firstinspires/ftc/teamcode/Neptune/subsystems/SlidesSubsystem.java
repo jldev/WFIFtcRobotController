@@ -82,7 +82,10 @@ public class SlidesSubsystem extends SubsystemBase {
             mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
         }
 
-        if(mVBarMotor.atTargetPosition()) {
+        if(!mVBarMotor.atTargetPosition()) {
+             mVBarMotor.set(NeptuneConstants.MAX_VBAR_MOTOR_POWER);
+        } else {
+            mVBarMotor.set(0);
             switch (mVBarPosition) {
                 case UP:
                     //up we have to wait for the slides to extend
@@ -95,8 +98,6 @@ public class SlidesSubsystem extends SubsystemBase {
                     break;
             }
             mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
-        } else {
-            mVBarMotor.set(NeptuneConstants.MAX_VBAR_MOTOR_POWER);
         }
     }
 
@@ -108,6 +109,7 @@ public class SlidesSubsystem extends SubsystemBase {
         if(position == SlidesPosition.HOME_POS){
             mVBarPosition = VBarPosition.DOWN;
             mSlidePosition = SlidesPosition.HOME_POS;
+            mVBarMotor.setTargetPosition(NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_DOWN);
         }
     }
 

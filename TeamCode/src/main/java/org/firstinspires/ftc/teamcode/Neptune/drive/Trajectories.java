@@ -43,7 +43,7 @@ public class Trajectories {
         Pose2d initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
         //     The left, center, and right spike mark locations
         Pose2d leftSpike = new Pose2d(0, 35, Math.toRadians(135));
-        Pose2d centerSpike = new Pose2d(-12, 32, Math.toRadians(90));
+        Pose2d centerSpike = new Pose2d(-12, 20, Math.toRadians(90));
         Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
 
         if (this.neptune.allianceColor == Neptune.AllianceColor.RED) {
@@ -99,9 +99,9 @@ public class Trajectories {
         //     The position we go to after locating the team prop, lining up to go to the correct spike mark
 
         //     The left, center, and right spike mark locations
-        Pose2d leftBackdrop = new Pose2d(-50, 28, Math.toRadians(0));
-        Pose2d centerBackdrop = new Pose2d(-50, 35, Math.toRadians(0));
-        Pose2d rightBackdrop = new Pose2d(-50, 42, Math.toRadians(0));
+        Pose2d leftBackdrop = new Pose2d(-40, 34, Math.toRadians(0));
+        Pose2d centerBackdrop = new Pose2d(-40, 41, Math.toRadians(0));
+        Pose2d rightBackdrop = new Pose2d(-40, 48, Math.toRadians(0));
         Trajectory traj = mDrive.trajectoryBuilder(mStartPosition)
                 .lineToSplineHeading(leftBackdrop)
                 .build();

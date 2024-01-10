@@ -18,6 +18,12 @@ public class OutakeSubsystem extends SubsystemBase {
     public OutakeSubsystem(Servo outakeServo, Servo autoOutakeServo){
         mOutakeServo = outakeServo;
         mAutoOutakeServo = autoOutakeServo;
+
+        mAutoOutakeServo.setDirection(Servo.Direction.REVERSE);
+
+        mOutakeServo.setPosition(NeptuneConstants.OUTAKE_CLOSED_POSITION);
+        mAutoOutakeServo.setPosition(NeptuneConstants.AUTOOUTAKE_CLOSED_POSITION);
+
     }
 
     public enum OutakeState {
@@ -47,10 +53,10 @@ public class OutakeSubsystem extends SubsystemBase {
 
         switch(autoOutakeState) {
             case OPENED:
-                mAutoOutakeServo.setPosition(NeptuneConstants.OUTAKE_OPEN_POSITION);
+                mAutoOutakeServo.setPosition(NeptuneConstants.AUTOOUTAKE_OPEN_POSITION);
                 break;
             case CLOSED:
-                mOutakeServo.setPosition(NeptuneConstants.OUTAKE_CLOSED_POSITION);
+                mAutoOutakeServo.setPosition(NeptuneConstants.AUTOOUTAKE_CLOSED_POSITION);
                 break;
         }
         }

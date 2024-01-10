@@ -6,14 +6,14 @@ import com.acmerobotics.dashboard.config.Config;
 public class NeptuneConstants {
     public static  double NEPTUNE_INTAKE_SERVO_INITIAL_POS = 1.0;
     public static double NEPTUNE_INTAKE_SERVO_POS1 = 0.75;
-    public static double NEPTUNE_INTAKE_SERVO_POS2 = 0.44;
+    public static double NEPTUNE_INTAKE_SERVO_POS2 = 0.56;
     public static double MAX_SLIDE_MOTOR_POWER = 1.0;
-    public static double MAX_VBAR_MOTOR_POWER = 0.5;
+    public static double MAX_VBAR_MOTOR_POWER = 1;
     public static double NEPTUNE_INTAKE_MOTOR_INTAKE_POWER = -1.0;
     public static double NEPTUNE_INTAKE_MOTOR_EJECT_POWER = 1.0;
     public static int NEPTUNE_SLIDE_POS1 = 800;
     public static int NEPTUNE_SLIDE_POS2 = 1400;
-    public static double NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_P = 0.5;
+    public static double NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_P = 0.002;
     public static double NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_I = 0.0;
     public static double NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_D = 0.0;
     public static int NEPTUNE_SLIDE_VBAR_POS_TOLERANCE = 10;
@@ -28,4 +28,6 @@ public class NeptuneConstants {
     public static double SLIDE_kF = 0;
     public static double OUTAKE_OPEN_POSITION = 0.5;
     public static double OUTAKE_CLOSED_POSITION = 0.0;
+    public static double AUTOOUTAKE_OPEN_POSITION = 0.4;
+    public static double AUTOOUTAKE_CLOSED_POSITION = 0.75;
 }
