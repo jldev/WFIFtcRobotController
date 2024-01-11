@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.SimpleLinearLift;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
@@ -89,20 +90,18 @@ public class Neptune {
         this.fieldPos = fp;
         this.allianceColor = ac;
 
-        if (fp == FieldPos.RIGHT && ac == AllianceColor.RED){
+        if (fp == FieldPos.RIGHT){
             this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
 
         }
-        else if (fp == FieldPos.LEFT && ac == AllianceColor.RED){
+        else if (fp == FieldPos.LEFT){
             this.startPos = (new Pose2d(42, 62, Math.toRadians(90)));
 
-        } else if (fp == FieldPos.RIGHT && ac == AllianceColor.BLUE){
-            this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
-
-        } else {
-            this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
-
         }
+        if(ac == AllianceColor.BLUE){
+            this.startPos = Trajectories.translatePosePositionToBlue(this.startPos);
+        }
+
         drive.setPoseEstimate(this.startPos);
     }
 }

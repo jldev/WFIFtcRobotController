@@ -38,35 +38,61 @@ public class Trajectories {
         this.neptune = neptune;
     }
 
+    /*
+        If the field is symmetric, you can use this to translate from RED to BLUE
+        we will rotate about x 180 degrees, using the right hand rule this would turn our field upside down,
+        but since we don't care about the Z(UP) direction this will be fine, the following matrix
+        rotates us around x
+        1	0	0
+        0	cos(a)	-sin(a)
+        0	sin(a)	cos(a)
+        for 180 rotation aournd the X axis we get
+        1   0   0
+        0   -1  0
+        0   0   -1
+        we dont care about the Z so the 2x2 matrix becomes
+        1    0
+        0   -1
+        given input point x,y
+        new_x = x*1 - 0 = x
+        new_y = x*0 -y = -y
+        so all that to say just multiply the y by -1
+        all the headings are +180 or PI in radians
+    */
+
+    public static Pose2d translatePosePositionToBlue(Pose2d p){
+        return new Pose2d(p.getX(),-p.getY(), p.getHeading()+Math.PI);
+    }
     public Trajectory getPlacePixelTrajectory(PropPlacement placement){
         //     The position we go to after locating the team prop, lining up to go to the correct spike mark
-        Pose2d initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
+        Pose2d initialSpike;
         //     The left, center, and right spike mark locations
-        Pose2d leftSpike = new Pose2d(0, 35, Math.toRadians(135));
-        Pose2d centerSpike = new Pose2d(-12, 20, Math.toRadians(90));
-        Pose2d rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
+        Pose2d leftSpike;
+        Pose2d centerSpike;
+        Pose2d rightSpike;
 
-        if (this.neptune.allianceColor == Neptune.AllianceColor.RED) {
-            if (this.neptune.fieldPos == Neptune.FieldPos.LEFT) {
-                 leftSpike = new Pose2d(48, 35, Math.toRadians(135));
-                 centerSpike = new Pose2d(36, 32, Math.toRadians(90));
-                 rightSpike = new Pose2d(36, 29, Math.toRadians(45));
-            } else  {
-                //this is right
-                leftSpike = new Pose2d(0, 35, Math.toRadians(135));
-                centerSpike = new Pose2d(-12, 32, Math.toRadians(90));
-                rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
-            }
-        } else {
-            //this is alliance blue
-            if (this.neptune.fieldPos == Neptune.FieldPos.LEFT) {
-                //needs to be added eventually
-            } else {
-                //this is left
+        // these are for the red side, if we are blue we translate them below
+        if (this.neptune.fieldPos == Neptune.FieldPos.LEFT) {
+             initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
+             leftSpike = new Pose2d(48, 35, Math.toRadians(135));
+             centerSpike = new Pose2d(36, 32, Math.toRadians(90));
+             rightSpike = new Pose2d(36, 29, Math.toRadians(45));
 
-
-            }
+        } else  {
+            //this is right
+            initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
+            leftSpike = new Pose2d(0, 35, Math.toRadians(135));
+            centerSpike = new Pose2d(-12, 32, Math.toRadians(90));
+            rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
         }
+
+        if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
+            initialSpike = translatePosePositionToBlue(initialSpike);
+            leftSpike = translatePosePositionToBlue(leftSpike);
+            centerSpike = translatePosePositionToBlue(centerSpike);
+            rightSpike = translatePosePositionToBlue(rightSpike);
+        }
+
         Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true)
                         .lineToSplineHeading(leftSpike)
                         .build();
@@ -98,10 +124,17 @@ public class Trajectories {
     public Trajectory getBackdropTrajectory(PropPlacement placement){
         //     The position we go to after locating the team prop, lining up to go to the correct spike mark
 
-        //     The left, center, and right spike mark locations
+        //     The left, center, and right spike mark locations for RED
         Pose2d leftBackdrop = new Pose2d(-40, 34, Math.toRadians(0));
         Pose2d centerBackdrop = new Pose2d(-40, 41, Math.toRadians(0));
         Pose2d rightBackdrop = new Pose2d(-40, 48, Math.toRadians(0));
+
+        if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
+            leftBackdrop = translatePosePositionToBlue(leftBackdrop);
+            centerBackdrop = translatePosePositionToBlue(centerBackdrop);
+            rightBackdrop = translatePosePositionToBlue(rightBackdrop);
+        }
+
         Trajectory traj = mDrive.trajectoryBuilder(mStartPosition)
                 .lineToSplineHeading(leftBackdrop)
                 .build();

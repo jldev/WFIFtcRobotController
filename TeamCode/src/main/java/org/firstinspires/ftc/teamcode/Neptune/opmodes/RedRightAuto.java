@@ -52,7 +52,6 @@ public class RedRightAuto extends CommandOpMode {
 //    private MecanumDriveSubsystem drive;
     private Trajectories trajectories;
 
-    private Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
     private Neptune neptune;
 
     @Override
