@@ -41,7 +41,6 @@ public class Neptune {
     public final GamepadButton liftButton;
     public final GamepadButton liftButtonDown;
     public final GamepadButton outtakeButton;
-    public final GamepadButton intakeButton;
     public final GamepadButton intakeliftbutton;
     public final GamepadButton hangButton;
     public final GamepadButton hangButtonDown;
@@ -67,7 +66,7 @@ public class Neptune {
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_1620),
-                opMode.hardwareMap.get(Servo.class, "intakeServo1" ), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
+                opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 new PIDMotor(opMode.hardwareMap, "vbarMotor", 537.6, 340));
         driverOp = new GamepadEx(opMode.gamepad1);
@@ -84,16 +83,17 @@ public class Neptune {
         // driver button setup
         liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
-        outtakeButton = new GamepadButton(driverOp, GamepadKeys.Button.B);
-        intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_RIGHT);
+        outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
         intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
-        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
+        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
         hangButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
         hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
 
         // gunner button setup
 
     }
+
+
 
     public void setStartPosition(FieldPos fp, AllianceColor ac) {
         this.fieldPos = fp;

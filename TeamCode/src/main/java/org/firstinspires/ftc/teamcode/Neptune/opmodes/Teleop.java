@@ -58,10 +58,9 @@ public class Teleop extends CommandOpMode {
         //neptune.outtakeButton.whenPressed(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED));
         //neptune.outtakeButton.whenReleased(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.CLOSED));
 
-        neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
-        neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
+        neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
+        neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
 
-        neptune.intakeButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
         neptune.intakeReverseButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.EJECTING));
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
                 neptune.drive, () -> -neptune.driverOp.getLeftY(),

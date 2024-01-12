@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -18,11 +19,16 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
+import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -59,16 +65,26 @@ public class RedLeftAuto extends CommandOpMode {
         );
 
         schedule(
-                detectPawnCommand.withTimeout(2000).whenFinished(() -> {
+                detectPawnCommand.withTimeout(5000).whenFinished(() -> {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation();
                     telemetry.addData("Pawn Location:", pawnLocation);
                     telemetry.update();
                     schedule( new SequentialCommandGroup(
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
-                                   new TrajectoryFollowerCommand(neptune.drive, trajectories.getPixelFromStack(Trajectories.StackPos.LEFTSTACK)),
-                                   new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(51,0))),
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24,0))),
-                                   new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation))
+                                    new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
+                                    new WaitCommand(500),
+                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(56,60))),
+                                   new WaitCommand(500),
+                                   new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(56,8))),
+                                    new WaitCommand(500),
+                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24,12))),
+                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation)),
+                                    new WaitCommand(500),
+                                    new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
+                                    new WaitCommand(500),
+                                    new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
+                                    new WaitCommand(500),
+                                    new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
 
                             )
                                     .whenFinished(() -> {

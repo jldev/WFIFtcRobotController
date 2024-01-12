@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.G3GSS;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -13,6 +14,7 @@ import java.util.List;
 
 
 @Autonomous(name = "test_auto")
+@Disabled
 public class test_auto  extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;
     private AprilTagProcessor aprilTag;
