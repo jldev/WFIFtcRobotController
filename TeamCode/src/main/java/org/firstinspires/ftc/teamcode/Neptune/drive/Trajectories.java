@@ -11,6 +11,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 public class Trajectories {
 
 
+    private static final boolean TRAJECTORY_SPEED_SLOW = true;
 
     public enum PropPlacement {
         LEFT,
@@ -93,22 +94,22 @@ public class Trajectories {
             rightSpike = translatePosePositionToBlue(rightSpike);
         }
 
-        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true)
+        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(leftSpike)
                         .build();
         switch (placement){
             case LEFT:
-                traj = mDrive.trajectoryBuilder(mStartPosition, true)
+                traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(leftSpike)
                         .build();
                 break;
             case RIGHT:
-                traj = mDrive.trajectoryBuilder(mStartPosition, true)
+                traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(rightSpike)
                         .build();
                 break;
             case CENTER:
-                traj = mDrive.trajectoryBuilder(mStartPosition, true)
+                traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(centerSpike)
                         .build();
                 break;
@@ -135,23 +136,23 @@ public class Trajectories {
             rightBackdrop = translatePosePositionToBlue(rightBackdrop);
         }
 
-        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition)
+        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)
                 .lineToSplineHeading(leftBackdrop)
                 .build();
 
         switch (placement){
             case LEFT:
-               traj = mDrive.trajectoryBuilder(mStartPosition, true)
+               traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(leftBackdrop)
                         .build();
                break;
             case CENTER:
-                traj = mDrive.trajectoryBuilder(mStartPosition)
+                traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(centerBackdrop)
                         .build();
                 break;
             case RIGHT:
-                traj = mDrive.trajectoryBuilder(mStartPosition)
+                traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(rightBackdrop)
                         .build();
                 break;
@@ -170,26 +171,26 @@ public class Trajectories {
         Pose2d centerStack = new Pose2d(51, 24, Math.toRadians(0));
         Pose2d rightStack = new Pose2d(54, 12, Math.toRadians(0));
 
-        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true)
+        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                 .splineToConstantHeading(leftStack.vec(),leftStack.getHeading())
                 .build();
 
 
         switch (stackPos){
             case LEFTSTACK:
-                traj = mDrive.trajectoryBuilder(mStartPosition, true)
+                traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(leftStack)
 //                        .splineToConstantHeading(leftStack.vec(),leftStack.getHeading())
                         .build();
                 break;
             case CENTERSTACK:
-                traj = mDrive.trajectoryBuilder(mStartPosition, true)
+                traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                         .lineToSplineHeading(centerStack)
 //                        .splineToConstantHeading(centerStack.vec(),centerStack.getHeading())
                         .build();
                 break;
             case RIGHTSTACK:
-                 traj = mDrive.trajectoryBuilder(mStartPosition, true)
+                 traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                          .lineToSplineHeading(rightStack)
 //                        .splineToConstantHeading(rightStack.vec(),rightStack.getHeading())
                         .build();
@@ -212,7 +213,7 @@ public class Trajectories {
     }
 
     public Trajectory getTrajectory(Pose2d pose2d){
-        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition)
+        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)
                 .lineToSplineHeading(pose2d)
                 .build();
 
@@ -226,7 +227,7 @@ public class Trajectories {
         double  newHeading    = mStartPosition.getHeading() + pose.bearing;
         double  yawError        = pose.yaw;
 
-        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition)
+        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)
                 .splineToConstantHeading(mStartPosition.vec(), newHeading)
                 .strafeRight(-yawError)
                 .forward(rangeError)

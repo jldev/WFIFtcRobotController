@@ -77,7 +77,10 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         return drive.trajectoryBuilder(startPose);
     }
 
-    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
+    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed, boolean slow) {
+        if (slow){
+            return drive.trajectoryBuilderSlow(startPose, reversed);
+        }
         return drive.trajectoryBuilder(startPose, reversed);
     }
 
