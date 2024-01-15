@@ -170,10 +170,50 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
+    public TrajectorySequenceBuilder trajectorySequenceBuilderSlow(Pose2d startPose) {
+        return new TrajectorySequenceBuilder(
+                startPose,
+                SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT,
+                MAX_ANG_VEL, MAX_ANG_ACCEL
+        );
+    }
+
     public void turnAsync(double angle) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(
                 trajectorySequenceBuilder(getPoseEstimate())
                         .turn(angle)
+                        .build()
+        );
+    }
+
+    public void left(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .strafeLeft(inches, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .build()
+        );
+    }
+
+    public void right(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .strafeRight(inches, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .build()
+        );
+    }
+
+    public void forward(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .forward(inches, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .build()
+        );
+    }
+
+    public void reverse(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .back(inches, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
                         .build()
         );
     }

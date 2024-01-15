@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.List;
 
@@ -19,6 +20,13 @@ import java.util.List;
  * state machine for the mecanum drive. All movement/following is async to fit the paradigm.
  */
 public class MecanumDriveSubsystem extends SubsystemBase {
+
+    public enum DriveDirection{
+        FORWARD,
+        BACKWARD,
+        LEFT,
+        RIGHT
+    }
 
     private final SampleMecanumDrive drive;
     private final boolean fieldCentric;
@@ -65,6 +73,23 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         );
     }
 
+    public void driveDirection(DriveDirection direction, double inches){
+        switch (direction){
+
+            case FORWARD:
+                this.drive.forward(inches);
+                break;
+            case BACKWARD:
+                this.drive.reverse(inches);
+                break;
+            case LEFT:
+                this.drive.left(inches);
+                break;
+            case RIGHT:
+                this.drive.right(inches);
+                break;
+        }
+    }
     public void setDrivePower(Pose2d drivePower) {
         drive.setDrivePower(drivePower);
     }
@@ -88,8 +113,12 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         return drive.trajectoryBuilder(startPose, startHeading);
     }
 
+    public TrajectorySequenceBuilder trajectorySequenceBuilderSlow(Pose2d startPose){
+        return drive.trajectorySequenceBuilderSlow(startPose);
+    }
+
     public void followTrajectory(Trajectory trajectory) {
-        drive.followTrajectoryAsync(trajectory);
+        drive.followTrajectory(trajectory);
     }
 
     public boolean isBusy() {
