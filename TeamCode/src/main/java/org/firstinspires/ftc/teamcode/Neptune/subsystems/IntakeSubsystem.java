@@ -16,11 +16,13 @@ public class IntakeSubsystem extends SubsystemBase {
     private final Servo mIntakeLiftServo1;
     private final Servo mIntakeLiftServo2;
     private final Motor mIntakeMotor;
+    private final Motor mIntakeMotor2;
 
 
 
-    public IntakeSubsystem(Motor intakeMotor, Servo liftServo, Servo liftServo2 ){
+    public IntakeSubsystem(Motor intakeMotor, Motor intakeMotor2, Servo liftServo, Servo liftServo2 ){
         mIntakeMotor = intakeMotor;
+        mIntakeMotor2 = intakeMotor2;
         mIntakeLiftServo1 = liftServo;
         mIntakeLiftServo2 = liftServo2;
         mIntakeLiftServo1.setDirection(Servo.Direction.REVERSE);
@@ -45,12 +47,15 @@ public class IntakeSubsystem extends SubsystemBase {
         switch(intakeState) {
             case INTAKING:
                 mIntakeMotor.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_INTAKE_POWER);
+                mIntakeMotor2.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_INTAKE_POWER);
                 break;
             case EJECTING:
                 mIntakeMotor.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_EJECT_POWER);
+                mIntakeMotor2.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_EJECT_POWER);
                 break;
             case NEUTRAL:
                 mIntakeMotor.stopMotor();
+                mIntakeMotor2.stopMotor();
                 break;
         }
         switch(intakeLiftState){

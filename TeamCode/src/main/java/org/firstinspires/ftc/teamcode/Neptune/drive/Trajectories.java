@@ -30,7 +30,7 @@ public class Trajectories {
 
 
     private MecanumDriveSubsystem mDrive;
-    private Pose2d mStartPosition;
+    public Pose2d mStartPosition;
     private Neptune neptune;
 
     public Trajectories(Neptune neptune){
@@ -75,10 +75,16 @@ public class Trajectories {
         // these are for the red side, if we are blue we translate them below
         if (this.neptune.fieldPos == Neptune.FieldPos.LEFT) {
              initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
-             leftSpike = new Pose2d(45, 36, Math.toRadians(135));
-             centerSpike = new Pose2d(36, 34, Math.toRadians(90));
-             rightSpike = new Pose2d(36, 36, Math.toRadians(45));
+             leftSpike = new Pose2d(43, 36, Math.toRadians(135));
+             centerSpike = new Pose2d(36, 36, Math.toRadians(90));
+             rightSpike = new Pose2d(38, 38, Math.toRadians(45));
              //left
+            if (this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
+                initialSpike = new Pose2d(-12, -46, Math.toRadians(270));
+                rightSpike = new Pose2d(0, -35, Math.toRadians(315));
+                centerSpike = new Pose2d(-12, -32, Math.toRadians(270));
+                leftSpike = new Pose2d(-12, -29, Math.toRadians(225));
+            }
 
         } else  {
             //this is right
@@ -86,19 +92,26 @@ public class Trajectories {
             leftSpike = new Pose2d(0, 35, Math.toRadians(135));
             centerSpike = new Pose2d(-12, 32, Math.toRadians(90));
             rightSpike = new Pose2d(-12, 29, Math.toRadians(45));
+            if (this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
+                initialSpike = new Pose2d(-14, -48, Math.toRadians(270));
+                rightSpike = new Pose2d(45, -36, Math.toRadians(315));
+                centerSpike = new Pose2d(35, -33, Math.toRadians(270));
+                leftSpike = new Pose2d(34, -34, Math.toRadians(225));
+            }
         }
 
-        if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
-            initialSpike = translatePosePositionToBlue(initialSpike);
-            leftSpike = translatePosePositionToBlue(leftSpike);
-            centerSpike = translatePosePositionToBlue(centerSpike);
-            rightSpike = translatePosePositionToBlue(rightSpike);
 
-            Pose2d temp = new Pose2d(leftSpike.getX(), leftSpike.getY(), leftSpike.getHeading());
-            leftSpike = rightSpike;
-            rightSpike = temp;
-
-        }
+//        if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
+//            initialSpike = translatePosePositionToBlue(initialSpike);
+//            leftSpike = translatePosePositionToBlue(leftSpike);
+//            centerSpike = translatePosePositionToBlue(centerSpike);
+//            rightSpike = translatePosePositionToBlue(rightSpike);
+//
+//            Pose2d temp = new Pose2d(leftSpike.getX(), leftSpike.getY(), leftSpike.getHeading());
+//            leftSpike = rightSpike;
+//            rightSpike = temp;
+//
+//        }
 
 
         Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
@@ -133,14 +146,14 @@ public class Trajectories {
         //     The position we go to after locating the team prop, lining up to go to the correct spike mark
 
         //     The left, center, and right spike mark locations for RED
-        Pose2d leftBackdrop = new Pose2d(-38, 34, Math.toRadians(0));
-        Pose2d centerBackdrop = new Pose2d(-38, 41, Math.toRadians(0));
-        Pose2d rightBackdrop = new Pose2d(-38, 48, Math.toRadians(0));
+        Pose2d leftBackdrop = new Pose2d(-40, 34, Math.toRadians(0));
+        Pose2d centerBackdrop = new Pose2d(-40, 41, Math.toRadians(0));
+        Pose2d rightBackdrop = new Pose2d(-40, 48, Math.toRadians(0));
 
         if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
-            leftBackdrop = translatePosePositionToBlue(leftBackdrop);
+            rightBackdrop = translatePosePositionToBlue(leftBackdrop);
             centerBackdrop = translatePosePositionToBlue(centerBackdrop);
-            rightBackdrop = translatePosePositionToBlue(rightBackdrop);
+            leftBackdrop = translatePosePositionToBlue(rightBackdrop);
         }
 
         Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)

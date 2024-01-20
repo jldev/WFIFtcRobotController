@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Neptune.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 
@@ -25,7 +26,7 @@ public class DetectPawnCommand extends CommandBase {
         return Thread.currentThread().isInterrupted() || !visionSubsystem.getRecognitions().isEmpty();
     }
 
-    public Trajectories.PropPlacement getPropLocation(){
+    public Trajectories.PropPlacement getPropLocation(Neptune neptune){
         if (!visionSubsystem.getRecognitions().isEmpty()){
             // this is making an assumption of only one detection
             double[] location = visionSubsystem.getCenterOfRecognition(visionSubsystem.getRecognitions().get(0));
@@ -36,6 +37,9 @@ public class DetectPawnCommand extends CommandBase {
             } else {
                 return Trajectories.PropPlacement.CENTER;
             }
+        }
+        if (neptune.fieldPos == Neptune.FieldPos.LEFT){
+            return Trajectories.PropPlacement.RIGHT;
         }
         return Trajectories.PropPlacement.LEFT;
     }

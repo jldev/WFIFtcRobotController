@@ -66,6 +66,7 @@ public class Neptune {
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_1620),
+                (new MotorEx(opMode.hardwareMap, "intakeMotor2", Motor.GoBILDA.RPM_1620)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 new PIDMotor(opMode.hardwareMap, "vbarMotor", 537.6, 340));
@@ -83,7 +84,7 @@ public class Neptune {
         // driver button setup
         liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
-        outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
+        outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
         intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
         intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
         hangButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
@@ -108,7 +109,11 @@ public class Neptune {
 
         }
         if(ac == AllianceColor.BLUE){
-            this.startPos = Trajectories.translatePosePositionToBlue(this.startPos);
+            if (fp == FieldPos.RIGHT){
+                this.startPos = (new Pose2d(42, -62, Math.toRadians(270)));
+            }else {
+                this.startPos = (new Pose2d(-12, -62, Math.toRadians(270)));
+            }
         }
 
         drive.setPoseEstimate(this.startPos);

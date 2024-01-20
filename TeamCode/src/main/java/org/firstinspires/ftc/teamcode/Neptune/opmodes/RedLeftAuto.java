@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.SimpleDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
@@ -66,24 +67,25 @@ public class RedLeftAuto extends CommandOpMode {
 
         schedule(
                 detectPawnCommand.withTimeout(5000).whenFinished(() -> {
-                    Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation();
+                    Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation(neptune);
                     telemetry.addData("Pawn Location:", pawnLocation);
                     telemetry.update();
                     schedule( new SequentialCommandGroup(
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
                                     new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
                                     new WaitCommand(500),
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(56,60))),
+                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(55,60))),
                                    new WaitCommand(500),
-                                   new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(56,8))),
+                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD,10),
+//                                   new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(55,8))),
                                     new WaitCommand(500),
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24,12))),
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation)),
                                     new WaitCommand(500),
                                     new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
-                                    new WaitCommand(500),
+                                    new WaitCommand(1000),
                                     new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
-                                    new WaitCommand(500),
+                                    new WaitCommand(1000),
                                     new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
 
                             )
