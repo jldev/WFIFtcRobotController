@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
@@ -47,11 +48,18 @@ public class Teleop extends CommandOpMode {
         neptune.liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
         neptune.liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
 
-        neptune.hangButton.whenPressed(new InstantCommand(() -> {neptune.hangController.power(NeptuneConstants.NEPTUNE_HANG_MOTOR_POWER);}));
-        neptune.hangButton.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
+//        neptune.hangButton.whenPressed(new InstantCommand(() -> {neptune.hangController.power(NeptuneConstants.NEPTUNE_HANG_MOTOR_POWER);}));
+//        neptune.hangButton.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
 
-        neptune.hangButtonDown.whenPressed(new InstantCommand(() -> {neptune.hangController.power(-NeptuneConstants.NEPTUNE_HANG_MOTOR_POWER);}));
-        neptune.hangButtonDown.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
+        neptune.hangButtonUp.whileHeld(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.UP);}));
+        neptune.hangButtonUp.whenReleased(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.STOPPED);}));
+
+        neptune.hangButtonDown.whileHeld(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.DOWN);}));
+        neptune.hangButtonDown.whenReleased(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.STOPPED);}));
+
+        neptune.hangArmButtonUp.whenPressed(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.HANGING);}));
+        neptune.hangArmButtonDown.whenPressed(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.REST);}));
+
 
         neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));
         neptune.outtakeButton.whenReleased(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED));
