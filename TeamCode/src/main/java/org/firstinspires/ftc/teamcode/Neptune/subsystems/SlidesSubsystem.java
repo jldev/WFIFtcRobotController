@@ -14,6 +14,7 @@ import org.opencv.dnn.Net;
 public class SlidesSubsystem extends SubsystemBase {
     private int mSlideMotorTargetPosition = 0;
     private int mVBarMotorTargetPosition = 0;
+    private int mSlidePositionOffset = 0;
 
     public enum SlidesPosition {
         POSITION_1,
@@ -61,16 +62,17 @@ public class SlidesSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
+
         if(!mSlideMotor.atTargetPosition()){
             mSlideMotor.set(NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
         } else {
             mSlideMotor.set(0);
             switch (mSlidePosition) {
                 case POSITION_1:
-                    mSlideMotorTargetPosition = NeptuneConstants.NEPTUNE_SLIDE_POS1;
+                    mSlideMotorTargetPosition = NeptuneConstants.NEPTUNE_SLIDE_POS1 + mSlidePositionOffset;
                     break;
                 case POSITION_2:
-                    mSlideMotorTargetPosition = NeptuneConstants.NEPTUNE_SLIDE_POS2;
+                    mSlideMotorTargetPosition = NeptuneConstants.NEPTUNE_SLIDE_POS2 + mSlidePositionOffset;
                     break;
                 case HOME_POS:
                     // home we have to wait for vbar to come down
@@ -79,7 +81,7 @@ public class SlidesSubsystem extends SubsystemBase {
                       }
                     break;
             }
-            mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
+            mSlideMotor.setTargetPosition(mSlideMotorTargetPosition + mSlidePositionOffset);
         }
 
         if(!mVBarMotor.atTargetPosition()) {
@@ -111,6 +113,12 @@ public class SlidesSubsystem extends SubsystemBase {
             mSlidePosition = SlidesPosition.HOME_POS;
             mVBarMotor.setTargetPosition(NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_DOWN);
         }
+        mSlidePositionOffset = 0;
+    }
+
+    public void UpdateOffset(int by)
+    {
+        mSlidePositionOffset += by * NeptuneConstants.NEPTUNE_SLIDE_OFFSET_CHANGE_BY;
     }
 
     public boolean isBusy (){

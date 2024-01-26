@@ -13,8 +13,10 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -51,6 +53,8 @@ public class Neptune {
     public final GamepadButton hangArmButtonUp;
     public final GamepadButton hangArmButtonDown;
     public final GamepadButton intakeReverseButton;
+    public final GamepadButton slideOffsetIncrease;
+    public final GamepadButton slideOffsetDecrease;
     public PIDSlidesController hangController;
     public Pose2d startPos;
 
@@ -93,18 +97,19 @@ public class Neptune {
         opMode.register(hang);
 
         // driver button setup
+        intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
+        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
+        hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
+        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+
+        // gunner button setup
         liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
         outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
-        intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
-        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
-        hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
-        hangArmButtonUp = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
-        hangArmButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
-        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
-
-        // gunner button setup
-
+        hangArmButtonUp = new GamepadButton(gunnerOp, GamepadKeys.Button.LEFT_BUMPER);     //  LB || DPAD LEFT
+        hangArmButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.RIGHT_BUMPER);     //  LB || DPAD RIGHT
+        slideOffsetIncrease = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
+        slideOffsetDecrease = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
     }
 
 

@@ -55,8 +55,12 @@ public class HangSubsystem extends SubsystemBase {
                 break;
 
             case REST:
-                mHangServo.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
-                mHangServo2.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
+                mHangServo.close();
+                mHangServo2.close();
+//                mHangServo.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
+//                mHangServo2.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
+
+
                 break;
         }
     }

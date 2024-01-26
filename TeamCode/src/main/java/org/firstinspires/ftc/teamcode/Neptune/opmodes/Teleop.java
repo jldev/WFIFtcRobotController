@@ -57,8 +57,11 @@ public class Teleop extends CommandOpMode {
         neptune.hangButtonDown.whileHeld(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.DOWN);}));
         neptune.hangButtonDown.whenReleased(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.STOPPED);}));
 
-        neptune.hangArmButtonUp.whenPressed(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.HANGING);}));
-        neptune.hangArmButtonDown.whenPressed(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.REST);}));
+        neptune.hangArmButtonUp.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.HANGING);}));
+        neptune.hangArmButtonDown.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.REST);}));
+
+        neptune.slideOffsetIncrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(1);}));
+        neptune.slideOffsetDecrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(-1);}));
 
 
         neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));
