@@ -26,35 +26,31 @@ import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.SimpleLinearLift;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
-import org.firstinspires.ftc.teamcode.Neptune.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.PIDMotor;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 
+import java.util.function.BooleanSupplier;
+
 public class Neptune {
     public final MecanumDriveSubsystem drive;
     public final OutakeSubsystem outtake;
     public final IntakeSubsystem intake;
     public final SlidesSubsystem slides;
-    public final HangSubsystem hang;
     public final GamepadEx driverOp;
     public final GamepadEx gunnerOp;
-    public final Servo hangServo;
-    public final Servo hangServo2;
-    public final MotorEx hangMotor;
+    private final MotorEx hangMotor;
     public final GamepadButton liftButton;
     public final GamepadButton liftButtonDown;
     public final GamepadButton outtakeButton;
     public final GamepadButton intakeliftbutton;
-    public final GamepadButton hangButtonUp;
+    public final GamepadButton hangButton;
     public final GamepadButton hangButtonDown;
-    public final GamepadButton hangArmButtonUp;
-    public final GamepadButton hangArmButtonDown;
     public final GamepadButton intakeReverseButton;
-    public final GamepadButton slideOffsetIncrease;
-    public final GamepadButton slideOffsetDecrease;
+    private final Trigger leftTrigger;
+    private final Trigger rightTrigger;
     public PIDSlidesController hangController;
     public Pose2d startPos;
 
@@ -76,40 +72,40 @@ public class Neptune {
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_1620),
-//                (new MotorEx(opMode.hardwareMap, "intakeMotor2", Motor.GoBILDA.RPM_1620)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 new PIDMotor(opMode.hardwareMap, "vbarMotor", 537.6, 340));
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
-        hangServo = opMode.hardwareMap.get(Servo.class, "hangServo1");
-        hangServo2 = opMode.hardwareMap.get(Servo.class, "hangServo2");
-        hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
-        hang = new HangSubsystem(hangServo,hangServo2,hangMotor);
-
-//        hangController = new PIDSlidesController(new SimpleLinearLift(hangServo));
+        hangMotor = new MotorEx(opMode.hardwareMap, "hangMotor", Motor.GoBILDA.RPM_312);
+        hangController = new PIDSlidesController(new SimpleLinearLift(hangMotor));
 
         // register subsystems
         opMode.register(drive);
         opMode.register(outtake);
         opMode.register(intake);
         opMode.register(slides);
-        opMode.register(hang);
 
         // driver button setup
-        intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
-        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
-        hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
-        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
-
-        // gunner button setup
         liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
-        outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
-        hangArmButtonUp = new GamepadButton(gunnerOp, GamepadKeys.Button.LEFT_BUMPER);     //  LB || DPAD LEFT
-        hangArmButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.RIGHT_BUMPER);     //  LB || DPAD RIGHT
-        slideOffsetIncrease = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
-        slideOffsetDecrease = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
+        outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
+        intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
+        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
+        hangButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
+        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+
+
+        // gunner button setup
+        TriggerReader reader = new TriggerReader(gunnerOp, GamepadKeys.Trigger.LEFT_TRIGGER, 100);
+
+        BooleanSupplier triggerDown = () -> reader.isDown();
+        BooleanSupplier triggerUp = () -> !reader.isDown();
+
+        leftTrigger = new Trigger(triggerDown);
+        rightTrigger = new Trigger(triggerUp);
+
+
     }
 
 
@@ -127,11 +123,7 @@ public class Neptune {
 
         }
         if(ac == AllianceColor.BLUE){
-            if (fp == FieldPos.RIGHT){
-                this.startPos = (new Pose2d(42, -62, Math.toRadians(270)));
-            }else {
-                this.startPos = (new Pose2d(-12, -62, Math.toRadians(270)));
-            }
+            this.startPos = Trajectories.translatePosePositionToBlue(this.startPos);
         }
 
         drive.setPoseEstimate(this.startPos);
