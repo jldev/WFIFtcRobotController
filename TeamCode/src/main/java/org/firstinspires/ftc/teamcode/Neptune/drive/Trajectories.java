@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Neptune.drive;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
@@ -73,7 +72,7 @@ public class Trajectories {
         Pose2d rightSpike;
 
         // these are for the red side, if we are blue we translate them below
-        if (this.neptune.fieldPos == Neptune.FieldPos.LEFT) {
+        if (this.neptune.fieldPos == Neptune.FieldPos.AU) {
              initialSpike = new Pose2d(-12, 46, Math.toRadians(90));
              leftSpike = new Pose2d(43, 36, Math.toRadians(135));
              centerSpike = new Pose2d(36, 36, Math.toRadians(90));

@@ -1,17 +1,7 @@
 package org.firstinspires.ftc.teamcode.Neptune;
 
-import static org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive.getAccelerationConstraint;
-import static org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive.getVelocityConstraint;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.TRACK_WIDTH;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -19,7 +9,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
@@ -55,8 +44,8 @@ public class Neptune {
     public Pose2d startPos;
 
     public enum FieldPos {
-        LEFT,
-        RIGHT
+        AU,
+        BD
     }
 
     public FieldPos fieldPos;
@@ -114,11 +103,11 @@ public class Neptune {
         this.fieldPos = fp;
         this.allianceColor = ac;
 
-        if (fp == FieldPos.RIGHT){
+        if (fp == FieldPos.BD){
             this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
 
         }
-        else if (fp == FieldPos.LEFT){
+        else if (fp == FieldPos.AU){
             this.startPos = (new Pose2d(42, 62, Math.toRadians(90)));
 
         }

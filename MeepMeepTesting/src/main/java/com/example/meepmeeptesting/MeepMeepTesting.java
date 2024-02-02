@@ -34,12 +34,55 @@ public class MeepMeepTesting {
 
         Pose2d robotOffset = new Pose2d(8,8, Math.toRadians(270));
 
-        Pose2d redAUStart = new Pose2d(-12, 62, Math.toRadians(90));
-        Pose2d redBDStart = new Pose2d(-12, 62, Math.toRadians(90));
-//        Pose2d blueBackStageStart = new Pose2d(-12, -62, Math.toRadians(270));
-//        Pose2d blueFrontStageStart = new Pose2d(35, -62, Math.toRadians(270));
+        //Start locations
+        Pose2d AUStart = new Pose2d(-12, 62, Math.toRadians(90));
+        Pose2d BDStart = new Pose2d(-12, 62, Math.toRadians(90));
 
-        Pose2d start = redAUStart;
+        //Spike locations for Backdrop side
+        Pose2d BDCenterSpike =new Pose2d(-24, 24, Math.toRadians(180)); //complete
+        Pose2d BDLeftSpike = new Pose2d(-12, 32, Math.toRadians(180)); //complete
+        Pose2d BDRightSpike = new Pose2d(-36, 32, Math.toRadians(180)); //complete
+        //Spike locations for Audience side
+        Pose2d AUCenterSpike =new Pose2d(-12, 32, Math.toRadians(90));
+        Pose2d AULeftSpike = new Pose2d(-7, 34, Math.toRadians(135));
+        Pose2d AURightSpike = new Pose2d(-18, 34, Math.toRadians(45));
+
+        //Backdrop locations
+        Pose2d CenterBackdrop = new Pose2d(-48, 36, Math.toRadians(0)); //complete
+        Pose2d LeftBackdrop = new Pose2d(-48, 30, Math.toRadians(0)); //complete
+        Pose2d RightBackdrop = new Pose2d(-48, 42, Math.toRadians(0)); //complete
+
+        //Stage midpoint locations
+        Pose2d AUIn = new Pose2d(48, 12, Math.toRadians(0)); // complete
+        Pose2d AUOut = new Pose2d(48, 60, Math.toRadians(0));
+        Pose2d BDIn = new Pose2d(-24, 12, Math.toRadians(0)); //complete
+        Pose2d BDOut = new Pose2d(-24, 60, Math.toRadians(0));
+
+        //Base points, where we need to go
+        Pose2d startOrigin = BDStart;
+          //Both left or right
+        Pose2d spikeOrigin = BDLeftSpike;
+        Pose2d backdropOrigin = LeftBackdrop;
+          //Both in or out
+        Pose2d AUInOutOrigin = AUOut;
+        Pose2d BDInOutOrigin = BDOut;
+
+        //If we're on the blue or red alliance
+        int redBlue = 1; //  red = 1 | blue = -1
+        //Translates
+        if(redBlue == -1)
+        {
+            //Flips left & right if we're on blue
+            if(spikeOrigin == BDRightSpike)
+            {spikeOrigin = BDLeftSpike; backdropOrigin = LeftBackdrop;}
+            else {spikeOrigin = BDRightSpike; backdropOrigin = RightBackdrop;}
+        }
+        Pose2d start = new Pose2d(startOrigin.getX(), redBlue * startOrigin.getY(), startOrigin.getHeading());
+        Pose2d spike = new Pose2d(spikeOrigin.getX(), redBlue * spikeOrigin.getY(), spikeOrigin.getHeading());
+        Pose2d backdrop = new Pose2d(backdropOrigin.getX(), redBlue * backdropOrigin.getY(), backdropOrigin.getHeading());
+        Pose2d AUInOut = new Pose2d(AUInOutOrigin.getX(), redBlue * AUInOutOrigin.getY(), AUInOutOrigin.getHeading());
+        Pose2d BDInOut = new Pose2d(BDInOutOrigin.getX(), redBlue * BDInOutOrigin.getY(), BDInOutOrigin.getHeading());
+
 
         RoadRunnerBotEntity myBot = new WFIBotBuilder(meepMeep)
                 .setStartPose(start)
@@ -47,40 +90,6 @@ public class MeepMeepTesting {
                 .setConstraints(MAX_VEL, MAX_ACCEL, MAX_ANG_VEL, MAX_ANG_ACCEL, TRACK_WIDTH)
                 .build();
 
-
-
-        Pose2d redCenterBackdrop = new Pose2d(-48, 36, Math.toRadians(0)); //complete
-        Pose2d redLeftBackdrop = new Pose2d(-48, 30, Math.toRadians(0)); //complete
-        Pose2d redRightBackdrop = new Pose2d(-48, 42, Math.toRadians(0)); //complete
-
-//        Pose2d blueCenterBackdrop = new Pose2d(-50, -36, Math.toRadians(180));
-//        Pose2d blueLeftBackdrop = new Pose2d(-40, -48, Math.toRadians(180)); //this is set
-//        Pose2d blueRightBackdrop = new Pose2d(-40, -30, Math.toRadians(180));
-
-        Pose2d redBDCenterSpike =new Pose2d(-24, 24, Math.toRadians(180)); //complete
-        Pose2d redBDLeftSpike = new Pose2d(-12, 32, Math.toRadians(180)); //complete
-        Pose2d redBDRightSpike = new Pose2d(-36, 32, Math.toRadians(180)); //complete? (does 180 over 12 inches)
-        Pose2d redAUCenterSpike =new Pose2d(-12, 32, Math.toRadians(90));
-        Pose2d redAULeftSpike = new Pose2d(-7, 34, Math.toRadians(135));
-        Pose2d redAURightSpike = new Pose2d(-18, 34, Math.toRadians(45));
-
-        Pose2d redAUIn = new Pose2d(-12, -22, Math.toRadians(180));
-        Pose2d redAUOut = new Pose2d(-12, 12, Math.toRadians(180));
-        Pose2d redBDIn = new Pose2d(-12, 10, Math.toRadians(180));
-        Pose2d redBDOut = new Pose2d(-36, -10, Math.toRadians(180));
-
-//        Pose2d blueBackStageCenterSpike =new Pose2d(-12, -32, Math.toRadians(90+180));
-//        Pose2d blueBackStageLeftSpike = new Pose2d(-18, -34, Math.toRadians(135+180));
-//        Pose2d blueBackStageRightSpike = new Pose2d(-7, -34, Math.toRadians(45+180));
-//
-//        Pose2d blueFrontStageCenterSpike =new Pose2d(36, -24, Math.toRadians(90));
-//        Pose2d blueFrontStageLeftSpike = new Pose2d(32, -29, Math.toRadians(180)); //this is set
-//        Pose2d blueFrontStageRightSpike = new Pose2d(46, -29, Math.toRadians(0));
-
-
-        Pose2d backdrop = redRightBackdrop;
-        Pose2d spike = redBDCenterSpike;
-        Pose2d inOut = redBDIn;
 
 //        backdrop.minus(robotOffset);
 //        spike.minus(robotOffset);
@@ -112,13 +121,21 @@ public class MeepMeepTesting {
                 .lineToLinearHeading(backdrop)
                 .build();
 
-        Trajectory backStageStagingOut = new TrajectoryBuilder(backdropTraj.end(), true, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
-                .lineToSplineHeading(new Pose2d(-36, -10, Math.toRadians(180)))
+        Trajectory BDInOutTraj = new TrajectoryBuilder(backdrop, false, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(BDInOut)
                 .build();
 
-        Trajectory leftPixelStack = new TrajectoryBuilder(backStageStagingOut.end(), true, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
-                .lineToSplineHeading(new Pose2d(59, -10, Math.toRadians(180)))
+        Trajectory AUInOutTraj = new TrajectoryBuilder(BDInOut, false, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(AUInOut)
                 .build();
+
+//        Trajectory backStageStagingOut = new TrajectoryBuilder(backdropTraj.end(), true, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+//                .lineToSplineHeading(new Pose2d(-36, -10, Math.toRadians(180)))
+//                .build();
+
+//        Trajectory leftPixelStack = new TrajectoryBuilder(backStageStagingOut.end(), true, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+//                .lineToSplineHeading(new Pose2d(59, -10, Math.toRadians(180)))
+//                .build();
 
 
 
@@ -132,6 +149,8 @@ public class MeepMeepTesting {
                         .addTrajectory(backdropTraj)
 //                        .addTrajectory(backStageStagingOut)
 //                        .addTrajectory(leftPixelStack)
+                        .addTrajectory(BDInOutTraj)
+                        .addTrajectory(AUInOutTraj)
                         .build()
         );
 
