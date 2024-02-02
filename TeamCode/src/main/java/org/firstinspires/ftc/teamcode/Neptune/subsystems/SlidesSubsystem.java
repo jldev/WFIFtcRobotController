@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
@@ -32,11 +33,11 @@ public class SlidesSubsystem extends SubsystemBase {
     VBarPosition mVBarPosition;
 
     private final MotorEx mSlideMotor;
-    private final PIDMotor mVBarMotor;
+    private final Servo mOuttakeServo;
 
-    public SlidesSubsystem(MotorEx slideMotor, PIDMotor vBarMotor) {
+    public SlidesSubsystem(MotorEx slideMotor, Servo outtakeservo) {
         mSlideMotor = slideMotor;
-        mVBarMotor = vBarMotor;
+        mOuttakeServo = outtakeservo;
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
         mSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         mSlideMotor.setPositionCoefficient(NeptuneConstants.NEPTUNE_SLIDE_MOTOR_POS_COEFFICIENT);
@@ -46,15 +47,8 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlidePosition = SlidesPosition.HOME_POS;
         mSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         mSlideMotor.encoder.setDirection(Motor.Direction.REVERSE);
-        mVBarMotor.setRunMode(MotorEx.RunMode.PositionControl);
-        mVBarMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-//        mVBarMotor.setPositionCoefficient(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT);
-        mVBarMotor.setPIDCoefficients(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_P,
-                NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_I,
-                NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_COEFFICIENT_D);
-        mVBarMotor.setPositionTolerance(NeptuneConstants.NEPTUNE_SLIDE_VBAR_POS_TOLERANCE);
-        mVBarMotor.resetEncoder();
-        mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
+
+
 
         mVBarPosition = VBarPosition.DOWN;
 
@@ -76,31 +70,26 @@ public class SlidesSubsystem extends SubsystemBase {
                     break;
                 case HOME_POS:
                     // home we have to wait for vbar to come down
-                    if (mVBarMotor.atTargetPosition() && mVBarPosition == VBarPosition.DOWN) {
-                        mSlideMotorTargetPosition = 0;
-                      }
+//                    if (mVBarPosition == VBarPosition.DOWN) {
+//                        mSlideMotorTargetPosition = 0;
+//                      }
                     break;
             }
             mSlideMotor.setTargetPosition(mSlideMotorTargetPosition + mSlidePositionOffset);
         }
 
-        if(!mVBarMotor.atTargetPosition()) {
-             mVBarMotor.set(NeptuneConstants.MAX_VBAR_MOTOR_POWER);
-        } else {
-            mVBarMotor.set(0);
             switch (mVBarPosition) {
                 case UP:
                     //up we have to wait for the slides to extend
                     if (mSlideMotor.atTargetPosition() && mSlidePosition != SlidesPosition.HOME_POS) {
-                        mVBarMotorTargetPosition = NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_UP;
+                        mOuttakeServo.setPosition(NeptuneConstants.NEPTUNE_OUTAKE_TARGET_POSITION_UP);
                     }
                     break;
                 case DOWN:
-                    mVBarMotorTargetPosition = NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_DOWN;
+                    mOuttakeServo.setPosition(NeptuneConstants.NEPTUNE_OUTAKE_TARGET_POSITION_DOWN);
                     break;
             }
-            mVBarMotor.setTargetPosition(mVBarMotorTargetPosition);
-        }
+
     }
 
     public void moveToPosition(SlidesPosition position){
@@ -111,9 +100,20 @@ public class SlidesSubsystem extends SubsystemBase {
         if(position == SlidesPosition.HOME_POS){
             mVBarPosition = VBarPosition.DOWN;
             mSlidePosition = SlidesPosition.HOME_POS;
-            mVBarMotor.setTargetPosition(NeptuneConstants.NEPTUNE_VBAR_MOTOR_TARGET_POSITION_DOWN);
+            mOuttakeServo.setPosition(NeptuneConstants.NEPTUNE_OUTAKE_TARGET_POSITION_DOWN);
+            try {
+                wait(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         mSlidePositionOffset = 0;
+    }
+
+    public void StopMotorResetEncoder() {
+        mSlideMotor.encoder.reset();
+        mSlidePosition = SlidesPosition.HOME_POS;
+
     }
 
     public void UpdateOffset(int by)
@@ -139,8 +139,7 @@ public class SlidesSubsystem extends SubsystemBase {
         telemetry.addLine(String.format("target_position %d", mSlideMotorTargetPosition));
 
         telemetry.addLine(String.format("vbar_setting - %s", mVBarPosition.toString()));
-        telemetry.addLine(String.format("vbarcurrentpos - %d", mVBarMotor.getCurrentPosition()));
-        telemetry.addLine(String.format("vbarcurrentpwr %.2f", mVBarMotor.motor.getPower()));
+        telemetry.addLine(String.format("vbarcurrentpwr %.2f", mOuttakeServo.getPosition()));
         telemetry.addLine(String.format("vbarcurrentpos %d", mVBarMotorTargetPosition));
     }
 }

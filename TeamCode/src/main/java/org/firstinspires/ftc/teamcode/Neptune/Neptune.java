@@ -36,6 +36,7 @@ public class Neptune {
     public final OutakeSubsystem outtake;
     public final IntakeSubsystem intake;
     public final SlidesSubsystem slides;
+
     public final HangSubsystem hang;
     public final GamepadEx driverOp;
     public final GamepadEx gunnerOp;
@@ -51,6 +52,8 @@ public class Neptune {
     public final GamepadButton hangArmButtonUp;
     public final GamepadButton hangArmButtonDown;
     public final GamepadButton intakeReverseButton;
+
+    public final SwitchReader magSwitcBbutton;
     public PIDSlidesController hangController;
     public Pose2d startPos;
 
@@ -71,11 +74,11 @@ public class Neptune {
 
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
-        intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", Motor.GoBILDA.RPM_1620),
-//                (new MotorEx(opMode.hardwareMap, "intakeMotor2", Motor.GoBILDA.RPM_1620)),
+        intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
+                (new MotorEx(opMode.hardwareMap, "intakeMotor2", 537.6,340)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
-                new PIDMotor(opMode.hardwareMap, "vbarMotor", 537.6, 340));
+                opMode.hardwareMap.get(Servo.class, "outtakeServo"));
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
         hangServo = opMode.hardwareMap.get(Servo.class, "hangServo1");
@@ -98,10 +101,14 @@ public class Neptune {
         outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
         intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
         intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
-        hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
+        hangButtonUp = new GamepadButton(gunnerOp, GamepadKeys.Button.LEFT_BUMPER);
         hangArmButtonUp = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
         hangArmButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
         hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
+
+
+        magSwitcBbutton = new SwitchReader(opMode.hardwareMap);
+
 
         // gunner button setup
 

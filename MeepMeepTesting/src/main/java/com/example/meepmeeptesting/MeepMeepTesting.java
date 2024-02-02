@@ -140,7 +140,7 @@ public class MeepMeepTesting {
 
 
         try {
-            File pathToFile = new File("C:\\Users\\Josh\\code\\WFIFtcRobotController\\MeepMeepTesting\\src\\main\\java\\com\\example\\meepmeeptesting\\field-2023-official.png");
+            File pathToFile = new File(".\\MeepMeepTesting\\src\\main\\java\\com\\example\\meepmeeptesting\\field-2023-official.png");
             Image image = ImageIO.read(pathToFile);
             meepMeep.setBackground(image)
                     .setDarkMode(true)

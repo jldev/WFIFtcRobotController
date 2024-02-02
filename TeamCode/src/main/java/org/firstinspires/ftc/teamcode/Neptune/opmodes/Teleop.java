@@ -48,6 +48,8 @@ public class Teleop extends CommandOpMode {
         neptune.liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
         neptune.liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
 
+//        neptune.magSwitcBbutton.whenPressed()
+
 //        neptune.hangButton.whenPressed(new InstantCommand(() -> {neptune.hangController.power(NeptuneConstants.NEPTUNE_HANG_MOTOR_POWER);}));
 //        neptune.hangButton.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
 
@@ -60,8 +62,8 @@ public class Teleop extends CommandOpMode {
         neptune.hangArmButtonUp.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.HANGING);}));
         neptune.hangArmButtonDown.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.REST);}));
 
-        neptune.slideOffsetIncrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(1);}));
-        neptune.slideOffsetDecrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(-1);}));
+//        neptune.slideOffsetIncrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(1);}));
+//        neptune.slideOffsetDecrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(-1);}));
 
 
         neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));
