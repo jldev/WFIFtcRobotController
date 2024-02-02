@@ -38,7 +38,7 @@ public class DetectPawnCommand extends CommandBase {
                 return Trajectories.PropPlacement.CENTER;
             }
         }
-        if (neptune.fieldPos == Neptune.FieldPos.LEFT){
+        if (neptune.fieldPos == Neptune.FieldPos.AU){
             return Trajectories.PropPlacement.RIGHT;
         }
         return Trajectories.PropPlacement.LEFT;

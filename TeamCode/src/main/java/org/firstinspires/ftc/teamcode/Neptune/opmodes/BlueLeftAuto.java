@@ -1,42 +1,23 @@
 package org.firstinspires.ftc.teamcode.Neptune.opmodes;
 
-import android.util.Size;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilderKt;
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.TrajectoryFollowerCommand;
-import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
-import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-
-import java.util.HashMap;
-import java.util.List;
 
 @Config
 @Autonomous(group = "drive", name = "Blue Left Auto")
@@ -57,7 +38,7 @@ public class BlueLeftAuto extends CommandOpMode {
     @Override
     public void initialize() {
         neptune = new Neptune(this);
-        neptune.setStartPosition(Neptune.FieldPos.LEFT, Neptune.AllianceColor.BLUE);
+        neptune.setStartPosition(Neptune.FieldPos.AU, Neptune.AllianceColor.BLUE);
 //        drive = new MecanumDriveSubsystem(new SampleMecanumDrive(hardwareMap), false);
         trajectories = new Trajectories(neptune);
 
