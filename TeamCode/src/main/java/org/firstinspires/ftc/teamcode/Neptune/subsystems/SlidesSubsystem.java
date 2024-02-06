@@ -17,6 +17,16 @@ public class SlidesSubsystem extends SubsystemBase {
     private int mVBarMotorTargetPosition = 0;
     private int mSlidePositionOffset = 0;
 
+    public enum SlideSubsystemState {
+        AUTO,
+        MANUAL
+    }
+
+    public enum ManualControlDirection{
+        UP,
+        DOWN,
+        OFF
+    }
     public enum SlidesPosition {
         POSITION_1,
         POSITION_2,
@@ -28,6 +38,7 @@ public class SlidesSubsystem extends SubsystemBase {
         DOWN
     }
 
+    SlideSubsystemState mState;
     SlidesPosition mSlidePosition;
     ;
     VBarPosition mVBarPosition;
@@ -47,16 +58,11 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlidePosition = SlidesPosition.HOME_POS;
         mSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         mSlideMotor.encoder.setDirection(Motor.Direction.REVERSE);
-
-
-
         mVBarPosition = VBarPosition.DOWN;
-
+        mState = SlideSubsystemState.AUTO;
     }
 
-    @Override
-    public void periodic(){
-
+    public void autoState(){
         if(!mSlideMotor.atTargetPosition()){
             mSlideMotor.set(NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
         } else {
@@ -78,21 +84,49 @@ public class SlidesSubsystem extends SubsystemBase {
             mSlideMotor.setTargetPosition(mSlideMotorTargetPosition + mSlidePositionOffset);
         }
 
-            switch (mVBarPosition) {
-                case UP:
-                    //up we have to wait for the slides to extend
-                    if (mSlideMotor.atTargetPosition() && mSlidePosition != SlidesPosition.HOME_POS) {
-                        mOuttakeServo.setPosition(NeptuneConstants.NEPTUNE_OUTAKE_TARGET_POSITION_UP);
-                    }
-                    break;
-                case DOWN:
-                    mOuttakeServo.setPosition(NeptuneConstants.NEPTUNE_OUTAKE_TARGET_POSITION_DOWN);
-                    break;
-            }
+        switch (mVBarPosition) {
+            case UP:
+                //up we have to wait for the slides to extend
+                if (mSlideMotor.atTargetPosition() && mSlidePosition != SlidesPosition.HOME_POS) {
+                    mOuttakeServo.setPosition(NeptuneConstants.NEPTUNE_OUTAKE_TARGET_POSITION_UP);
+                }
+                break;
+            case DOWN:
+                mOuttakeServo.setPosition(NeptuneConstants.NEPTUNE_OUTAKE_TARGET_POSITION_DOWN);
+                break;
+        }
+    }
+
+    public void manualState(){
 
     }
 
+    @Override
+    public void periodic(){
+        switch (mState){
+            case AUTO:
+                autoState();
+                break;
+            case MANUAL:
+                manualState();
+                break;
+        }
+    }
+
+    private void changeSlideState(SlideSubsystemState newState){
+        if (mState != newState){ //we need to change the state
+            if (newState == SlideSubsystemState.AUTO){
+                mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+            } else {
+                //we are changing to MANUAL
+                mSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+            }
+        }
+        mState = newState;
+    }
     public void moveToPosition(SlidesPosition position){
+        // anytime the user wants to move to a position we need to be in auto state
+        changeSlideState(SlideSubsystemState.AUTO);
         if (position == SlidesPosition.POSITION_1){
             mVBarPosition = VBarPosition.UP;
             mSlidePosition = SlidesPosition.POSITION_1;
@@ -110,12 +144,27 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlidePositionOffset = 0;
     }
 
-    public void StopMotorResetEncoder() {
+    public void stopMotorResetEncoder() {
         mSlideMotor.encoder.reset();
         mSlidePosition = SlidesPosition.HOME_POS;
-
     }
 
+    public void manualSlideControl(ManualControlDirection direction){
+        // anytime the user want to manual control we need to be in the manual state
+        changeSlideState(SlideSubsystemState.MANUAL);
+        switch (direction){
+            case UP:
+                mSlideMotor.set(NeptuneConstants.SLIDE_MOTOR_MANUAL_POWER);
+                break;
+            case DOWN:
+                mSlideMotor.set(-NeptuneConstants.SLIDE_MOTOR_MANUAL_POWER);
+                break;
+            case OFF:
+                mSlideMotor.set(0);
+                break;
+        }
+
+    }
     public void UpdateOffset(int by)
     {
         mSlidePositionOffset += by * NeptuneConstants.NEPTUNE_SLIDE_OFFSET_CHANGE_BY;

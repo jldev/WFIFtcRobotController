@@ -35,24 +35,23 @@ public class Teleop extends CommandOpMode {
         neptune = new Neptune(this);
 
         schedule(new RunCommand(() -> {
-//            Pose2d poseEstimate = neptune.drive.getPoseEstimate();
-//            telemetry.addData("x", poseEstimate.getX());
-//            telemetry.addData("y", poseEstimate.getY());
-//            telemetry.addData("heading", poseEstimate.getHeading());
-//            telemetry.addData("slide_position", neptune.slides.getSlidePosition());
-//            telemetry.update();
+            //neptune.drive.addTelemetry(telemetry);
             neptune.slides.addTelemetry(telemetry);
             telemetry.update();
         }));
 
+        // Lift System Buttons
         neptune.liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
         neptune.liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
 
-//        neptune.magSwitcBbutton.whenPressed()
+        neptune.manualSlideButtonUp.whileHeld(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.UP);}));
+        neptune.manualSlideButtonUp.whenReleased(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.OFF);}));
+        neptune.manualSlideButtonDown.whileHeld(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.DOWN);}));
+        neptune.manualSlideButtonUp.whenReleased(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.OFF);}));
+        //neptune.slideOffsetIncrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(1);}));
+        //neptune.slideOffsetDecrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(-1);}));
 
-//        neptune.hangButton.whenPressed(new InstantCommand(() -> {neptune.hangController.power(NeptuneConstants.NEPTUNE_HANG_MOTOR_POWER);}));
-//        neptune.hangButton.whenReleased(new InstantCommand(() -> {neptune.hangController.power(0);}));
-
+        // Hang System Buttons
         neptune.hangButtonUp.whileHeld(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.UP);}));
         neptune.hangButtonUp.whenReleased(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.STOPPED);}));
 
@@ -62,22 +61,21 @@ public class Teleop extends CommandOpMode {
         neptune.hangArmButtonUp.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.HANGING);}));
         neptune.hangArmButtonDown.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.REST);}));
 
-//        neptune.slideOffsetIncrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(1);}));
-//        neptune.slideOffsetDecrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(-1);}));
-
-
+        // Cowbell Outtake Button
         neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));
         neptune.outtakeButton.whenReleased(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED));
-        //neptune.outtakeButton.whenPressed(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED));
-        //neptune.outtakeButton.whenReleased(new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.CLOSED));
 
+        // Intake Buttons
         neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
         neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
 
         neptune.intakeReverseButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.EJECTING));
+
+        // Drive control
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
                 neptune.drive, () -> -neptune.driverOp.getLeftY(),
-                neptune.driverOp::getLeftX, neptune.driverOp::getRightX
+                neptune.driverOp::getLeftX, neptune.driverOp::getRightX,
+                neptune.driveBrakeTrigger::get
         );
         neptune.drive.setDefaultCommand(driveCommand);
 

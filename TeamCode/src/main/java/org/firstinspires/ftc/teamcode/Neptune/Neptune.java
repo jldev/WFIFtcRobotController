@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Neptune;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -42,8 +44,10 @@ public class Neptune {
     public final GamepadButton hangArmButtonDown;
     public final GamepadButton intakeReverseButton;
 
-    public final SwitchReader magSwitcBbutton;
-    public PIDSlidesController hangController;
+    public final SwitchReader magSwitchButton;
+    public final GamepadTriggerAsButton manualSlideButtonUp;
+    public final GamepadTriggerAsButton manualSlideButtonDown;
+    public final GamepadTrigger driveBrakeTrigger;
     public Pose2d startPos;
 
     public enum FieldPos {
@@ -85,22 +89,23 @@ public class Neptune {
         opMode.register(hang);
 
         // driver button setup
+        intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
+        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
+        driveBrakeTrigger = new GamepadTrigger(driverOp, GamepadKeys.Trigger.LEFT_TRIGGER);
+        // gunner button setup
         liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
         outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
-        intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
-        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
         hangButtonUp = new GamepadButton(gunnerOp, GamepadKeys.Button.LEFT_BUMPER);
+        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
         hangArmButtonUp = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
         hangArmButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
-        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
+        manualSlideButtonUp = new GamepadTriggerAsButton(gunnerOp, GamepadKeys.Trigger.LEFT_TRIGGER, NeptuneConstants.TRIGGER_THRESHOLD);
+        manualSlideButtonDown = new GamepadTriggerAsButton(gunnerOp, GamepadKeys.Trigger.LEFT_TRIGGER, NeptuneConstants.TRIGGER_THRESHOLD);
 
-
-        magSwitcBbutton = new SwitchReader(opMode.hardwareMap);
-
-
-        // gunner button setup
-
+        // pseudo buttons
+        magSwitchButton = new SwitchReader(opMode.hardwareMap);
+        magSwitchButton.whenActive(new InstantCommand(slides::stopMotorResetEncoder));
     }
 
 
@@ -118,7 +123,7 @@ public class Neptune {
 
         }
         if(ac == AllianceColor.BLUE){
-            if (fp == FieldPos.RIGHT){
+            if (fp == FieldPos.AU){
                 this.startPos = (new Pose2d(42, -62, Math.toRadians(270)));
             }else {
                 this.startPos = (new Pose2d(-12, -62, Math.toRadians(270)));
