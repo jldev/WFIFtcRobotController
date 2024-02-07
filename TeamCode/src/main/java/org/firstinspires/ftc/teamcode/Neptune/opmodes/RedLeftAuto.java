@@ -54,6 +54,7 @@ public class RedLeftAuto extends CommandOpMode {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation(neptune);
                     telemetry.addData("Pawn Location:", pawnLocation);
                     telemetry.update();
+
                     schedule( new SequentialCommandGroup(
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
                                     new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
@@ -81,5 +82,9 @@ public class RedLeftAuto extends CommandOpMode {
                     );
                 })
         );
+        }
+    private void Process()
+    {
+
     }
-}
+    }
