@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.Neptune.opmodes;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
@@ -21,9 +19,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 
-@Config
-@Autonomous(group = "drive", name = "Red Left Auto")
-public class RedLeftAuto extends CommandOpMode {
+public class NeptuneAuto {
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
@@ -32,40 +28,41 @@ public class RedLeftAuto extends CommandOpMode {
             "Pawn",
     };
 
-    //    private MecanumDriveSubsystem drive;
-    private Trajectories trajectories;
+    private final Neptune neptune;
+    private final Trajectories trajectories;
+    private final CommandOpMode opMode;
 
-    private Pose2d start = new Pose2d(-12, 62, Math.toRadians(90));
-    private Neptune neptune;
-
-    @Override
-    public void initialize() {
-        neptune = new Neptune(this);
-        neptune.setStartPosition(Neptune.FieldPos.AU, Neptune.AllianceColor.RED);
-//        drive = new MecanumDriveSubsystem(new SampleMecanumDrive(hardwareMap), false);
+    public NeptuneAuto(CommandOpMode commandOpMode, Neptune.FieldPos startingPosition, Neptune.AllianceColor allianceColor) {
+        opMode = commandOpMode;
+        neptune = new Neptune(opMode);
+        neptune.setStartPosition(startingPosition, allianceColor);
         trajectories = new Trajectories(neptune);
+    }
+
+    public void run() {
 
         DetectPawnCommand detectPawnCommand = new DetectPawnCommand(
-                new VisionSubsystem(hardwareMap.get(WebcamName.class, "Webcam 1"), TFOD_MODEL_ASSET, LABELS)
+                new VisionSubsystem(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"), TFOD_MODEL_ASSET, LABELS)
         );
-
-        schedule(
+        opMode.schedule(
                 detectPawnCommand.withTimeout(5000).whenFinished(() -> {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation(neptune);
-                    telemetry.addData("Pawn Location:", pawnLocation);
-                    telemetry.update();
+                    opMode.telemetry.addData("Pawn Location:", pawnLocation);
+                    opMode.telemetry.update();
+                    // pass in the detected pawn location to the trajectories to set it all up
+                    trajectories.setupTrajectories(pawnLocation);
 
-                    schedule( new SequentialCommandGroup(
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
+                    opMode.schedule(new SequentialCommandGroup(
+                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
                                     new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
                                     new WaitCommand(500),
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(55,60))),
-                                   new WaitCommand(500),
-                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD,10),
+//                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(55, 60))),
+//                                    new WaitCommand(500),
+//                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 10),
 //                                   new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(55,8))),
-                                    new WaitCommand(500),
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24,12))),
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation)),
+//                                    new WaitCommand(500),
+//                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-24, 12))),
+                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
                                     new WaitCommand(500),
                                     new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
                                     new WaitCommand(1000),
@@ -73,18 +70,12 @@ public class RedLeftAuto extends CommandOpMode {
                                     new WaitCommand(1000),
                                     new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
 
-                            )
-                                    .whenFinished(() -> {
-                                        telemetry.addLine("trajectory is finished");
-                                        telemetry.update();
-
-                                    })
+                            ).whenFinished(() -> {
+                                opMode.telemetry.addLine("trajectory is finished");
+                                opMode.telemetry.update();
+                            })
                     );
                 })
         );
-        }
-    private void Process()
-    {
-
     }
-    }
+}

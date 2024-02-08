@@ -115,19 +115,15 @@ public class Neptune {
         this.allianceColor = ac;
 
         if (fp == FieldPos.BD){
-            this.startPos = (new Pose2d(-12, 62, Math.toRadians(90)));
-
+            this.startPos = Trajectories.BDStart;
         }
         else if (fp == FieldPos.AU){
-            this.startPos = (new Pose2d(42, 62, Math.toRadians(90)));
+            this.startPos = Trajectories.AUStart;
 
         }
+
         if(ac == AllianceColor.BLUE){
-            if (fp == FieldPos.AU){
-                this.startPos = (new Pose2d(42, -62, Math.toRadians(270)));
-            }else {
-                this.startPos = (new Pose2d(-12, -62, Math.toRadians(270)));
-            }
+            this.startPos = new Pose2d(this.startPos.getX(), -this.startPos.getY(), this.startPos.getHeading());
         }
 
         drive.setPoseEstimate(this.startPos);

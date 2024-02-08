@@ -24,45 +24,107 @@ public class Trajectories {
         RIGHTSTACK
 
     }
+    //Start locations
+    public static Pose2d AUStart = new Pose2d(36, 62, Math.toRadians(90)); //complete
+    public static Pose2d BDStart = new Pose2d(-12, 62, Math.toRadians(90)); //complete
 
+    //Spike locations for Backdrop side
+    Pose2d BDCenterSpike =new Pose2d(-24, 24, Math.toRadians(180)); //complete
+    Pose2d BDLeftSpike = new Pose2d(-12, 32, Math.toRadians(180)); //complete
+    Pose2d BDRightSpike = new Pose2d(-36, 32, Math.toRadians(180)); //complete
 
+    //Spike locations for Audience side
+    Pose2d AUCenterSpike =new Pose2d(48, 24, Math.toRadians(0)); //complete
+    Pose2d AULeftSpike = new Pose2d(57, 32, Math.toRadians(0)); //complete
+    Pose2d AURightSpike = new Pose2d(36, 32, Math.toRadians(0)); //complete
 
+    //Backdrop locations
+    Pose2d CenterBackdrop = new Pose2d(-48, 36, Math.toRadians(0)); //complete
+    Pose2d LeftBackdrop = new Pose2d(-48, 30, Math.toRadians(0)); //complete
+    Pose2d RightBackdrop = new Pose2d(-48, 42, Math.toRadians(0)); //complete
+
+    //Stack locations
+    Pose2d OuterStack = new Pose2d(60, 36, Math.toRadians(0));  //complete
+    Pose2d CenterStack = new Pose2d(60, 24, Math.toRadians(0)); //complete
+    Pose2d InnerStack = new Pose2d(60, 12, Math.toRadians(0)); //complete
+
+    //Stage midpoint locations
+    Pose2d AUIn = new Pose2d(48, 12, Math.toRadians(0)); // complete
+    Pose2d AUOut = new Pose2d(48, 60, Math.toRadians(0)); //complete
+    Pose2d BDIn = new Pose2d(-24, 12, Math.toRadians(0)); //complete
+    Pose2d BDOut = new Pose2d(-24, 60, Math.toRadians(0)); //complete
+
+    //Both left or right
+    Pose2d spikeOrigin = AUCenterSpike;
+    Pose2d backdropOrigin = CenterBackdrop;
+    Pose2d stackOrigin = InnerStack;
+    //Both in or out
+    Pose2d AUInOutOrigin = AUIn;
+    Pose2d BDInOutOrigin = BDIn;
+
+    public Pose2d spike;
+    public Pose2d stack;
+    public Pose2d backdrop;
+    public Pose2d AUInOut;
+    public Pose2d BDInOut;
 
     private MecanumDriveSubsystem mDrive;
     public Pose2d mStartPosition;
     private Neptune neptune;
 
+    //If we're on the blue or red alliance
+    int redBlue = 1; //  red = 1 | blue = -1
+
     public Trajectories(Neptune neptune){
         this.mDrive = neptune.drive;
         this.mStartPosition = neptune.startPos;
         this.neptune = neptune;
+
+        if (this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
+            redBlue = -1;
+        }
+
     }
 
-    /*
-        If the field is symmetric, you can use this to translate from RED to BLUE
-        we will rotate about x 180 degrees, using the right hand rule this would turn our field upside down,
-        but since we don't care about the Z(UP) direction this will be fine, the following matrix
-        rotates us around x
-        1	0	0
-        0	cos(a)	-sin(a)
-        0	sin(a)	cos(a)
-        for 180 rotation aournd the X axis we get
-        1   0   0
-        0   -1  0
-        0   0   -1
-        we dont care about the Z so the 2x2 matrix becomes
-        1    0
-        0   -1
-        given input point x,y
-        new_x = x*1 - 0 = x
-        new_y = x*0 -y = -y
-        so all that to say just multiply the y by -1
-        all the headings are +180 or PI in radians
-    */
+    public void setupTrajectories(PropPlacement propLocation){
+        switch(propLocation){
+            case LEFT:
+                if (neptune.fieldPos == Neptune.FieldPos.BD)
+                    spikeOrigin = BDLeftSpike;
+                else
+                    spikeOrigin = AULeftSpike;
+                break;
+            case RIGHT:
+                if (neptune.fieldPos == Neptune.FieldPos.BD)
+                    spikeOrigin = BDRightSpike;
+                else
+                    spikeOrigin = AURightSpike;
+                break;
+            case CENTER:
+                if (neptune.fieldPos == Neptune.FieldPos.BD)
+                    spikeOrigin = BDCenterSpike;
+                else
+                    spikeOrigin = AUCenterSpike;
+                break;
+        }
 
-    public static Pose2d translatePosePositionToBlue(Pose2d p){
-        return new Pose2d(p.getX(),-p.getY(), p.getHeading()+Math.PI);
+        //Translates
+        if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE)
+        {
+            //Flips left & right of the spike mark, stack, and backdrop if we're on blue
+            if(spikeOrigin == BDRightSpike)
+            {spikeOrigin = BDLeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = OuterStack;}   //flips right to left
+            else {spikeOrigin = BDRightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;}   //flips left to right
+        }
+
+        spike = new Pose2d(spikeOrigin.getX(), redBlue * spikeOrigin.getY(), spikeOrigin.getHeading());
+        stack = new Pose2d(stackOrigin.getX(), redBlue * stackOrigin.getY(), stackOrigin.getHeading());
+        backdrop = new Pose2d(backdropOrigin.getX(), redBlue * backdropOrigin.getY(), backdropOrigin.getHeading());
+        AUInOut = new Pose2d(AUInOutOrigin.getX(), redBlue * AUInOutOrigin.getY(), AUInOutOrigin.getHeading());
+        BDInOut = new Pose2d(BDInOutOrigin.getX(), redBlue * BDInOutOrigin.getY(), BDInOutOrigin.getHeading());
     }
+
+/*
     public Trajectory getPlacePixelTrajectory(PropPlacement placement){
         //     The position we go to after locating the team prop, lining up to go to the correct spike mark
         Pose2d initialSpike;
@@ -230,7 +292,7 @@ public class Trajectories {
 
         return getTrajectory(stageIn);
     }
-
+*/
     public Trajectory getTrajectory(Pose2d pose2d){
         Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)
                 .lineToSplineHeading(pose2d)
