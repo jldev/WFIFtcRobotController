@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 
 public class OutakeSubsystem extends SubsystemBase {
 
-
+//TODO: ADD NEW CODE FOR VBAR SERVO
 
     private final Servo mOutakeServo;
     private final Servo mAutoOutakeServo;

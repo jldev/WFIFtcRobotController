@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.DroneLauncherSubsytem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
@@ -40,9 +41,11 @@ public class Teleop extends CommandOpMode {
             telemetry.update();
         }));
 
-        // Lift System Buttons
+        // Slide System Buttons
         neptune.liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
         neptune.liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
+
+        // Manual Slides Button
 
         neptune.manualSlideButtonUp.whileHeld(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.UP);}));
         neptune.manualSlideButtonUp.whenReleased(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.OFF);}));
@@ -51,13 +54,21 @@ public class Teleop extends CommandOpMode {
         //neptune.slideOffsetIncrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(1);}));
         //neptune.slideOffsetDecrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(-1);}));
 
+
+        //Drone Launcher with a safety switch
+        neptune.droneLauncherButton.and(neptune.droneLauncherButton2).whenActive(new InstantCommand(() -> {neptune.launcher.setDroneState(DroneLauncherSubsytem.droneLaunchState.LAUNCH);}));
+
         // Hang System Buttons
         neptune.hangButtonUp.whileHeld(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.UP);}));
         neptune.hangButtonUp.whenReleased(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.STOPPED);}));
 
+
+        // Hang System Buttons
         neptune.hangButtonDown.whileHeld(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.DOWN);}));
         neptune.hangButtonDown.whenReleased(new InstantCommand(() -> {neptune.hang.hangDirection(HangSubsystem.HangMotorDirection.STOPPED);}));
 
+
+        // Hang Servo Buttons
         neptune.hangArmButtonUp.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.HANGING);}));
         neptune.hangArmButtonDown.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.REST);}));
 
@@ -69,7 +80,8 @@ public class Teleop extends CommandOpMode {
         neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
         neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
 
-        neptune.intakeReverseButton.toggleWhenPressed(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.EJECTING));
+        neptune.intakeReverseButton.whileHeld(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.EJECTING));
+        neptune.intakeReverseButton.whenReleased(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
 
         // Drive control
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(

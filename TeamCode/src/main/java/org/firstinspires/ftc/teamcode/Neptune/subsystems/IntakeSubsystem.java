@@ -23,13 +23,14 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem(Motor intakeMotor, Motor intakeMotor2, Servo liftServo, Servo liftServo2 ){
         mIntakeMotor = intakeMotor;
         mIntakeMotor2 = intakeMotor2;
-        mIntakeMotor.setInverted(false);
-        mIntakeMotor2.setInverted(false);
+        mIntakeMotor.setInverted(true);
+        mIntakeMotor2.setInverted(true);
         mIntakeLiftServo1 = liftServo;
         mIntakeLiftServo2 = liftServo2;
         mIntakeLiftServo1.setDirection(Servo.Direction.REVERSE);
         mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
         mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
+
 
     }
 
@@ -73,6 +74,8 @@ public class IntakeSubsystem extends SubsystemBase {
                 break;
         }
     }
+
+
 
     public void intakeOn(){
         intakeState = IntakeState.INTAKING;
