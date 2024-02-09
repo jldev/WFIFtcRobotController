@@ -52,11 +52,11 @@ public class RedRightAuto extends CommandOpMode {
                     telemetry.addData("Pawn Location:", pawnLocation);
                     telemetry.update();
                     schedule( new SequentialCommandGroup(
-                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
-                                new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
-//                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-12,0))),
-                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation)),
-                                new WaitCommand(1000),
+//                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
+//                                new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
+////                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(-12,0))),
+//                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getBackdropTrajectory(pawnLocation)),
+//                                new WaitCommand(1000),
                                 new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
                                 new WaitCommand(2000),
                                 new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED)

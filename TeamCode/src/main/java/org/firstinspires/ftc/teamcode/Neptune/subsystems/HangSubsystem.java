@@ -31,6 +31,7 @@ public class HangSubsystem extends SubsystemBase {
 
     public enum HangState {
         HANGING,
+        SECONDHANG,
         REST,
     }
 
@@ -51,16 +52,14 @@ public class HangSubsystem extends SubsystemBase {
             case HANGING:
                 mHangServo.setPosition(NeptuneConstants.NEPTUNE_HANG_POS);
                 mHangServo2.setPosition(NeptuneConstants.NEPTUNE_HANG_POS);
-
                 break;
-
+            case SECONDHANG:
+                mHangServo.setPosition(NeptuneConstants.NEPTUNE_SECONDHANG_POS);
+                mHangServo2.setPosition(NeptuneConstants.NEPTUNE_SECONDHANG_POS);
+                break;
             case REST:
-                mHangServo.close();
-                mHangServo2.close();
-//                mHangServo.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
-//                mHangServo2.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
-
-
+                mHangServo.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
+                mHangServo2.setPosition(NeptuneConstants.NEPTUNE_HANG_REST_POS);
                 break;
         }
     }
@@ -71,6 +70,16 @@ public class HangSubsystem extends SubsystemBase {
 
     public void setHangState(HangSubsystem.HangState state){
         hangstate = state;
+    }
+
+    public void changeState(){
+        if (hangstate == HangState.REST){
+            hangstate = HangState.HANGING;
+        }else if (hangstate == HangState.HANGING){
+            hangstate = HangState.SECONDHANG;
+        }else {
+            hangstate = HangState.REST;
+        }
     }
 
     public void hangDirection(HangMotorDirection hangingDirection){

@@ -53,8 +53,8 @@ public class BlueRightAuto extends CommandOpMode {
                     telemetry.addData("Pawn Location:", pawnLocation);
                     telemetry.update();
                     schedule( new SequentialCommandGroup(
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
-                                    new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
+//                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getPlacePixelTrajectory(pawnLocation)),
+//                                    new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
                                     new WaitCommand(500)
 //                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(35, -38, 90)))
 //                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(56,-60))),

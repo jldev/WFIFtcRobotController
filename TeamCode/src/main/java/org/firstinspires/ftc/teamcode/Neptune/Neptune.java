@@ -44,7 +44,6 @@ public class Neptune {
     public final GamepadButton hangButtonUp;
     public final GamepadButton hangButtonDown;
     public final GamepadButton hangArmButtonUp;
-    public final GamepadButton hangArmButtonDown;
     public final GamepadButton intakeReverseButton;
 
     public final GamepadButton droneLauncherButton;
@@ -78,7 +77,7 @@ public class Neptune {
                 (new MotorEx(opMode.hardwareMap, "intakeMotor2", 537.6,340)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
-                opMode.hardwareMap.get(Servo.class, "vbarServo"));
+                opMode.hardwareMap.get(Servo.class, "vbarServo"), opMode);
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
         hangServo = opMode.hardwareMap.get(Servo.class, "hangServo1");
@@ -103,7 +102,6 @@ public class Neptune {
         intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
         driveBrakeTrigger = new GamepadTrigger(driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER);
         hangArmButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.X);
-        hangArmButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.Y);
         hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
         hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
 

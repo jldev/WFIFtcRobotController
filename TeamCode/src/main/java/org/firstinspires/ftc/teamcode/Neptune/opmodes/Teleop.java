@@ -47,6 +47,8 @@ public class Teleop extends CommandOpMode {
 
         // Manual Slides Button
 
+
+
         neptune.manualSlideButtonUp.whileHeld(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.UP);}));
         neptune.manualSlideButtonUp.whenReleased(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.OFF);}));
         neptune.manualSlideButtonDown.whileHeld(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.DOWN);}));
@@ -69,8 +71,8 @@ public class Teleop extends CommandOpMode {
 
 
         // Hang Servo Buttons
-        neptune.hangArmButtonUp.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.HANGING);}));
-        neptune.hangArmButtonDown.whenActive(new InstantCommand(() -> {neptune.hang.setHangState(HangSubsystem.HangState.REST);}));
+        neptune.hangArmButtonUp.whenPressed(new InstantCommand(() -> {neptune.hang.changeState();}));
+
 
         // Cowbell Outtake Button
         neptune.outtakeButton.whileHeld(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED));

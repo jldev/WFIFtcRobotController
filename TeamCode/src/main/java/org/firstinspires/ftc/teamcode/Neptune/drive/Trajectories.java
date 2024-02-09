@@ -108,6 +108,7 @@ public class Trajectories {
                 break;
         }
 
+
         //Translates
         if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE)
         {
