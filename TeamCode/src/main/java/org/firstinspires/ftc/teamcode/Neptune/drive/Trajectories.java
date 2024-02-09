@@ -25,7 +25,7 @@ public class Trajectories {
 
     }
     //Start locations
-    public static Pose2d AUStart = new Pose2d(36, 62, Math.toRadians(90)); //complete
+    public static Pose2d AUStart = new Pose2d(40, 63, Math.toRadians(90)); //complete
     public static Pose2d BDStart = new Pose2d(-12, 62, Math.toRadians(90)); //complete
 
     //Spike locations for Backdrop side
@@ -35,8 +35,8 @@ public class Trajectories {
 
     //Spike locations for Audience side
     Pose2d AUCenterSpike =new Pose2d(48, 24, Math.toRadians(0)); //complete
-    Pose2d AULeftSpike = new Pose2d(57, 32, Math.toRadians(0)); //complete
-    Pose2d AURightSpike = new Pose2d(36, 32, Math.toRadians(0)); //complete
+    Pose2d AULeftSpike = new Pose2d(56, 32, Math.toRadians(0)); //complete
+    Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(0)); //complete
 
     //Backdrop locations
     Pose2d CenterBackdrop = new Pose2d(-48, 36, Math.toRadians(0)); //complete

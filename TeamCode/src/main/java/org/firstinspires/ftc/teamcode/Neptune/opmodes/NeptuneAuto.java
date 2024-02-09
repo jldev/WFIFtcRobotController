@@ -45,20 +45,6 @@ public class NeptuneAuto {
                 new VisionSubsystem(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"), TFOD_MODEL_ASSET, LABELS)
         );
 
-        SequentialCommandGroup pixelDeliveryGroup = new SequentialCommandGroup(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
-                new WaitCommand(500),
-                new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
-                new WaitCommand(1000),
-                new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
-                new WaitCommand(1000),
-                new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
-
-        SequentialCommandGroup audienceEntryGroup = new SequentialCommandGroup(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
-                new TrajectoryFollowerCommand(neptune.drive,trajectories.getTrajectory(trajectories.AUInOut)));
-
-        SequentialCommandGroup backdropEntryGroup = new SequentialCommandGroup(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
-                new TrajectoryFollowerCommand(neptune.drive,trajectories.getTrajectory(trajectories.BDInOut)));
-
         opMode.schedule(
                 detectPawnCommand.withTimeout(5000).whenFinished(() -> {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation(neptune);
@@ -66,6 +52,21 @@ public class NeptuneAuto {
                     opMode.telemetry.update();
                     // pass in the detected pawn location to the trajectories to set it all up
                     trajectories.setupTrajectories(pawnLocation);
+
+//                    SequentialCommandGroup pixelDeliveryGroup = new SequentialCommandGroup(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
+//                            new WaitCommand(500),
+//                            new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
+//                            new WaitCommand(1000),
+//                            new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
+//                            new WaitCommand(1000),
+//                            new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
+//
+//                    SequentialCommandGroup audienceEntryGroup = new SequentialCommandGroup(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
+//                            new TrajectoryFollowerCommand(neptune.drive,trajectories.getTrajectory(trajectories.AUInOut)));
+//
+//                    SequentialCommandGroup backdropEntryGroup = new SequentialCommandGroup(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
+//                            new TrajectoryFollowerCommand(neptune.drive,trajectories.getTrajectory(trajectories.BDInOut)));
+
 
                     opMode.schedule(new SequentialCommandGroup(
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
@@ -76,7 +77,7 @@ public class NeptuneAuto {
 
                                       }
 
-                                      opMode.schedule(pixelDeliveryGroup);
+//                                      opMode.schedule(pixelDeliveryGroup);
                             })
 //                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(new Pose2d(55, 60))),
 //                                    new WaitCommand(500),
