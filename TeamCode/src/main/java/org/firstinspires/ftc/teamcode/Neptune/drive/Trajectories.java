@@ -39,14 +39,14 @@ public class Trajectories {
     Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(0)); //complete
 
     //Backdrop locations
-    Pose2d CenterBackdrop = new Pose2d(-48, 36, Math.toRadians(0)); //complete
-    Pose2d LeftBackdrop = new Pose2d(-48, 30, Math.toRadians(0)); //complete
-    Pose2d RightBackdrop = new Pose2d(-48, 42, Math.toRadians(0)); //complete
+    Pose2d CenterBackdrop = new Pose2d(-38, 30, Math.toRadians(0)); //complete
+    Pose2d LeftBackdrop = new Pose2d(-38, 24, Math.toRadians(0)); //complete
+    Pose2d RightBackdrop = new Pose2d(-38, 36, Math.toRadians(0)); //complete
 
     //Stack locations
     Pose2d OuterStack = new Pose2d(60, 36, Math.toRadians(0));  //complete
     Pose2d CenterStack = new Pose2d(60, 24, Math.toRadians(0)); //complete
-    Pose2d InnerStack = new Pose2d(60, 12, Math.toRadians(0)); //complete
+     Pose2d InnerStack = new Pose2d(60, 12, Math.toRadians(0)); //complete
 
     //Stage midpoint locations
     Pose2d AUIn = new Pose2d(48, 12, Math.toRadians(0)); // complete
@@ -73,12 +73,13 @@ public class Trajectories {
     private Neptune neptune;
 
     //If we're on the blue or red alliance
-    int redBlue = 1; //  red = 1 | blue = -1
+   public int redBlue = 1; //  red = 1 | blue = -1
 
     public Trajectories(Neptune neptune){
         this.mDrive = neptune.drive;
         this.mStartPosition = neptune.startPos;
         this.neptune = neptune;
+
 
         if (this.neptune.allianceColor == Neptune.AllianceColor.BLUE){
             redBlue = -1;
@@ -114,10 +115,15 @@ public class Trajectories {
         {
             //Flips left & right of the spike mark, stack, and backdrop if we're on blue
             if(spikeOrigin == BDRightSpike)
-            {spikeOrigin = BDLeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = OuterStack;}   //flips right to left
-            else {spikeOrigin = BDRightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;}   //flips left to right
-        }
+            {spikeOrigin = BDLeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = OuterStack;}//flips right to left
 
+            else if(spikeOrigin == BDLeftSpike) {spikeOrigin = BDRightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;}
+
+            if(spikeOrigin == AURightSpike)
+            {spikeOrigin = AULeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = OuterStack;} //flips right to left
+
+            else if(spikeOrigin == AULeftSpike) {spikeOrigin = AURightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;}//flips left to right
+        }
         spike = new Pose2d(spikeOrigin.getX(), redBlue * spikeOrigin.getY(), spikeOrigin.getHeading());
         stack = new Pose2d(stackOrigin.getX(), redBlue * stackOrigin.getY(), stackOrigin.getHeading());
         backdrop = new Pose2d(backdropOrigin.getX(), redBlue * backdropOrigin.getY(), backdropOrigin.getHeading());

@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
@@ -51,6 +52,8 @@ public class Neptune {
     public final GamepadButton droneLauncherButton2;
 
     public final SwitchReader magSwitchButton;
+
+    public final DistanceSensor distanceSensor;
     public final GamepadTriggerAsButton manualSlideButtonUp;
     public final GamepadTriggerAsButton manualSlideButtonDown;
     public final GamepadTrigger driveBrakeTrigger;
@@ -84,6 +87,7 @@ public class Neptune {
         hangServo2 = opMode.hardwareMap.get(Servo.class, "hangServo2");
         hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
         launcher = new DroneLauncherSubsytem(opMode.hardwareMap.get(Servo.class, "droneLauncher"));
+        distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
 
         hang = new HangSubsystem(hangServo,hangServo2,hangMotor);
 
@@ -125,8 +129,10 @@ public class Neptune {
 
         //Start positions for each auto placement
     public void setStartPosition(FieldPos fp, AllianceColor ac) {
+
         this.fieldPos = fp;
         this.allianceColor = ac;
+
 
         if (fp == FieldPos.BD){
             this.startPos = Trajectories.BDStart;
@@ -137,7 +143,7 @@ public class Neptune {
         }
 
         if(ac == AllianceColor.BLUE){
-            this.startPos = new Pose2d(this.startPos.getX(), -this.startPos.getY(), this.startPos.getHeading());
+            this.startPos = new Pose2d(this.startPos.getX(), -this.startPos.getY(), -this.startPos.getHeading());
         }
 
         drive.setPoseEstimate(this.startPos);
