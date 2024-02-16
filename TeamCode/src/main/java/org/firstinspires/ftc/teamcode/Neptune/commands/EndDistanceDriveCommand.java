@@ -1,33 +1,34 @@
 package org.firstinspires.ftc.teamcode.Neptune.commands;
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
-import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 
-public class BDDriveCommand extends CommandBase {
+public class EndDistanceDriveCommand extends CommandBase {
 
     private final Neptune neptune;
     private final MecanumDriveSubsystem.DriveDirection direction;
-    private final double distanceInches;
+    private final double endDistance;
 
 
-    public BDDriveCommand(Neptune neptune, MecanumDriveSubsystem.DriveDirection direction, double inches ) {
+    public EndDistanceDriveCommand(Neptune neptune, MecanumDriveSubsystem.DriveDirection direction, double endDistance ) {
         this.neptune = neptune;
         this.direction = direction;
-        this.distanceInches = inches;
+        this.endDistance = endDistance;
 
     }
 
     @Override
     public void initialize() {
+    }
 
-        this.neptune.drive.driveDirection(direction, distanceInches);}
 
-
+    @Override
+    public void execute(){
+        this.neptune.drive.driveDirection(direction, 0.5);
+    }
     @Override
     public void end(boolean interrupted) {
         this.neptune.drive.stop();
@@ -35,6 +36,6 @@ public class BDDriveCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return neptune.distanceSensor.getDistance(DistanceUnit.INCH) < distanceInches;
+        return neptune.distanceSensor.getDistance(DistanceUnit.INCH) < this.endDistance;
     }
 }

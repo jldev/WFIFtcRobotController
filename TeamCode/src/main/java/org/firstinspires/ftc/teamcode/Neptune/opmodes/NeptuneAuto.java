@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.EndDistanceDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SimpleDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
@@ -91,12 +92,7 @@ public class NeptuneAuto {
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
                                     new WaitCommand(1000),
-                                    new PerpetualCommand(new SimpleDriveCommand(neptune.drive,MecanumDriveSubsystem.DriveDirection.BACKWARD, 1)).interruptOn(new BooleanSupplier() {
-                                        @Override
-                                        public boolean getAsBoolean() {
-                                            return neptune.distanceSensor.getDistance(DistanceUnit.INCH) < NeptuneConstants.NEPTUNE_DISTANCESENSOR_POS;
-                                        }
-                                    }),
+                                    new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, NeptuneConstants.NEPTUNE_DISTANCESENSOR_POS),
                                     new WaitCommand(500),
                                     new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
                                     new WaitCommand(1500),

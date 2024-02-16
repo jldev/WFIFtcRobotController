@@ -26,7 +26,7 @@ public class NeptuneConstants {
     public static double NEPTUNE_HANG_REST_POS= 1.0;
     public static double NEPTUNE_HANG_POS= 0.65;
 
-    public static double NEPTUNE_DISTANCESENSOR_POS = 4;
+    public static double NEPTUNE_DISTANCESENSOR_POS = 6;
 
     public static double NEPTUNE_SECONDHANG_POS = 0.8;
     public static double NEPTUNE_HANG_MOTOR_UP_POWER = 1;
