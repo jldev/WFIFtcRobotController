@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -13,7 +14,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 import org.opencv.dnn.Net;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.IntSupplier;
+
 public class SlidesSubsystem extends SubsystemBase {
+    private final Trigger encoderStopTrigger;
     private int mSlideMotorTargetPosition = 0;
     private int mVBarMotorTargetPosition = 0;
     private int mSlidePositionOffset = 0;
@@ -65,6 +70,19 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlideMotor.encoder.setDirection(Motor.Direction.REVERSE);
         mVBarPosition = VBarPosition.DOWN;
         mState = SlideSubsystemState.AUTO;
+
+        BooleanSupplier encoderStopSupplier = new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() {
+                return mSlideMotor.getCurrentPosition() > NeptuneConstants.SLIDE_HARD_STOP;
+            }
+        };
+
+        encoderStopTrigger = new Trigger(encoderStopSupplier);
+        encoderStopTrigger.whenActive(() -> {
+           this.manualSlideControl(ManualControlDirection.OFF);
+        });
+
     }
 
     public void autoState(){

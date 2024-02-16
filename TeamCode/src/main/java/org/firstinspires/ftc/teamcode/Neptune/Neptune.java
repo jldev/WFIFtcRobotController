@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
 import org.firstinspires.ftc.teamcode.Neptune.controllers.SimpleLinearLift;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
@@ -23,8 +24,11 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.PIDMotor;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 
 public class Neptune {
+
+    public final VisionSubsystem vision;
     public final MecanumDriveSubsystem drive;
     public final OutakeSubsystem outtake;
     public final IntakeSubsystem intake;
@@ -71,9 +75,15 @@ public class Neptune {
         RED,
         BLUE
     }
+    // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
+    // this is only used for Android Studio when using models in Assets.
+    private static final String TFOD_MODEL_ASSET = "model_20231127_183907.tflite";
+    private static final String[] LABELS = {
+            "Pawn",
+    };
 
     public Neptune(CommandOpMode opMode) {
-
+        vision = new VisionSubsystem(opMode, TFOD_MODEL_ASSET, LABELS);
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
@@ -94,6 +104,7 @@ public class Neptune {
 //        hangController = new PIDSlidesController(new SimpleLinearLift(hangServo));
 
         // register subsystems
+        opMode.register(vision);
         opMode.register(drive);
         opMode.register(outtake);
         opMode.register(intake);

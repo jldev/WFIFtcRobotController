@@ -29,13 +29,6 @@ import java.util.function.BooleanSupplier;
 
 public class NeptuneAuto {
 
-    // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
-    // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "model_20231127_183907.tflite";
-    private static final String[] LABELS = {
-            "Pawn",
-    };
-
     private final Neptune neptune;
     private final Trajectories trajectories;
     private final CommandOpMode opMode;
@@ -55,9 +48,7 @@ public class NeptuneAuto {
             opMode.telemetry.update();
         }));
 
-        DetectPawnCommand detectPawnCommand = new DetectPawnCommand(
-                new VisionSubsystem(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"), TFOD_MODEL_ASSET, LABELS)
-        );
+        DetectPawnCommand detectPawnCommand = new DetectPawnCommand(neptune.vision);
 
         opMode.schedule(
                 detectPawnCommand.withTimeout(5000).whenFinished(() -> {

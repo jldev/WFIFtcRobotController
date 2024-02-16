@@ -3,16 +3,23 @@ package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.Neptune.Neptune;
+import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class VisionSubsystem  extends SubsystemBase {
 
@@ -40,10 +47,12 @@ public class VisionSubsystem  extends SubsystemBase {
     private List<Recognition> recognitions;
     private List<AprilTagDetection> detections;
 
-    public VisionSubsystem(CameraName camera, String tensorflowModelAsset, String[] labels){
+    private OpMode opMode;
+    public VisionSubsystem(OpMode om, String tensorflowModelAsset, String[] labels){
+        this.opMode = om;
         this.labels = labels;
         this.tfodAssetName = tensorflowModelAsset;
-        this.cameraName = camera;
+        this.cameraName = opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
 
         init();
     }
@@ -90,6 +99,23 @@ public class VisionSubsystem  extends SubsystemBase {
         return this.recognitions;
     }
 
+    private void setExposureAndGain(long exposureMS, int gain){
+        // Set exposure.  Make sure we are in Manual Mode for these values to take effect.
+        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+            exposureControl.setMode(ExposureControl.Mode.Manual);
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+
+        // Set Gain.
+        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+        gainControl.setGain(gain);
+    }
     /**
      * Initialize the TensorFlow Object Detection processor.
      */
@@ -125,6 +151,8 @@ public class VisionSubsystem  extends SubsystemBase {
 
         // Set confidence threshold for TFOD recognitions, at any time.
         tfod.setMinResultConfidence(0.5f);
+
+        setExposureAndGain(NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
 
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
