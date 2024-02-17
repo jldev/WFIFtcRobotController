@@ -78,17 +78,18 @@ public class VisionSubsystem  extends SubsystemBase {
 
     }
 
-    public void detectTensorFlowObject(){
-        this.setMode(VisionMode.TENSORFLOW);
-        this.start();
-    }
-
-    public void detectAprilTags(){
-        this.setMode(VisionMode.APRIL_TAG);
-        this.start();
-    }
+//    public void detectTensorFlowObject(){
+//        this.setMode(VisionMode.TENSORFLOW);
+//        this.start();
+//    }
+//
+//    public void detectAprilTags(){
+//        this.setMode(VisionMode.APRIL_TAG);
+//        this.start();
+//    }
     public void setMode(VisionSubsystem.VisionMode mode){
         this.mode = mode;
+        start();
     }
     public double[] getCenterOfRecognition(Recognition recognition){
         double x = (recognition.getLeft() + recognition.getRight()) / 2;
@@ -218,6 +219,7 @@ public class VisionSubsystem  extends SubsystemBase {
                         telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                         telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
                     }
+                    telemetry.update();
                 }   // end for() loop
                 break;
         }

@@ -12,7 +12,7 @@ import java.util.List;
 public class DetectAprilTagCommand extends CommandBase {
 
     private final VisionSubsystem visionSubsystem;
-    private boolean tagFound = false;
+    public boolean tagFound = false;
     private int desiredTag;
     private AprilTagDetection detection;
 

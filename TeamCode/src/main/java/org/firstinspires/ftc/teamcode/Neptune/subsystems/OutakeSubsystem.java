@@ -59,7 +59,7 @@ public class OutakeSubsystem extends SubsystemBase {
                 mAutoOutakeServo.setPosition(NeptuneConstants.AUTOOUTAKE_CLOSED_POSITION);
                 break;
         }
-        }
+    }
 
     public void setOutakeState(OutakeState state){
         outakeState = state;

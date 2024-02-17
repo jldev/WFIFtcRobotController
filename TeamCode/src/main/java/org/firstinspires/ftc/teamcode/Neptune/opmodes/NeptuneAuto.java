@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Neptune.opmodes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.PerpetualCommand;
@@ -55,6 +56,8 @@ public class NeptuneAuto {
 
         DetectAprilTagCommand detectAprilTagCommand = new DetectAprilTagCommand(neptune.vision, trajectories.targettedAprilTag);
 
+
+
         opMode.schedule(
                 detectPawnCommand.withTimeout(5000).whenFinished(() -> {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation(neptune);
@@ -76,13 +79,22 @@ public class NeptuneAuto {
                     ).whenFinished(() -> {
                         //Sequential Command Group finished
                         opMode.schedule(detectAprilTagCommand.withTimeout(3000).whenFinished(() -> {
+                            CommandBase commandToRun;
                             // when detectAprilTagCommand finished
-                            AprilTagPoseFtc pose = detectAprilTagCommand.getPoseFromDetection();
-                            opMode.schedule(new ConditionalCommand(
-                                    new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectoryForAprilTag(pose, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP)),
-                                    new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP),
-                                    () -> pose != null
-                            ).whenFinished(() -> {
+                            if (detectAprilTagCommand.tagFound){
+                                AprilTagPoseFtc ftcPose = detectAprilTagCommand.getPoseFromDetection();
+                                opMode.telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", ftcPose.x, ftcPose.y, ftcPose.z));
+                                opMode.telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", ftcPose.pitch, ftcPose.roll, ftcPose.yaw));
+                                opMode.telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", ftcPose.range, ftcPose.bearing, ftcPose.elevation));
+
+                                commandToRun = new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectoryForAprilTag(detectAprilTagCommand.getPoseFromDetection(), NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP));
+
+                            } else {
+                                commandToRun = new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP);
+
+                            }
+                            opMode.schedule(commandToRun
+                                    .whenFinished(() -> {
                                 // when backdrop location finished
                                 opMode.schedule(new SequentialCommandGroup(
                                         new WaitCommand(500),

@@ -40,7 +40,7 @@ public class NeptuneConstants {
     public static double OUTAKE_OPEN_POSITION = 0.5;
     public static double OUTAKE_CLOSED_POSITION = 0.0;
     public static double AUTOOUTAKE_OPEN_POSITION = 0.4;
-    public static double AUTOOUTAKE_CLOSED_POSITION = 0.70;
+    public static double AUTOOUTAKE_CLOSED_POSITION = 0.75;
 
     public static double DRONE_LAUNCHED = 0.5;
 
