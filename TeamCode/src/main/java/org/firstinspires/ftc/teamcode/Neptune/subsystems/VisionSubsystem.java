@@ -100,6 +100,22 @@ public class VisionSubsystem  extends SubsystemBase {
     }
 
     private void setExposureAndGain(long exposureMS, int gain){
+
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            opMode.telemetry.addData("Camera", "Waiting");
+            opMode.telemetry.update();
+            while ((visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            opMode.telemetry.addData("Camera", "Ready");
+            opMode.telemetry.update();
+        }
+
+
         // Set exposure.  Make sure we are in Manual Mode for these values to take effect.
         ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
@@ -139,10 +155,12 @@ public class VisionSubsystem  extends SubsystemBase {
         // Choose a camera resolution. Not all cameras support all resolutions.
         builder.setCameraResolution(new Size(640, 360));
 
+
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         builder.enableLiveView(true);
 
         // Set and enable the processor.
+
         builder.addProcessor(tfod);
         builder.addProcessor(aprilTag);
 
@@ -152,7 +170,7 @@ public class VisionSubsystem  extends SubsystemBase {
         // Set confidence threshold for TFOD recognitions, at any time.
         tfod.setMinResultConfidence(0.5f);
 
-        setExposureAndGain(NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
+        setExposureAndGain((long)NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
 
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
