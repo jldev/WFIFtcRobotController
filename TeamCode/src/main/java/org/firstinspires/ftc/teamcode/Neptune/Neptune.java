@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 
 public class Neptune {
 
-    public final VisionSubsystem vision;
+    public VisionSubsystem vision;
     public final MecanumDriveSubsystem drive;
     public final OutakeSubsystem outtake;
     public final IntakeSubsystem intake;
@@ -75,6 +75,11 @@ public class Neptune {
         RED,
         BLUE
     }
+
+    public enum OpModeType {
+        TELEOP,
+        AUTO
+    }
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
     private static final String TFOD_MODEL_ASSET = "model_20231127_183907.tflite";
@@ -82,8 +87,10 @@ public class Neptune {
             "Pawn",
     };
 
-    public Neptune(CommandOpMode opMode) {
-        vision = new VisionSubsystem(opMode, TFOD_MODEL_ASSET, LABELS);
+    public Neptune(CommandOpMode opMode, OpModeType opModeType) {
+
+
+
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
@@ -104,7 +111,11 @@ public class Neptune {
 //        hangController = new PIDSlidesController(new SimpleLinearLift(hangServo));
 
         // register subsystems
-        opMode.register(vision);
+        if (opModeType == OpModeType.AUTO){
+            vision = new VisionSubsystem(opMode, TFOD_MODEL_ASSET, LABELS);
+            opMode.register(vision);
+        }
+
         opMode.register(drive);
         opMode.register(outtake);
         opMode.register(intake);

@@ -38,7 +38,7 @@ public class NeptuneAuto {
 
     public NeptuneAuto(CommandOpMode commandOpMode, Neptune.FieldPos startingPosition, Neptune.AllianceColor allianceColor) {
         opMode = commandOpMode;
-        neptune = new Neptune(opMode);
+        neptune = new Neptune(opMode, Neptune.OpModeType.AUTO);
         neptune.setStartPosition(startingPosition, allianceColor);
         trajectories = new Trajectories(neptune);
     }
@@ -91,7 +91,7 @@ public class NeptuneAuto {
                                     new WaitCommand(1000),
                                    detectAprilTagCommand.whenFinished(() -> {
                                         AprilTagPoseFtc pose = detectAprilTagCommand.getPoseFromDetection();
-                                        trajectories.getTrajectoryForAprilTag(pose, 6);
+                                        //Trajectory aprilTagTrajectory = trajectories.getTrajectoryForAprilTag(pose, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP);
 
 
                                     }),
