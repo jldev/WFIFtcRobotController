@@ -22,11 +22,10 @@ public class IntakeStateCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        intake.setIntakeState(IntakeSubsystem.IntakeState.NEUTRAL);
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }

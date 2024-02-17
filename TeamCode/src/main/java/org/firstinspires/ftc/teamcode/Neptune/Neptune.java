@@ -117,8 +117,8 @@ public class Neptune {
         intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
         driveBrakeTrigger = new GamepadTrigger(driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER);
         hangArmButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.X);
-        hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
-        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+        hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
 
 
         // gunner button setup

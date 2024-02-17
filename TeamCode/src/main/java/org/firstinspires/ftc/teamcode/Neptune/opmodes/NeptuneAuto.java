@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.PerpetualCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.trajectory.Trajectory;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -77,6 +78,7 @@ public class NeptuneAuto {
 //                            new TrajectoryFollowerCommand(neptune.drive,trajectories.getTrajectory(trajectories.BDInOut)));
 
 
+
                     opMode.schedule(new SequentialCommandGroup(
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
                                     new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
@@ -90,6 +92,7 @@ public class NeptuneAuto {
                                    detectAprilTagCommand.whenFinished(() -> {
                                         AprilTagPoseFtc pose = detectAprilTagCommand.getPoseFromDetection();
                                         trajectories.getTrajectoryForAprilTag(pose, 6);
+
 
                                     }),
                                     new WaitCommand(500),
