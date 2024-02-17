@@ -88,11 +88,11 @@ public class Teleop extends CommandOpMode {
         // Drive control
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
 
-                neptune.drive, () -> -neptune.driverOp.getLeftY(),
-                neptune.driverOp::getLeftX, neptune.driverOp::getRightX,
+//                neptune.drive, () -> -neptune.driverOp.getLeftY(),
+//                neptune.driverOp::getLeftX, neptune.driverOp::getRightX,
 
-                //                neptune.drive, () -> -neptune.driverOp.getRightY(),
-//                () -> -neptune.driverOp.getRightX(), () -> -neptune.driverOp.getLeftX(),
+                neptune.drive, () -> neptune.driverOp.getRightY(),
+                () -> neptune.driverOp.getRightX(), () -> neptune.driverOp.getLeftX(),
                 neptune.driveBrakeTrigger::get
         );
         neptune.drive.setDefaultCommand(driveCommand);

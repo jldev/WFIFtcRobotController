@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class NeptuneConstants {
     public static double SLIDE_MOTOR_MANUAL_POWER = 0.3;
     public static double TRIGGER_THRESHOLD = 0.5;
-    public static int CAMERA_EXPOSURE_TIME_MS = 100;
+    public static int CAMERA_EXPOSURE_TIME_MS = 40;
     public static int CAMERA_GAIN = 1;
     public static  double NEPTUNE_INTAKE_SERVO_INITIAL_POS = 1.0;
     public static double NEPTUNE_INTAKE_SERVO_POS2 = 0.52;
@@ -40,7 +40,7 @@ public class NeptuneConstants {
     public static double OUTAKE_OPEN_POSITION = 0.5;
     public static double OUTAKE_CLOSED_POSITION = 0.0;
     public static double AUTOOUTAKE_OPEN_POSITION = 0.4;
-    public static double AUTOOUTAKE_CLOSED_POSITION = 0.6;
+    public static double AUTOOUTAKE_CLOSED_POSITION = 0.70;
 
     public static double DRONE_LAUNCHED = 0.5;
 

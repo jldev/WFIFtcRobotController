@@ -12,10 +12,13 @@ public class DetectPawnCommand extends CommandBase {
 
     public DetectPawnCommand(VisionSubsystem visionSubsystem){
         this.visionSubsystem = visionSubsystem;
-        this.visionSubsystem.setMode(VisionSubsystem.VisionMode.TENSORFLOW);
         addRequirements(visionSubsystem);
     }
 
+    @Override
+    public void initialize(){
+        this.visionSubsystem.setMode(VisionSubsystem.VisionMode.TENSORFLOW);
+    }
     @Override
     public void end(boolean interrupted) {
         visionSubsystem.stop();

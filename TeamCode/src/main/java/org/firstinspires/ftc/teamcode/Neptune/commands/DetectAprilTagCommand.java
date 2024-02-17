@@ -18,11 +18,14 @@ public class DetectAprilTagCommand extends CommandBase {
 
     public DetectAprilTagCommand(VisionSubsystem visionSubsystem, int desiredTag){
         this.visionSubsystem = visionSubsystem;
-        this.visionSubsystem.setMode(VisionSubsystem.VisionMode.APRIL_TAG);
         this.desiredTag = desiredTag;
         addRequirements(visionSubsystem);
     }
 
+    @Override
+    public void initialize(){
+        this.visionSubsystem.setMode(VisionSubsystem.VisionMode.APRIL_TAG);
+    }
     @Override
     public void execute(){
         List<AprilTagDetection> detections = visionSubsystem.getAprilTagDetections();

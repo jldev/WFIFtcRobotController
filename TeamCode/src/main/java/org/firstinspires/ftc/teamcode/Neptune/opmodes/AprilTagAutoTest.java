@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 @Config
-@Autonomous(group = "drive", name = "Red Audience Auto")
+@Autonomous(group = "drive", name = "April Tag Auto Test")
 public class AprilTagAutoTest extends CommandOpMode {
     NeptuneAuto neptuneAuto;
     @Override
@@ -21,7 +21,7 @@ public class AprilTagAutoTest extends CommandOpMode {
         neptuneAuto.trajectories.setupTrajectories(Trajectories.PropPlacement.CENTER);
         DetectAprilTagCommand detectAprilTagCommand = new DetectAprilTagCommand(neptuneAuto.neptune.vision, neptuneAuto.trajectories.targettedAprilTag);
 
-        schedule(new RunCommand(() -> {
+        schedule(
             detectAprilTagCommand.whenFinished(() -> {
                 AprilTagPoseFtc pose = detectAprilTagCommand.getPoseFromDetection();
                 telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", pose.x, pose.y, pose.z));
@@ -29,7 +29,6 @@ public class AprilTagAutoTest extends CommandOpMode {
                 telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", pose.range, pose.bearing, pose.elevation));
                 telemetry.update();
 
-            });
-        }));
+            }));
     }
 }

@@ -39,9 +39,9 @@ public class Trajectories {
     Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(0)); //complete
 
     //Backdrop locations
-    Pose2d CenterBackdrop = new Pose2d(-38, 36, Math.toRadians(0)); //complete
-    Pose2d LeftBackdrop = new Pose2d(-38, 30, Math.toRadians(0)); //complete
-    Pose2d RightBackdrop = new Pose2d(-38, 42, Math.toRadians(0)); //complete
+    Pose2d CenterBackdrop = new Pose2d(-30, 36, Math.toRadians(0)); //complete
+    Pose2d LeftBackdrop = new Pose2d(-30, 30, Math.toRadians(0)); //complete
+    Pose2d RightBackdrop = new Pose2d(-30, 42, Math.toRadians(0)); //complete
 
     //Stack locations
     Pose2d OuterStack = new Pose2d(60, 36, Math.toRadians(0));  //complete

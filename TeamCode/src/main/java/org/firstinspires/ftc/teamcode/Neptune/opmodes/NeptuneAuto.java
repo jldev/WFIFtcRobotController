@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.DetectAprilTagCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.EndDistanceDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 import java.util.function.BooleanSupplier;
 
@@ -49,6 +51,8 @@ public class NeptuneAuto {
         }));
 
         DetectPawnCommand detectPawnCommand = new DetectPawnCommand(neptune.vision);
+
+        DetectAprilTagCommand detectAprilTagCommand = new DetectAprilTagCommand(neptune.vision, trajectories.targettedAprilTag);
 
         opMode.schedule(
                 detectPawnCommand.withTimeout(5000).whenFinished(() -> {
@@ -83,7 +87,11 @@ public class NeptuneAuto {
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
                                     new WaitCommand(1000),
-                                    new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, NeptuneConstants.NEPTUNE_DISTANCESENSOR_POS),
+                                   detectAprilTagCommand.whenFinished(() -> {
+                                        AprilTagPoseFtc pose = detectAprilTagCommand.getPoseFromDetection();
+                                        trajectories.getTrajectoryForAprilTag(pose, 6);
+
+                                    }),
                                     new WaitCommand(500),
                                     new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
                                     new WaitCommand(1500),
