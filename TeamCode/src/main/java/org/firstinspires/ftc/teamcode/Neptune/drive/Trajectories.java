@@ -62,6 +62,8 @@ public class Trajectories {
     Pose2d AUInOutOrigin = AUIn;
     Pose2d BDInOutOrigin = BDIn;
 
+    public int targettedAprilTag;
+
     public Pose2d spike;
     public Pose2d stack;
     public Pose2d backdrop;
@@ -90,18 +92,21 @@ public class Trajectories {
     public void setupTrajectories(PropPlacement propLocation){
         switch(propLocation){
             case LEFT:
+                targettedAprilTag = 4;
                 if (neptune.fieldPos == Neptune.FieldPos.BD)
                     spikeOrigin = BDLeftSpike;
                 else
                     spikeOrigin = AULeftSpike;
                 break;
             case RIGHT:
+                targettedAprilTag = 6;
                 if (neptune.fieldPos == Neptune.FieldPos.BD)
                     spikeOrigin = BDRightSpike;
                 else
                     spikeOrigin = AURightSpike;
                 break;
             case CENTER:
+                targettedAprilTag = 5;
                 if (neptune.fieldPos == Neptune.FieldPos.BD)
                     spikeOrigin = BDCenterSpike;
                 else
@@ -113,6 +118,7 @@ public class Trajectories {
         //Translates
         if(this.neptune.allianceColor == Neptune.AllianceColor.BLUE)
         {
+            targettedAprilTag -= 3;
             //Flips left & right of the spike mark, stack, and backdrop if we're on blue
             if(spikeOrigin == BDRightSpike)
             {spikeOrigin = BDLeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = OuterStack;}//flips right to left

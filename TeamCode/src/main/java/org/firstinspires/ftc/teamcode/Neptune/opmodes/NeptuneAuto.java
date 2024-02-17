@@ -29,8 +29,8 @@ import java.util.function.BooleanSupplier;
 
 public class NeptuneAuto {
 
-    private final Neptune neptune;
-    private final Trajectories trajectories;
+    public final Neptune neptune;
+    public final Trajectories trajectories;
     private final CommandOpMode opMode;
 
     public NeptuneAuto(CommandOpMode commandOpMode, Neptune.FieldPos startingPosition, Neptune.AllianceColor allianceColor) {
