@@ -16,9 +16,7 @@ public class IntakeLiftCommand extends CommandBase {
     }
 
     @Override
-    public void initialize() {intake.setIntakeLiftState(this.intakeLiftState);
-
-    }
+    public void initialize() {intake.setIntakeLiftState(this.intakeLiftState);}
 
     @Override
     public void end(boolean interrupted) {

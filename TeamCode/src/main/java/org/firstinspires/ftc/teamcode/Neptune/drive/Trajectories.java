@@ -315,13 +315,13 @@ public class Trajectories {
         return traj;
     }
 
-    public Trajectory getTrajectoryForAprilTag(AprilTagPoseFtc pose, int distanceFromTag){
+    public Trajectory getTrajectoryForAprilTag(AprilTagPoseFtc pose, double distanceFromTag){
 
         double  rangeError      = (pose.range - distanceFromTag);
         double  newHeading    = mStartPosition.getHeading() + pose.bearing;
         double  yawError        = pose.yaw;
 
-        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, false, TRAJECTORY_SPEED_SLOW)
+        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
                 .splineToConstantHeading(mStartPosition.vec(), newHeading)
                 .strafeRight(-yawError)
                 .forward(rangeError)

@@ -47,6 +47,9 @@ public class DetectAprilTagCommand extends CommandBase {
     }
 
     public AprilTagPoseFtc getPoseFromDetection(){
-        return detection.ftcPose;
+        if (detection != null) {
+            return detection.ftcPose;
+        }
+        return null;
     }
 }
