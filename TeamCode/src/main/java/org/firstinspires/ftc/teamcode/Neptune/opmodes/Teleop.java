@@ -42,19 +42,14 @@ public class Teleop extends CommandOpMode {
         }));
 
         // Slide System Buttons
-        neptune.liftButton.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1));
+        neptune.liftButton.whenPressed(new InstantCommand(() -> neptune.slides.changeToNextSlidePosition()));
         neptune.liftButtonDown.whenPressed(new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS));
 
         // Manual Slides Button
-
-
-
         neptune.manualSlideButtonUp.whileHeld(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.UP);}));
         neptune.manualSlideButtonUp.whenReleased(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.OFF);}));
         neptune.manualSlideButtonDown.whileHeld(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.DOWN);}));
         neptune.manualSlideButtonUp.whenReleased(new InstantCommand(() -> {neptune.slides.manualSlideControl(SlidesSubsystem.ManualControlDirection.OFF);}));
-        //neptune.slideOffsetIncrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(1);}));
-        //neptune.slideOffsetDecrease.whileHeld(new InstantCommand(() -> {neptune.slides.UpdateOffset(-1);}));
 
 
         //Drone Launcher with a safety switch
