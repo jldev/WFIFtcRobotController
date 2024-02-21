@@ -44,8 +44,8 @@ public class SlidesSubsystem extends SubsystemBase {
 
     SlideSubsystemState mState;
     SlidesPosition mSlidesCurrentPosition;
-    VBarPosition mVBarCurrentPosition;
-    VBarPosition mVBarNextPosition;
+    VBarPosition mVBarCurrentPosition = VBarPosition.DOWN;
+    VBarPosition mVBarNextPosition = VBarPosition.DOWN;
 
     private final MotorEx mSlideMotor;
     private final Servo mVbarServo;
@@ -120,10 +120,11 @@ public class SlidesSubsystem extends SubsystemBase {
                         break;
                     case DOWN:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
+                        mOpMode.sleep(1000);
                         break;
                 }
                 //wait here for the vbar to change
-                mOpMode.sleep(1000);
+
             }
         }
         mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
@@ -156,6 +157,8 @@ public class SlidesSubsystem extends SubsystemBase {
         else if (mSlidesCurrentPosition == SlidesPosition.POSITION_2) {
             moveToPosition(SlidesPosition.POSITION_3);
         }else if (mSlidesCurrentPosition == SlidesPosition.POSITION_3) {
+            moveToPosition(SlidesPosition.POSITION_1);
+        } else if(mSlidesCurrentPosition == SlidesPosition.HOME_POS){
             moveToPosition(SlidesPosition.POSITION_1);
         }
     }

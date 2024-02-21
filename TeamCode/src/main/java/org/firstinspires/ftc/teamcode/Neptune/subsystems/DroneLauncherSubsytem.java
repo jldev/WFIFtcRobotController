@@ -14,6 +14,8 @@ public class DroneLauncherSubsytem extends SubsystemBase {
 
     private final Servo mDroneLauncherServo;
 
+    droneLaunchState DroneLaunchState = droneLaunchState.NEUTRAL;
+
     public DroneLauncherSubsytem(Servo droneLauncherServo) {
 
        mDroneLauncherServo = droneLauncherServo;
@@ -23,7 +25,7 @@ public class DroneLauncherSubsytem extends SubsystemBase {
        mDroneLauncherServo.setPosition(NeptuneConstants.DRONE_NEUTRAL);
     }
 
-    droneLaunchState DroneLaunchState = droneLaunchState.LAUNCH;
+
 
     @Override
     public void periodic() {
