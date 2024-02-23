@@ -142,7 +142,7 @@ public class Neptune {
 
         // pseudo buttons
         magSwitchButton = new SwitchReader(opMode.hardwareMap);
-        magSwitchButton.whenActive(new InstantCommand(slides::stopMotorResetEncoder));
+        magSwitchButton.whileActiveContinuous(new InstantCommand(slides::stopMotorResetEncoder));
     }
 
 

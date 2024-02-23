@@ -59,7 +59,7 @@ public class NeptuneAuto {
 
 
         opMode.schedule(
-                detectPawnCommand.withTimeout(5000).whenFinished(() -> {
+                detectPawnCommand.withTimeout(2500).whenFinished(() -> {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation(neptune);
                     opMode.telemetry.addData("Pawn Location:", pawnLocation);
                     opMode.telemetry.update();
@@ -74,11 +74,10 @@ public class NeptuneAuto {
 //                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 4),
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
-                            new WaitCommand(1000)
+                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop))
                     ).whenFinished(() -> {
                         //Sequential Command Group finished
-                        opMode.schedule(detectAprilTagCommand.withTimeout(3000).whenFinished(() -> {
+                        opMode.schedule(detectAprilTagCommand.withTimeout(1500).whenFinished(() -> {
                             CommandBase commandToRun;
                             // when detectAprilTagCommand finished
                             if (detectAprilTagCommand.tagFound){
@@ -97,11 +96,10 @@ public class NeptuneAuto {
                                     .whenFinished(() -> {
                                 // when backdrop location finished
                                 opMode.schedule(new SequentialCommandGroup(
-                                        new WaitCommand(500),
                                         new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
-                                        new WaitCommand(1500),
+                                        new WaitCommand(2000),
                                         new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
-                                        new WaitCommand(1000),
+                                        new WaitCommand(500),
                                         new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
                                 ));
                             }));

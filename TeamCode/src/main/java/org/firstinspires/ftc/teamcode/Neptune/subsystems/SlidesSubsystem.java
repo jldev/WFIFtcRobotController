@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 
+import static org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants.MAX_SLIDE_MOTOR_POWER;
+
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -83,7 +85,7 @@ public class SlidesSubsystem extends SubsystemBase {
 
     public void autoState(){
         if(!mSlideMotor.atTargetPosition()){
-            mSlideMotor.set(NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
+            mSlideMotor.set(MAX_SLIDE_MOTOR_POWER);
         } else {
             mSlideMotor.set(0);
             switch (mSlidesCurrentPosition) {
@@ -114,13 +116,16 @@ public class SlidesSubsystem extends SubsystemBase {
             } else {
                 // we are good the slides are high enough to change the vbar position
                 mVBarCurrentPosition = mVBarNextPosition;
+                mSlideMotor.setTargetPosition(NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR);
+                mSlideMotor.set(0.05 * NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
                 switch (mVBarCurrentPosition) {
                     case UP:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP);
+                        mOpMode.sleep(100);
                         break;
                     case DOWN:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
-                        mOpMode.sleep(1000);
+                        mOpMode.sleep(750);
                         break;
                 }
                 //wait here for the vbar to change
@@ -170,7 +175,7 @@ public class SlidesSubsystem extends SubsystemBase {
 
     public void stopMotorResetEncoder() {
         mSlideMotor.encoder.reset();
-        mSlidesCurrentPosition = SlidesPosition.HOME_POS;
+        mSlideMotor.set(0);
     }
     public void manualSlideControl(ManualControlDirection direction){
         // anytime the user want to manual control we need to be in the manual state
