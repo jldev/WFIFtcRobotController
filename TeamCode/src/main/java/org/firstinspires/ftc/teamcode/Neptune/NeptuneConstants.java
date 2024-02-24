@@ -17,7 +17,7 @@ public class NeptuneConstants {
     public static int MIN_SAFE_POSTITION_FOR_VBAR = 800;
     public static int NEPTUNE_SLIDE_HOME = 0;
     public static int NEPTUNE_SLIDE_POS1 = 0;
-    public static int NEPTUNE_SLIDE_POS2 = 800;
+    public static int NEPTUNE_SLIDE_POS2 = 900;
     public static int NEPTUNE_SLIDE_POS3 = 1400;
     public static double NEPTUNE_SLIDE_MOTOR_POS_COEFFICIENT = .02;
     public static int NEPTUNE_SLIDE_MOTOR_POS_TOLERANCE = 50;

@@ -71,6 +71,7 @@ public class Neptune {
     public FieldPos fieldPos;
     public AllianceColor allianceColor;
 
+    public final CommandOpMode mOpMode;
     public enum AllianceColor {
         RED,
         BLUE
@@ -88,13 +89,13 @@ public class Neptune {
     };
 
     public Neptune(CommandOpMode opMode, OpModeType opModeType) {
-
+        mOpMode = opMode;
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
                 (new MotorEx(opMode.hardwareMap, "intakeMotor2", 537.6,340)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
-        slides = new SlidesSubsystem(new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
+        slides = new SlidesSubsystem(this, new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 opMode.hardwareMap.get(Servo.class, "vbarServo"), opMode);
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
@@ -141,7 +142,7 @@ public class Neptune {
         manualSlideButtonDown = new GamepadTriggerAsButton(gunnerOp, GamepadKeys.Trigger.RIGHT_TRIGGER, NeptuneConstants.TRIGGER_THRESHOLD);
 
         // pseudo buttons
-        magSwitchButton = new SwitchReader(opMode.hardwareMap);
+        magSwitchButton = new SwitchReader(opMode.hardwareMap, false);
         magSwitchButton.whileActiveContinuous(new InstantCommand(slides::stopMotorResetEncoder));
     }
 

@@ -11,16 +11,19 @@ import java.util.function.BooleanSupplier;
 public class SwitchReader extends Button {
 
     public DigitalChannel magswitch = null;
-
-    private BooleanSupplier state = null;
-
-
-    public SwitchReader(HardwareMap hwMap){
+    private boolean mHighTrue = false;
+    public SwitchReader(HardwareMap hwMap, boolean highTrue){
         magswitch = hwMap.digitalChannel.get("magswitch");
         magswitch.setMode(DigitalChannel.Mode.INPUT);
-
-
-        state = () -> magswitch.getState();
+        mHighTrue = highTrue;
+    }
+    @Override
+    public boolean get() {
+        if (mHighTrue) {
+            return magswitch.getState();
+        } else {
+            return !magswitch.getState();
+        }
     }
 
 

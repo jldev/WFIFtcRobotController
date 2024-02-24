@@ -11,12 +11,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 
 import java.util.function.BooleanSupplier;
 
 public class SlidesSubsystem extends SubsystemBase {
     private final Trigger encoderStopTrigger;
+    private final Neptune mNeptune;
     private int mSlideMotorTargetPosition = 0;
     private int mVBarMotorTargetPosition = 0;
 
@@ -52,7 +54,8 @@ public class SlidesSubsystem extends SubsystemBase {
     private final MotorEx mSlideMotor;
     private final Servo mVbarServo;
 
-    public SlidesSubsystem(MotorEx slideMotor, Servo VbarServo, CommandOpMode opmode) {
+    public SlidesSubsystem(Neptune neptune, MotorEx slideMotor, Servo VbarServo, CommandOpMode opmode) {
+        mNeptune = neptune;
         mSlideMotor = slideMotor;
         mVbarServo = VbarServo;
         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
@@ -117,7 +120,7 @@ public class SlidesSubsystem extends SubsystemBase {
                 // we are good the slides are high enough to change the vbar position
                 mVBarCurrentPosition = mVBarNextPosition;
                 mSlideMotor.setTargetPosition(NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR);
-                mSlideMotor.set(0.05 * NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
+                mSlideMotor.set(0.025 * NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
                 switch (mVBarCurrentPosition) {
                     case UP:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP);
@@ -125,7 +128,7 @@ public class SlidesSubsystem extends SubsystemBase {
                         break;
                     case DOWN:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
-                        mOpMode.sleep(750);
+                        mOpMode.sleep(1000);
                         break;
                 }
                 //wait here for the vbar to change
@@ -174,6 +177,8 @@ public class SlidesSubsystem extends SubsystemBase {
     }
 
     public void stopMotorResetEncoder() {
+        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
+        mNeptune.mOpMode.telemetry.update();
         mSlideMotor.encoder.reset();
         mSlideMotor.set(0);
     }
