@@ -9,6 +9,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -96,7 +98,7 @@ public class Neptune {
                 (new MotorEx(opMode.hardwareMap, "intakeMotor2", 537.6,340)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(this, new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
-                opMode.hardwareMap.get(Servo.class, "vbarServo"), opMode);
+                opMode.hardwareMap.get(Servo.class, "vbarServo"),  opMode, opMode.hardwareMap.get(AnalogInput.class, "vbarAnalog"));
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
         hangServo = opMode.hardwareMap.get(Servo.class, "hangServo1");

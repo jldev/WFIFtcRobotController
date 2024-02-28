@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,9 +22,9 @@ public class SlidesSubsystem extends SubsystemBase {
     private final Trigger encoderStopTrigger;
     private final Neptune mNeptune;
     private int mSlideMotorTargetPosition = 0;
-    private int mVBarMotorTargetPosition = 0;
+    private int mVBarMotorTargetPosition;
 
-    private CommandOpMode mOpMode;
+    private final CommandOpMode mOpMode;
 
     public enum SlideSubsystemState {
         AUTO,
@@ -54,11 +56,14 @@ public class SlidesSubsystem extends SubsystemBase {
     private final MotorEx mSlideMotor;
     private final Servo mVbarServo;
 
-    public SlidesSubsystem(Neptune neptune, MotorEx slideMotor, Servo VbarServo, CommandOpMode opmode) {
+    private final AnalogInput mVbarAnalog;
+
+    public SlidesSubsystem(Neptune neptune, MotorEx slideMotor, Servo VbarServo, CommandOpMode opmode, AnalogInput vbarAnalog) {
         mNeptune = neptune;
         mSlideMotor = slideMotor;
         mVbarServo = VbarServo;
         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
+        mVbarAnalog = vbarAnalog;
         mOpMode = opmode;
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
         mSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -124,11 +129,15 @@ public class SlidesSubsystem extends SubsystemBase {
                 switch (mVBarCurrentPosition) {
                     case UP:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP);
-                        mOpMode.sleep(100);
+                        while ( !servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP)) {
+                            mOpMode.sleep(10);
+                        }
                         break;
                     case DOWN:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
-                        mOpMode.sleep(1000);
+                        while ( !servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN)) {
+                            mOpMode.sleep(10);
+                        }
                         break;
                 }
                 //wait here for the vbar to change
@@ -146,6 +155,15 @@ public class SlidesSubsystem extends SubsystemBase {
             case MANUAL:
                 break;
         }
+    }
+
+    public boolean servoAtPos(double dp){
+
+        double cp = mVbarAnalog.getVoltage();
+
+        cp = cp/3.3;
+
+        return cp >= (dp * .95) || cp <= (dp * 1.05);
     }
 
     private void changeSlideState(SlideSubsystemState newState){
@@ -176,9 +194,10 @@ public class SlidesSubsystem extends SubsystemBase {
         mSlidesCurrentPosition = position;
     }
 
+
     public void stopMotorResetEncoder() {
-        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
-        mNeptune.mOpMode.telemetry.update();
+//        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
+//        mNeptune.mOpMode.telemetry.update();
         mSlideMotor.encoder.reset();
         mSlideMotor.set(0);
     }

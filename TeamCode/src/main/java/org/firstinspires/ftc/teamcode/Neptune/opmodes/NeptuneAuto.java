@@ -70,10 +70,13 @@ public class NeptuneAuto {
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
                             new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
                             new WaitCommand(1000),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)),
+//                            new ConditionalCommand( new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)), new WaitCommand(10),() -> neptune.fieldPos == Neptune.FieldPos.AU ),
+//                            new ConditionalCommand( new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)), new WaitCommand(10),() -> neptune.fieldPos == Neptune.FieldPos.AU ),
+//                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)),
+
 //                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 4),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
+//                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
+//                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop))
                     ).whenFinished(() -> {
                         //Sequential Command Group finished
