@@ -1,19 +1,11 @@
 package org.firstinspires.ftc.teamcode.Neptune.opmodes;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.command.button.Button;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
-import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
-import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
-import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeLiftCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
@@ -23,8 +15,6 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
-
-import java.util.logging.Level;
 
 @TeleOp(name = "Teleop")
 public class Teleop extends CommandOpMode {
@@ -74,8 +64,8 @@ public class Teleop extends CommandOpMode {
         neptune.outtakeButton.whenReleased(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED));
 
         // Intake Buttons
-        neptune.intakeliftbutton.whileHeld(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.LOWER));
-        neptune.intakeliftbutton.whenReleased(new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.RAISE));
+        neptune.intakeButton.whileHeld(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
+        neptune.intakeButton.whenReleased(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
 
         neptune.intakeReverseButton.whileHeld(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.EJECTING));
         neptune.intakeReverseButton.whenReleased(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));

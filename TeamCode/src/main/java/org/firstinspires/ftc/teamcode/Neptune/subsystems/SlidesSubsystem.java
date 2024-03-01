@@ -124,19 +124,21 @@ public class SlidesSubsystem extends SubsystemBase {
             } else {
                 // we are good the slides are high enough to change the vbar position
                 mVBarCurrentPosition = mVBarNextPosition;
+                // set the position to the safe position
                 mSlideMotor.setTargetPosition(NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR);
-                mSlideMotor.set(0.025 * NeptuneConstants.MAX_SLIDE_MOTOR_POWER);
                 switch (mVBarCurrentPosition) {
                     case UP:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP);
                         while ( !servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP)) {
-                            mOpMode.sleep(10);
+//                            mOpMode.sleep(10);
+                            mSlideMotor.set(MAX_SLIDE_MOTOR_POWER);
                         }
                         break;
                     case DOWN:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
                         while ( !servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN)) {
-                            mOpMode.sleep(10);
+//                            mOpMode.sleep(10);
+                            mSlideMotor.set(MAX_SLIDE_MOTOR_POWER);
                         }
                         break;
                 }

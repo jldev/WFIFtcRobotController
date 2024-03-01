@@ -3,20 +3,15 @@ package org.firstinspires.ftc.teamcode.Neptune;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Neptune.controllers.PIDSlidesController;
-import org.firstinspires.ftc.teamcode.Neptune.controllers.SimpleLinearLift;
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.DroneLauncherSubsytem;
@@ -24,7 +19,6 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
-import org.firstinspires.ftc.teamcode.Neptune.subsystems.PIDMotor;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 
@@ -47,7 +41,7 @@ public class Neptune {
     public final GamepadButton liftButton;
     public final GamepadButton liftButtonDown;
     public final GamepadButton outtakeButton;
-    public final GamepadButton intakeliftbutton;
+    public final GamepadButton intakeButton;
     public final GamepadButton hangButtonUp;
     public final GamepadButton hangButtonDown;
     public final GamepadButton hangArmButtonUp;
@@ -126,7 +120,7 @@ public class Neptune {
 
         // driver button setup
         intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
-        intakeliftbutton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
+        intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
         driveBrakeTrigger = new GamepadTrigger(driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER);
         hangArmButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.X);
         hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);

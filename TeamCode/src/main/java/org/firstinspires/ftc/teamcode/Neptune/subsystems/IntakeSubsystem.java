@@ -51,43 +51,31 @@ public class IntakeSubsystem extends SubsystemBase {
             case INTAKING:
                 mIntakeMotor.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_INTAKE_POWER);
                 mIntakeMotor2.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_INTAKE_POWER);
+                intakeLiftState = LiftableIntakePosition.LOWER;
                 break;
             case EJECTING:
                 mIntakeMotor.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_EJECT_POWER);
                 mIntakeMotor2.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_EJECT_POWER);
+                intakeLiftState = LiftableIntakePosition.RAISE;
                 break;
             case NEUTRAL:
+                intakeLiftState = LiftableIntakePosition.RAISE;
                 mIntakeMotor.stopMotor();
                 mIntakeMotor2.stopMotor();
                 break;
         }
         switch(intakeLiftState){
             case LOWER:
-                intakeState = IntakeState.INTAKING;
                 mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2);
                 mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2);
                 break;
             case RAISE:
-                intakeState = IntakeState.NEUTRAL;
                 mIntakeLiftServo1.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
                 mIntakeLiftServo2.setPosition(NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS);
                 break;
         }
     }
 
-
-
-    public void intakeOn(){
-        intakeState = IntakeState.INTAKING;
-    }
-
-    public void intakeOff(){
-        intakeState = IntakeState.NEUTRAL;
-    }
-
-    public void intakeEject(){
-        intakeState = IntakeState.EJECTING;
-    }
     public boolean intakeFull(){
         return false;
     }

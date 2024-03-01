@@ -49,6 +49,8 @@ public class NeptuneAuto {
         opMode.schedule(new RunCommand(() -> {
             //neptune.drive.addTelemetry(telemetry);
             opMode.telemetry.addData("distanceSensor", neptune.distanceSensor.getDistance(DistanceUnit.INCH));
+            neptune.vision.addTelemetry(opMode.telemetry);
+
             opMode.telemetry.update();
         }));
 

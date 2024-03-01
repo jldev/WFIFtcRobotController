@@ -2,12 +2,16 @@ package org.firstinspires.ftc.teamcode.Neptune.subsystems;
 
 import android.util.Size;
 
+import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.apache.commons.math3.analysis.function.Exp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraControls;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -47,8 +51,8 @@ public class VisionSubsystem  extends SubsystemBase {
     private List<Recognition> recognitions;
     private List<AprilTagDetection> detections;
 
-    private OpMode opMode;
-    public VisionSubsystem(OpMode om, String tensorflowModelAsset, String[] labels){
+    private CommandOpMode opMode;
+    public VisionSubsystem(CommandOpMode om, String tensorflowModelAsset, String[] labels){
         this.opMode = om;
         this.labels = labels;
         this.tfodAssetName = tensorflowModelAsset;
@@ -106,26 +110,16 @@ public class VisionSubsystem  extends SubsystemBase {
             opMode.telemetry.addData("Camera", "Waiting");
             opMode.telemetry.update();
             while ((visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                opMode.sleep(20);
             }
             opMode.telemetry.addData("Camera", "Ready");
             opMode.telemetry.update();
         }
 
-
         // Set exposure.  Make sure we are in Manual Mode for these values to take effect.
         ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
             exposureControl.setMode(ExposureControl.Mode.Manual);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
         exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
 
@@ -142,7 +136,7 @@ public class VisionSubsystem  extends SubsystemBase {
         tfod = new TfodProcessor.Builder()
                 .setModelAssetName(this.tfodAssetName)
                 .setModelLabels(this.labels)
-                .setModelInputSize(600)
+                .setModelInputSize(300)
                 .setModelAspectRatio(16.0 / 9.0)
                 .build();
 
@@ -171,7 +165,7 @@ public class VisionSubsystem  extends SubsystemBase {
         // Set confidence threshold for TFOD recognitions, at any time.
         tfod.setMinResultConfidence(0.5f);
 
-//        setExposureAndGain((long)NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
+        setExposureAndGain((long)NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
 
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
@@ -184,12 +178,14 @@ public class VisionSubsystem  extends SubsystemBase {
     }
 
     public void start(){
-        visionPortal.resumeStreaming();
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            visionPortal.resumeStreaming();
+        }
     }
     public void stop() {
-        //TODO: Figure out a way to stop streaming after inital auto.
-//        visionPortal.stopStreaming();
-//        visionPortal.close();
+        if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
+            visionPortal.stopStreaming();
+        }
     }
 
     public void addTelemetry(Telemetry telemetry){
@@ -219,7 +215,6 @@ public class VisionSubsystem  extends SubsystemBase {
                         telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                         telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
                     }
-                    telemetry.update();
                 }   // end for() loop
                 break;
         }
