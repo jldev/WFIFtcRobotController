@@ -14,7 +14,7 @@ public class NeptuneConstants {
     public static double MAX_VBAR_MOTOR_POWER = 0.8;
     public static double NEPTUNE_INTAKE_MOTOR_INTAKE_POWER = -1.0;
     public static double NEPTUNE_INTAKE_MOTOR_EJECT_POWER = 1.0;
-    public static int MIN_SAFE_POSTITION_FOR_VBAR = 800;
+    public static int MIN_SAFE_POSTITION_FOR_VBAR = 900;
     public static int NEPTUNE_SLIDE_HOME = 0;
     public static int NEPTUNE_SLIDE_POS1 = 0;
     public static int NEPTUNE_SLIDE_POS2 = 900;
@@ -38,7 +38,7 @@ public class NeptuneConstants {
     public static double OUTAKE_OPEN_POSITION = 0.5;
     public static double OUTAKE_CLOSED_POSITION = 0.0;
     public static double AUTOOUTAKE_OPEN_POSITION = 0.4;
-    public static double AUTOOUTAKE_CLOSED_POSITION = 0.75;
+    public static double AUTOOUTAKE_CLOSED_POSITION = 0.70;
 
     public static double DRONE_LAUNCHED = 0.5;
 

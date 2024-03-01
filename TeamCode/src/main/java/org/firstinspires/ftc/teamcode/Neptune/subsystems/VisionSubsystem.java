@@ -142,7 +142,7 @@ public class VisionSubsystem  extends SubsystemBase {
         tfod = new TfodProcessor.Builder()
                 .setModelAssetName(this.tfodAssetName)
                 .setModelLabels(this.labels)
-                .setModelInputSize(300)
+                .setModelInputSize(600)
                 .setModelAspectRatio(16.0 / 9.0)
                 .build();
 
@@ -171,7 +171,7 @@ public class VisionSubsystem  extends SubsystemBase {
         // Set confidence threshold for TFOD recognitions, at any time.
         tfod.setMinResultConfidence(0.5f);
 
-        setExposureAndGain((long)NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
+//        setExposureAndGain((long)NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
 
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);

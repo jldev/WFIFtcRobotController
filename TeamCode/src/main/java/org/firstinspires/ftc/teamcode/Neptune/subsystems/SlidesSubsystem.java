@@ -161,9 +161,9 @@ public class SlidesSubsystem extends SubsystemBase {
 
         double cp = mVbarAnalog.getVoltage();
 
-        cp = cp/3.3;
+        cp = -.329*cp+1.04;
 
-        return cp >= (dp * .95) || cp <= (dp * 1.05);
+        return cp >= (dp * .90) && cp <= (dp * 1.1);
     }
 
     private void changeSlideState(SlideSubsystemState newState){
@@ -227,7 +227,9 @@ public class SlidesSubsystem extends SubsystemBase {
         telemetry.addLine(String.format("target_position %d", mSlideMotorTargetPosition));
 
         telemetry.addLine(String.format("vbar_setting - %s", mVBarCurrentPosition.toString()));
-        telemetry.addLine(String.format("vbarcurrentpwr %.2f", mVbarServo.getPosition()));
+        telemetry.addLine(String.format("vbarposvoltage %.2f", mVbarAnalog.getVoltage()));
         telemetry.addLine(String.format("vbarcurrentpos %d", mVBarMotorTargetPosition));
+
+
     }
 }
