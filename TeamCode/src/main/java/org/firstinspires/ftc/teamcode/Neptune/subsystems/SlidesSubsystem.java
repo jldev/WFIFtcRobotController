@@ -119,34 +119,28 @@ public class SlidesSubsystem extends SubsystemBase {
 
         // if the user has requested the vbar to move we have to be in safe spot to do so
         if(mVBarNextPosition != mVBarCurrentPosition){
-            if (mSlideMotor.getCurrentPosition() < (NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR - NeptuneConstants.NEPTUNE_SLIDE_MOTOR_POS_TOLERANCE)) {
-                mSlideMotorTargetPosition = NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR;
-            } else {
-                // we are good the slides are high enough to change the vbar position
-                mVBarCurrentPosition = mVBarNextPosition;
+            mSlideMotor.setTargetPosition(NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR);
+            if (mSlideMotor.getCurrentPosition() > (NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR - NeptuneConstants.NEPTUNE_SLIDE_MOTOR_POS_TOLERANCE)) {
                 // set the position to the safe position
                 mSlideMotor.setTargetPosition(NeptuneConstants.MIN_SAFE_POSTITION_FOR_VBAR);
-                switch (mVBarCurrentPosition) {
+                switch (mVBarNextPosition) {
                     case UP:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP);
-                        while ( !servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP)) {
-//                            mOpMode.sleep(10);
-                            mSlideMotor.set(MAX_SLIDE_MOTOR_POWER);
+                        if(servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_UP)){
+                            mVBarCurrentPosition = mVBarNextPosition;
                         }
                         break;
                     case DOWN:
                         mVbarServo.setPosition(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN);
-                        while ( !servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN)) {
-//                            mOpMode.sleep(10);
-                            mSlideMotor.set(MAX_SLIDE_MOTOR_POWER);
+                        if(servoAtPos(NeptuneConstants.NEPTUNE_VBAR_TARGET_POSITION_DOWN)){
+                            mVBarCurrentPosition = mVBarNextPosition;
                         }
                         break;
                 }
-                //wait here for the vbar to change
-
             }
+        } else {
+            mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
         }
-        mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
     }
     @Override
     public void periodic(){
