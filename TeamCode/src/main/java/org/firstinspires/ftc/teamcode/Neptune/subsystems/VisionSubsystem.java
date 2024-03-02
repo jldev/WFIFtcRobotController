@@ -165,7 +165,7 @@ public class VisionSubsystem  extends SubsystemBase {
         // Set confidence threshold for TFOD recognitions, at any time.
         tfod.setMinResultConfidence(0.5f);
 
-        setExposureAndGain((long)NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
+//        setExposureAndGain((long)NeptuneConstants.CAMERA_EXPOSURE_TIME_MS, NeptuneConstants.CAMERA_GAIN);
 
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
@@ -183,9 +183,9 @@ public class VisionSubsystem  extends SubsystemBase {
         }
     }
     public void stop() {
-        if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
-            visionPortal.stopStreaming();
-        }
+//        if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
+//            visionPortal.stopStreaming();
+//        }
     }
 
     public void addTelemetry(Telemetry telemetry){

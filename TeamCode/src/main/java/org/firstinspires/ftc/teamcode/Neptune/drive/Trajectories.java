@@ -121,12 +121,12 @@ public class Trajectories {
             targettedAprilTag -= 3;
             //Flips left & right of the spike mark, stack, and backdrop if we're on blue
             if(spikeOrigin == BDRightSpike)
-            {spikeOrigin = BDLeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = OuterStack;}//flips right to left
+            {spikeOrigin = BDLeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = InnerStack;}//flips right to left
 
             else if(spikeOrigin == BDLeftSpike) {spikeOrigin = BDRightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;}
 
             if(spikeOrigin == AURightSpike)
-            {spikeOrigin = AULeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = OuterStack;} //flips right to left
+            {spikeOrigin = AULeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = InnerStack;} //flips right to left
 
             else if(spikeOrigin == AULeftSpike) {spikeOrigin = AURightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;}//flips left to right
         }

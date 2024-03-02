@@ -79,7 +79,7 @@ public class Neptune {
     }
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "model_20240229_182527.tflite";
+    private static final String TFOD_MODEL_ASSET = "model_20240301_211037.tflite";
     private static final String[] LABELS = {
             "Pawn",
     };

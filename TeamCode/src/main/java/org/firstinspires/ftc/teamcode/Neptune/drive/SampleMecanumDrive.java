@@ -70,8 +70,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
-    private static final TrajectoryVelocityConstraint SLOW_VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL/2, MAX_ANG_VEL/2, TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint SLOW_ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL/2);
+    private static final TrajectoryVelocityConstraint SLOW_VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL*.75, MAX_ANG_VEL*.75, TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint SLOW_ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL*.75);
 
     private TrajectoryFollower follower;
 
