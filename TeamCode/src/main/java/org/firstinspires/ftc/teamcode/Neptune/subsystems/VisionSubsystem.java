@@ -178,9 +178,9 @@ public class VisionSubsystem  extends SubsystemBase {
     }
 
     public void start(){
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            visionPortal.resumeStreaming();
-        }
+//        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+//            visionPortal.resumeStreaming();
+//        }
     }
     public void stop() {
 //        if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
