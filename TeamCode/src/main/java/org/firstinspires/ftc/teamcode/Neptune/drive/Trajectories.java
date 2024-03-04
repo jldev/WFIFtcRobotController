@@ -39,20 +39,20 @@ public class Trajectories {
     Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(0)); //complete
 
     //Backdrop locations
-    Pose2d CenterBackdrop = new Pose2d(-27, 36, Math.toRadians(0)); //complete
-    Pose2d LeftBackdrop = new Pose2d(-27, 30, Math.toRadians(0)); //complete
-    Pose2d RightBackdrop = new Pose2d(-27, 42, Math.toRadians(0)); //complete
+    Pose2d CenterBackdrop = new Pose2d(-32, 36, Math.toRadians(0)); //complete
+    Pose2d LeftBackdrop = new Pose2d(-32, 30, Math.toRadians(0)); //complete
+    Pose2d RightBackdrop = new Pose2d(-32, 42, Math.toRadians(0)); //complete
 
     //Stack locations
-    Pose2d OuterStack = new Pose2d(60, 36, Math.toRadians(0));  //complete
-    Pose2d CenterStack = new Pose2d(60, 24, Math.toRadians(0)); //complete
-     Pose2d InnerStack = new Pose2d(60, 12, Math.toRadians(0)); //complete
+    Pose2d OuterStack = new Pose2d(58, 36, Math.toRadians(0));  //complete
+    Pose2d CenterStack = new Pose2d(58, 24, Math.toRadians(0)); //complete
+     Pose2d InnerStack = new Pose2d(58, 12, Math.toRadians(0)); //complete
 
     //Stage midpoint locations
     Pose2d AUIn = new Pose2d(48, 12, Math.toRadians(0)); // complete
     Pose2d AUOut = new Pose2d(48, 60, Math.toRadians(0)); //complete
-    Pose2d BDIn = new Pose2d(-24, 12, Math.toRadians(0)); //complete
-    Pose2d BDOut = new Pose2d(-24, 60, Math.toRadians(0)); //complete
+    Pose2d BDIn = new Pose2d(-32, 12, Math.toRadians(0)); //complete
+    Pose2d BDOut = new Pose2d(-32, 60, Math.toRadians(0)); //complete
 
     //Both left or right
     Pose2d spikeOrigin = AUCenterSpike;

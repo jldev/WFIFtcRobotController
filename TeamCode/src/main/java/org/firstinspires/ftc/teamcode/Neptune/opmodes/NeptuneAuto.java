@@ -50,15 +50,12 @@ public class NeptuneAuto {
             //neptune.drive.addTelemetry(telemetry);
             opMode.telemetry.addData("distanceSensor", neptune.distanceSensor.getDistance(DistanceUnit.INCH));
             neptune.vision.addTelemetry(opMode.telemetry);
-
             opMode.telemetry.update();
         }));
 
         DetectPawnCommand detectPawnCommand = new DetectPawnCommand(neptune.vision);
 
         DetectAprilTagCommand detectAprilTagCommand = new DetectAprilTagCommand(neptune.vision, trajectories.targettedAprilTag);
-
-
 
         opMode.schedule(
                 detectPawnCommand.withTimeout(2500).whenFinished(() -> {
@@ -77,7 +74,7 @@ public class NeptuneAuto {
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)),
 
 //                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 4),
-//                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
+                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
                             new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
