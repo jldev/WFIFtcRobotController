@@ -65,48 +65,60 @@ public class NeptuneAuto {
                     // pass in the detected pawn location to the trajectories to set it all up
                     trajectories.setupTrajectories(pawnLocation);
 
-                    opMode.schedule(new SequentialCommandGroup(
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
-                            new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
-                            new WaitCommand(1000),
-//                            new ConditionalCommand( new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)), new WaitCommand(10),() -> neptune.fieldPos == Neptune.FieldPos.AU ),
-//                            new ConditionalCommand( new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)), new WaitCommand(10),() -> neptune.fieldPos == Neptune.FieldPos.AU ),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)),
+                    opMode.schedule(
+                            new SequentialCommandGroup(
+                                new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
+                                new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
+                                new WaitCommand(1000)
+                            ).whenFinished(() -> {
+                                SequentialCommandGroup groupToRun;
+                                if (neptune.fieldPos == Neptune.FieldPos.AU){
+                                    groupToRun = new SequentialCommandGroup(
+                                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)),
+                                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
+                                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
+                                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
+                                            new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
+                                    );
+                                } else {
+                                    groupToRun = new SequentialCommandGroup(
+                                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
+                                            new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
+                                    );
+                                }
+                                groupToRun.whenFinished(() -> {
+                                    //Sequential Command Group finished
+                                    opMode.schedule(detectAprilTagCommand.withTimeout(1000).whenFinished(() -> {
+                                        CommandBase commandToRun;
+                                        // when detectAprilTagCommand finished
+                                        if (detectAprilTagCommand.tagFound){
+                                            AprilTagPoseFtc ftcPose = detectAprilTagCommand.getPoseFromDetection();
+                                            opMode.telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", ftcPose.x, ftcPose.y, ftcPose.z));
+                                            opMode.telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", ftcPose.pitch, ftcPose.roll, ftcPose.yaw));
+                                            opMode.telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", ftcPose.range, ftcPose.bearing, ftcPose.elevation));
 
-//                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 4),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
-                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
-                            new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
+                                            commandToRun = new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectoryForAprilTag(detectAprilTagCommand.getPoseFromDetection(), NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP));
 
-                    ).whenFinished(() -> {
-                        //Sequential Command Group finished
-                        opMode.schedule(detectAprilTagCommand.withTimeout(1000).whenFinished(() -> {
-                            CommandBase commandToRun;
-                            // when detectAprilTagCommand finished
-                            if (detectAprilTagCommand.tagFound){
-                                AprilTagPoseFtc ftcPose = detectAprilTagCommand.getPoseFromDetection();
-                                opMode.telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", ftcPose.x, ftcPose.y, ftcPose.z));
-                                opMode.telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", ftcPose.pitch, ftcPose.roll, ftcPose.yaw));
-                                opMode.telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", ftcPose.range, ftcPose.bearing, ftcPose.elevation));
+                                        } else {
+                                            commandToRun = new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP);
 
-                                commandToRun = new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectoryForAprilTag(detectAprilTagCommand.getPoseFromDetection(), NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP));
-
-                            } else {
-                                commandToRun = new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP);
-
-                            }
-                            opMode.schedule(commandToRun
-                                    .whenFinished(() -> {
-                                // when backdrop location finished
-                                opMode.schedule(new SequentialCommandGroup(
-                                        new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
-                                        new WaitCommand(500),
-                                        new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
-                                ));
+                                        }
+                                        opMode.schedule(commandToRun
+                                                .whenFinished(() -> {
+                                                    // when backdrop location finished
+                                                    opMode.schedule(new SequentialCommandGroup(
+                                                            new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
+                                                            new WaitCommand(500),
+                                                            new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
+                                                    ).whenFinished(() -> {
+                                                        if (neptune.fieldPos == Neptune.FieldPos.BD){
+                                                            opMode.schedule(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.park)));
+                                                        }
+                                                    }));
+                                                }));
+                                    }));
+                                });
                             }));
-                        }));
-                    }));
                 }));
     }
 }

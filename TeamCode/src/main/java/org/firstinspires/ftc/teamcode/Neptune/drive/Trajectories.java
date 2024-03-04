@@ -12,6 +12,7 @@ public class Trajectories {
 
     private static final boolean TRAJECTORY_SPEED_SLOW = true;
 
+
     public enum PropPlacement {
         LEFT,
         RIGHT,
@@ -54,6 +55,8 @@ public class Trajectories {
     Pose2d BDIn = new Pose2d(-32, 12, Math.toRadians(0)); //complete
     Pose2d BDOut = new Pose2d(-32, 60, Math.toRadians(0)); //complete
 
+    //Parking spot for BD side
+    Pose2d ParkPosition = new Pose2d(-48, 60, Math.toRadians(0)); //complete
     //Both left or right
     Pose2d spikeOrigin = AUCenterSpike;
     Pose2d backdropOrigin = CenterBackdrop;
@@ -70,6 +73,7 @@ public class Trajectories {
     public Pose2d AUInOut;
     public Pose2d BDInOut;
 
+    public Pose2d park;
     private MecanumDriveSubsystem mDrive;
     public Pose2d mStartPosition;
     private Neptune neptune;
@@ -135,6 +139,7 @@ public class Trajectories {
         backdrop = new Pose2d(backdropOrigin.getX(), redBlue * backdropOrigin.getY(), backdropOrigin.getHeading());
         AUInOut = new Pose2d(AUInOutOrigin.getX(), redBlue * AUInOutOrigin.getY(), AUInOutOrigin.getHeading());
         BDInOut = new Pose2d(BDInOutOrigin.getX(), redBlue * BDInOutOrigin.getY(), BDInOutOrigin.getHeading());
+        park = new Pose2d(ParkPosition.getX(), redBlue * ParkPosition.getY(), ParkPosition.getHeading());
     }
 
 /*
