@@ -10,7 +10,7 @@ import static org.firstinspires.ftc.teamcode.Neptune.drive.DriveConstants.TRACK_
 import static org.firstinspires.ftc.teamcode.Neptune.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.Neptune.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.Neptune.drive.DriveConstants.kV;
-import static org.firstinspires.ftc.teamcode.roadrunner.StandardTrackingWheelLocalizer.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.Neptune.drive.StandardTrackingWheelLocalizer.encoderTicksToInches;
 
 import androidx.annotation.NonNull;
 
@@ -41,7 +41,6 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.roadrunner.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
@@ -56,8 +55,8 @@ import java.util.List;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.0169;
 
@@ -70,8 +69,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
-    private static final TrajectoryVelocityConstraint SLOW_VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL*.6, MAX_ANG_VEL*.6, TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint SLOW_ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL*.6);
+    private static final TrajectoryVelocityConstraint SLOW_VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL*.5, MAX_ANG_VEL*.5, TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint SLOW_ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
 

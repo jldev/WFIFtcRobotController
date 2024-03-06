@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.roadrunner;
+package org.firstinspires.ftc.teamcode.Neptune.drive;
 
 import androidx.annotation.NonNull;
 
@@ -39,7 +39,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
     private List<Integer> lastEncPositions, lastEncVels;
 
-    public double X_MULTIPLIER = 1.0;//1.09865; //0.9364; //1.096071;//1.01123596;
+    public double X_MULTIPLIER = 1; //1.09865; //0.9364; //1.096071;//1.01123596;
     public double Y_MULTIPLIER = 1.0278; //0.9684608;//0.96774194;
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap, List<Integer> lastTrackingEncPositions, List<Integer> lastTrackingEncVels) {

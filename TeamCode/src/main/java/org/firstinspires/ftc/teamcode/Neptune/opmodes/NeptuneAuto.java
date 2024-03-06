@@ -77,7 +77,7 @@ public class NeptuneAuto {
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)),
 
 //                                    new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 4),
-//                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
+                            new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
                             new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
