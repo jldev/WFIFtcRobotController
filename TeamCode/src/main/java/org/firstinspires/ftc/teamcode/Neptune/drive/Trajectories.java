@@ -40,7 +40,7 @@ public class Trajectories {
 
     //Backdrop locations
     Pose2d CenterBackdrop = new Pose2d(-32, 32, Math.toRadians(0)); //complete
-    Pose2d LeftBackdrop = new Pose2d(-32, 26, Math.toRadians(0)); //complete
+    Pose2d LeftBackdrop = new Pose2d(-32, 26, Math.toRadians(0)); //complete   ||  uh could be moved a bit more left imo
     Pose2d RightBackdrop = new Pose2d(-32, 38, Math.toRadians(0)); //complete
 
     //Stack locations
@@ -321,15 +321,23 @@ public class Trajectories {
     public Trajectory getTrajectoryForAprilTag(AprilTagPoseFtc pose, double distanceFromTag){
 
         double  rangeError      = (pose.range - distanceFromTag);
-        double  newHeading    = mStartPosition.getHeading() + pose.bearing;
+        double  newHeading    = mStartPosition.getHeading() - pose.bearing;
         double  yawError        = pose.yaw;
+        Trajectory traj;
 
-        Trajectory traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
-                .splineToConstantHeading(mStartPosition.vec(), newHeading)
-                .strafeRight(-yawError)
-                .forward(rangeError)
-                .build();
-
+        if(neptune.allianceColor == Neptune.AllianceColor.BLUE){
+            traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
+                    .splineToConstantHeading(mStartPosition.vec(), newHeading)
+                    .strafeLeft(yawError)
+                    .forward(rangeError)
+                    .build();
+        } else {
+            traj = mDrive.trajectoryBuilder(mStartPosition, true, TRAJECTORY_SPEED_SLOW)
+                    .splineToConstantHeading(mStartPosition.vec(), newHeading)
+                    .strafeRight(yawError)
+                    .forward(rangeError)
+                    .build();
+        }
         mStartPosition = traj.end();
         return traj;
     }
