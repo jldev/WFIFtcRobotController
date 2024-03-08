@@ -50,8 +50,8 @@ public class HangSubsystem extends SubsystemBase {
         }
         switch (hangstate) {
             case HANGING:
-                mHangServo.setPosition(NeptuneConstants.NEPTUNE_HANG_POS);
-                mHangServo2.setPosition(NeptuneConstants.NEPTUNE_HANG_POS);
+                mHangServo.setPosition(NeptuneConstants.NEPTUNE_HANG_POS1);
+                mHangServo2.setPosition(NeptuneConstants.NEPTUNE_HANG_POS2);
                 break;
             case SECONDHANG:
                 mHangServo.setPosition(NeptuneConstants.NEPTUNE_SECONDHANG_POS);

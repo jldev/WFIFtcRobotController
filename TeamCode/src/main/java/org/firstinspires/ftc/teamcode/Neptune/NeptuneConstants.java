@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class NeptuneConstants {
+    public static long WAIT_FOR_ALLIANCE_PARTNER_TO_CLEAR_MS = 2000;
     public static double SLIDE_MOTOR_MANUAL_POWER = 0.3;
     public static double TRIGGER_THRESHOLD = 0.5;
     public static int CAMERA_EXPOSURE_TIME_MS = 40;
@@ -24,11 +25,12 @@ public class NeptuneConstants {
     public static double NEPTUNE_VBAR_TARGET_POSITION_UP = 0.40;
     public static double NEPTUNE_VBAR_TARGET_POSITION_DOWN = 1.0;
     public static double NEPTUNE_HANG_REST_POS= 1.0;
-    public static double NEPTUNE_HANG_POS= 0.65;
+    public static double NEPTUNE_SECONDHANG_POS = 0.8;
+    public static double NEPTUNE_HANG_POS1= 0.65;
+    public static double NEPTUNE_HANG_POS2= 0.52;
 
     public static double NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP = 5;
 
-    public static double NEPTUNE_SECONDHANG_POS = 0.8;
     public static double NEPTUNE_HANG_MOTOR_UP_POWER = 1;
     public static double NEPTUNE_HANG_MOTOR_DOWN_POWER = -1;
     public static double SLIDE_kP = 3;

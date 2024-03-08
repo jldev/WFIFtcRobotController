@@ -39,9 +39,9 @@ public class Trajectories {
     Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(0)); //complete
 
     //Backdrop locations
-    Pose2d CenterBackdrop = new Pose2d(-32, 36, Math.toRadians(0)); //complete
-    Pose2d LeftBackdrop = new Pose2d(-32, 30, Math.toRadians(0)); //complete
-    Pose2d RightBackdrop = new Pose2d(-32, 42, Math.toRadians(0)); //complete
+    Pose2d CenterBackdrop = new Pose2d(-32, 32, Math.toRadians(0)); //complete
+    Pose2d LeftBackdrop = new Pose2d(-32, 26, Math.toRadians(0)); //complete
+    Pose2d RightBackdrop = new Pose2d(-32, 38, Math.toRadians(0)); //complete
 
     //Stack locations
     Pose2d OuterStack = new Pose2d(60, 36, Math.toRadians(0));  //complete
@@ -71,7 +71,6 @@ public class Trajectories {
     public Pose2d backdrop;
     public Pose2d AUInOut;
     public Pose2d BDInOut;
-
     public Pose2d park;
     private MecanumDriveSubsystem mDrive;
     public Pose2d mStartPosition;

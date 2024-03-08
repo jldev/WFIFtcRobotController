@@ -77,6 +77,7 @@ public class NeptuneAuto {
                                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.stack)),
                                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.AUInOut)),
                                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
+                                            new WaitCommand(NeptuneConstants.WAIT_FOR_ALLIANCE_PARTNER_TO_CLEAR_MS),
                                             new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
                                             new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
                                     );
@@ -86,7 +87,7 @@ public class NeptuneAuto {
                                             new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
                                     );
                                 }
-                                groupToRun.whenFinished(() -> {
+                                opMode.schedule(groupToRun.whenFinished(() -> {
                                     //Sequential Command Group finished
                                     opMode.schedule(detectAprilTagCommand.withTimeout(1000).whenFinished(() -> {
                                         CommandBase commandToRun;
@@ -117,7 +118,7 @@ public class NeptuneAuto {
                                                     }));
                                                 }));
                                     }));
-                                });
+                                }));
                             }));
                 }));
     }
