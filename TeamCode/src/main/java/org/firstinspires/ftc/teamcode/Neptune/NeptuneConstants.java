@@ -4,13 +4,25 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class NeptuneConstants {
-    public static long WAIT_FOR_ALLIANCE_PARTNER_TO_CLEAR_MS = 2000;
+    public static int WAIT_FOR_ALLIANCE_PARTNER_TO_CLEAR_MS = 5000;
     public static double SLIDE_MOTOR_MANUAL_POWER = 0.3;
     public static double TRIGGER_THRESHOLD = 0.5;
     public static int CAMERA_EXPOSURE_TIME_MS = 40;
     public static int CAMERA_GAIN = 1;
     public static  double NEPTUNE_INTAKE_SERVO_INITIAL_POS = 1.0;
     public static double NEPTUNE_INTAKE_SERVO_POS2 = 0.57;
+
+    public static double NEPTUNE_INTAKE_SERVO_P2 = 1.0;
+    public static double NEPTUNE_INTAKE_SERVO2_P2 = 0.4;
+
+    public static double NEPTUNE_INTAKE_SERVO_P3 = 1.0;
+    public static double NEPTUNE_INTAKE_SERVO2_P3 = 1.0;
+
+    public static double NEPTUNE_INTAKE_SERVO_P4 = 1.0;
+    public static double NEPTUNE_INTAKE_SERVO2_P4 = 1.0;
+
+    public static double NEPTUNE_INTAKE_SERVO_P5 = 1.0;
+    public static double NEPTUNE_INTAKE_SERVO2_P5 = 1.0;
     public static double MAX_SLIDE_MOTOR_POWER = 1.0;
     public static double MAX_VBAR_MOTOR_POWER = 0.8;
     public static double NEPTUNE_INTAKE_MOTOR_INTAKE_POWER = -1.0;
@@ -29,7 +41,7 @@ public class NeptuneConstants {
     public static double NEPTUNE_HANG_POS1= 0.65;
     public static double NEPTUNE_HANG_POS2= 0.52;
 
-    public static double NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP = 5;
+    public static double NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP = 2;
 
     public static double NEPTUNE_HANG_MOTOR_UP_POWER = 1;
     public static double NEPTUNE_HANG_MOTOR_DOWN_POWER = -1;
@@ -41,6 +53,8 @@ public class NeptuneConstants {
     public static double OUTAKE_CLOSED_POSITION = 0.0;
     public static double AUTOOUTAKE_OPEN_POSITION = 0.4;
     public static double AUTOOUTAKE_CLOSED_POSITION = 0.70;
+
+    public static int NEPTUNE_INTAKE_EJECT_TIME = 500;
 
     public static double DRONE_LAUNCHED = 0.25;
 

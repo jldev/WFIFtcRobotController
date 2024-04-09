@@ -18,11 +18,14 @@ import org.firstinspires.ftc.teamcode.Neptune.commands.AutoOutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectAprilTagCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.EndDistanceDriveCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeEjectCommand;
+import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SimpleDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.SlidePositionCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
@@ -68,7 +71,9 @@ public class NeptuneAuto {
                     opMode.schedule(
                             new SequentialCommandGroup(
                                 new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
-                                new AutoOutakeStateCommand(neptune.outtake, OutakeSubsystem.AutoOutakeState.OPENED),
+                                new IntakeEjectCommand(neptune.intake).withTimeout(NeptuneConstants.NEPTUNE_INTAKE_EJECT_TIME).whenFinished(() -> {
+                                    opMode.schedule(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
+                                }),
                                 new WaitCommand(1000)
                             ).whenFinished(() -> {
                                 SequentialCommandGroup groupToRun;

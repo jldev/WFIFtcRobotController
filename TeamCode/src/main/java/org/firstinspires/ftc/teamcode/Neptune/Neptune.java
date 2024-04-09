@@ -9,13 +9,16 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Neptune.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Neptune.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.DroneLauncherSubsytem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.HangSubsystem;
+import org.firstinspires.ftc.teamcode.Neptune.subsystems.IndicatorSubsytem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
@@ -31,6 +34,8 @@ public class Neptune {
     public final SlidesSubsystem slides;
 
     public final DroneLauncherSubsytem launcher;
+
+    public  final IndicatorSubsytem indicatorSubsytem;
 
     public final HangSubsystem hang;
     public final GamepadEx driverOp;
@@ -83,11 +88,10 @@ public class Neptune {
     private static final String[] LABELS = {
             "Pawn",
     };
-
     public Neptune(CommandOpMode opMode, OpModeType opModeType) {
         mOpMode = opMode;
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
-        outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"), opMode.hardwareMap.get(Servo.class, "autoOuttake"));
+        outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"));
         intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
                 (new MotorEx(opMode.hardwareMap, "intakeMotor2", 537.6,340)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
@@ -100,6 +104,13 @@ public class Neptune {
         hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
         launcher = new DroneLauncherSubsytem(opMode.hardwareMap.get(Servo.class, "droneLauncher"));
         distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        indicatorSubsytem = new IndicatorSubsytem(this);
+        int ledCount = 6;
+        for(Integer i = 0; i< ledCount; i++)
+        {
+            indicatorSubsytem.registerLED(opMode.hardwareMap.get(LED.class, "led" + i.toString()), i % 2);
+        }
+
 
         hang = new HangSubsystem(hangServo,hangServo2,hangMotor);
 

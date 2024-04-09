@@ -11,19 +11,13 @@ public class OutakeSubsystem extends SubsystemBase {
 //TODO: ADD NEW CODE FOR VBAR SERVO
 
     private final Servo mOutakeServo;
-    private final Servo mAutoOutakeServo;
 
 
-
-    public OutakeSubsystem(Servo outakeServo, Servo autoOutakeServo){
+    public OutakeSubsystem(Servo outakeServo){
         mOutakeServo = outakeServo;
-        mAutoOutakeServo = autoOutakeServo;
 
-        mAutoOutakeServo.setDirection(Servo.Direction.REVERSE);
 
         mOutakeServo.setPosition(NeptuneConstants.OUTAKE_CLOSED_POSITION);
-        mAutoOutakeServo.setPosition(NeptuneConstants.AUTOOUTAKE_CLOSED_POSITION);
-
     }
 
     public enum OutakeState {
@@ -47,16 +41,6 @@ public class OutakeSubsystem extends SubsystemBase {
                 break;
             case CLOSED:
                 mOutakeServo.setPosition(NeptuneConstants.OUTAKE_CLOSED_POSITION);
-                break;
-        }
-
-
-        switch(autoOutakeState) {
-            case OPENED:
-                mAutoOutakeServo.setPosition(NeptuneConstants.AUTOOUTAKE_OPEN_POSITION);
-                break;
-            case CLOSED:
-                mAutoOutakeServo.setPosition(NeptuneConstants.AUTOOUTAKE_CLOSED_POSITION);
                 break;
         }
     }
