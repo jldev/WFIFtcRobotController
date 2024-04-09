@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 
@@ -13,10 +14,12 @@ import java.util.ArrayList;
 
 public class IndicatorSubsytem extends SubsystemBase {
 
-    class IndicatorLED{
+    private final int RED = 0;
+    private final int GREEN = 1;
+
+    static class IndicatorLED{
         LED led;
         int color;
-
         public IndicatorLED(LED led, int color)
         {
             this.led = led;
@@ -30,25 +33,9 @@ public class IndicatorSubsytem extends SubsystemBase {
         GREEN
     }
 
+    private final Neptune mNeptune;
 
-
-    private int TIME = 0;
-
-    private double currentTime = 0;
-
-    private double nextChange = 0.5;
-    private final int nextState = 0;
-
-    private  int currentState = 0;
-
-    private Neptune mNeptune;
-
-    private ArrayList<IndicatorLED> mleds = new ArrayList<>();
-
-
-
-
-
+    private final ArrayList<IndicatorLED> mleds = new ArrayList<>();
 
     public IndicatorSubsytem(Neptune neptune) {
         mNeptune = neptune;
@@ -59,57 +46,38 @@ public class IndicatorSubsytem extends SubsystemBase {
         mleds.add(new IndicatorLED(led, color));
     }
 
-
-    LEDState ledstate = LEDState.OFF;
+    LEDState currentState = LEDState.OFF;
 
     @Override
     public void periodic() {
-
-       currentTime = mNeptune.mOpMode.getRuntime();
-
-        if (currentTime > nextChange) {
-            currentState = nextState;
-            nextChange = (currentTime + nextChange);
-            switch (ledstate) {
-                case OFF:
-                    for(IndicatorLED led : mleds){
-                    led.led.enable(false);
+        if (mNeptune.slides.mVBarCurrentPosition == SlidesSubsystem.VBarPosition.UP){
+            double currentDistance = mNeptune.distanceSensor.getDistance(DistanceUnit.INCH);
+            if (currentDistance > 12){ // TODO: This needs to be a constant
+                currentState = LEDState.OFF;
+            } else if ((currentDistance < 12) && (currentDistance > 2)) {
+                currentState = LEDState.GREEN;
+            }else{
+                currentState = LEDState.RED;
+            }
+            for(IndicatorLED led : mleds){
+                switch (currentState) {
+                    case OFF:
+                        led.led.enable(false);
+                        break;
+                    case RED:
+                        led.led.enable(led.color == RED);
+                        break;
+                    case GREEN:
+                        led.led.enable(led.color == GREEN );
+                        break;
                 }
-                    break;
-                case RED:
-                    for(IndicatorLED led : mleds){
-                        if(led.color == 0)
-                            led.led.enable(false);
-                    }
+            }
 
-                    break;
-                case GREEN:
-                    for(IndicatorLED led : mleds){
-                        if(led.color == 1)
-                            led.led.enable(false);
-                    }
-
-                    break;
+        } else {
+            // turn all leds off when vbar is not up
+            for(IndicatorLED led : mleds){
+                led.led.enable(false);
             }
         }
     }
-
-    public void setLedstate (IndicatorSubsytem state, int period){
-//        nextState = state;
-        nextChange = (TIME + period);
-    }
-
-    public void ledOFF(){
-        ledstate = LEDState.OFF;
-    }
-
-    public void setLED (IndicatorSubsytem.LEDState state){
-        ledstate = state;
-    }
-
-
-    public boolean ledturnedoff(){
-        return false;
-    }
-
 }
