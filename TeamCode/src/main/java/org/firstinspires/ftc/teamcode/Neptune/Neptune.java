@@ -9,7 +9,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -27,6 +26,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 
 public class Neptune {
 
+    public final OpModeType mOpModeType;
     public VisionSubsystem vision;
     public final MecanumDriveSubsystem drive;
     public final OutakeSubsystem outtake;
@@ -61,7 +61,7 @@ public class Neptune {
     public final DistanceSensor distanceSensor;
     public final GamepadTriggerAsButton manualSlideButtonUp;
     public final GamepadTriggerAsButton manualSlideButtonDown;
-    public final GamepadTrigger driveBrakeTrigger;
+    public final GamepadTriggerAsButton intakeTrigger;
     public Pose2d startPos;
 
     public enum FieldPos {
@@ -90,9 +90,10 @@ public class Neptune {
     };
     public Neptune(CommandOpMode opMode, OpModeType opModeType) {
         mOpMode = opMode;
+        mOpModeType = opModeType;
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"));
-        intake = new IntakeSubsystem(new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
+        intake = new IntakeSubsystem(this, new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
                 (new MotorEx(opMode.hardwareMap, "intakeMotor2", 537.6,340)),
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(this, new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
@@ -128,11 +129,12 @@ public class Neptune {
         opMode.register(slides);
         opMode.register(hang);
         opMode.register(launcher);
+        opMode.register(indicatorSubsytem);
 
         // driver button setup
         intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
         intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
-        driveBrakeTrigger = new GamepadTrigger(driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER);
+        intakeTrigger = new GamepadTriggerAsButton(driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, 0.05);
         hangArmButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.X);
         hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
         hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);

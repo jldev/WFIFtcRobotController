@@ -64,11 +64,19 @@ public class Teleop extends CommandOpMode {
         neptune.outtakeButton.whenReleased(new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED));
 
         // Intake Buttons
-        neptune.intakeButton.whileHeld(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
-        neptune.intakeButton.whenReleased(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
+//        neptune.intakeButton.whileHeld(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING));
+//        neptune.intakeButton.whenReleased(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
 
         neptune.intakeReverseButton.whileHeld(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.EJECTING));
         neptune.intakeReverseButton.whenReleased(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
+
+        neptune.intakeTrigger.whileActiveContinuous(new InstantCommand(() -> {
+            neptune.intake.setIntakeState(IntakeSubsystem.IntakeState.INTAKING);
+            neptune.intake.setIntakeLiftPositionPercentage(neptune.intakeTrigger.getTriggerValue());
+        }));
+        neptune.intakeTrigger.whenInactive(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
+
+
 
         // Drive control
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
@@ -77,8 +85,7 @@ public class Teleop extends CommandOpMode {
 //                neptune.driverOp::getLeftX, neptune.driverOp::getRightX,
 
                 neptune.drive, () -> neptune.driverOp.getRightY(),
-                () -> neptune.driverOp.getRightX(), () -> neptune.driverOp.getLeftX(),
-                neptune.driveBrakeTrigger::get
+                () -> neptune.driverOp.getRightX(), () -> neptune.driverOp.getLeftX()
         );
         neptune.drive.setDefaultCommand(driveCommand);
 

@@ -54,7 +54,7 @@ public class IndicatorSubsytem extends SubsystemBase {
             double currentDistance = mNeptune.distanceSensor.getDistance(DistanceUnit.INCH);
             if (currentDistance > 12){ // TODO: This needs to be a constant
                 currentState = LEDState.OFF;
-            } else if ((currentDistance < 12) && (currentDistance > 2)) {
+            } else if ((currentDistance < 12) && (currentDistance > 3)) {
                 currentState = LEDState.GREEN;
             }else{
                 currentState = LEDState.RED;

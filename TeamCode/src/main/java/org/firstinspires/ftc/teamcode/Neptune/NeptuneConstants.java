@@ -9,24 +9,17 @@ public class NeptuneConstants {
     public static double TRIGGER_THRESHOLD = 0.5;
     public static int CAMERA_EXPOSURE_TIME_MS = 40;
     public static int CAMERA_GAIN = 1;
-    public static  double NEPTUNE_INTAKE_SERVO_INITIAL_POS = 1.0;
-    public static double NEPTUNE_INTAKE_SERVO_POS2 = 0.57;
+    public static  double NEPTUNE_INTAKE_SERVO_INITIAL_POS = .4;
+    public static double NEPTUNE_INTAKE_SERVO_POS2 = 0.815;
 
-    public static double NEPTUNE_INTAKE_SERVO_P2 = 1.0;
-    public static double NEPTUNE_INTAKE_SERVO2_P2 = 0.4;
-
-    public static double NEPTUNE_INTAKE_SERVO_P3 = 1.0;
-    public static double NEPTUNE_INTAKE_SERVO2_P3 = 1.0;
-
-    public static double NEPTUNE_INTAKE_SERVO_P4 = 1.0;
-    public static double NEPTUNE_INTAKE_SERVO2_P4 = 1.0;
-
-    public static double NEPTUNE_INTAKE_SERVO_P5 = 1.0;
-    public static double NEPTUNE_INTAKE_SERVO2_P5 = 1.0;
+    public static double NEPTUNE_INTAKE_SERVO_P2 = .75;
+    public static double NEPTUNE_INTAKE_SERVO_P3 = .75;
+    public static double NEPTUNE_INTAKE_SERVO_P4 = .75;
+    public static double NEPTUNE_INTAKE_SERVO_P5 = .75;
     public static double MAX_SLIDE_MOTOR_POWER = 1.0;
     public static double MAX_VBAR_MOTOR_POWER = 0.8;
-    public static double NEPTUNE_INTAKE_MOTOR_INTAKE_POWER = -1.0;
-    public static double NEPTUNE_INTAKE_MOTOR_EJECT_POWER = 1.0;
+    public static double NEPTUNE_INTAKE_MOTOR_INTAKE_POWER = 1.0;
+    public static double NEPTUNE_INTAKE_MOTOR_EJECT_POWER = -   1.0;
     public static int MIN_SAFE_POSTITION_FOR_VBAR = 900;
     public static int NEPTUNE_SLIDE_HOME = 0;
     public static int NEPTUNE_SLIDE_POS1 = 0;

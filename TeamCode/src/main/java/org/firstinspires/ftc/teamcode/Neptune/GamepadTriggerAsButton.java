@@ -23,4 +23,8 @@ public class GamepadTriggerAsButton extends Button {
     public boolean get() {
         return mTrigger.get() > mTriggerThreshold;
     }
+
+    public double getTriggerValue() {
+        return mTrigger.get();
+    }
 }
