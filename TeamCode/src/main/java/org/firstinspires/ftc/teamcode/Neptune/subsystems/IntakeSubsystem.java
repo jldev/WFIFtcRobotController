@@ -61,16 +61,12 @@ public class IntakeSubsystem extends SubsystemBase {
             case INTAKING:
                 mIntakeMotor.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_INTAKE_POWER);
                 mIntakeMotor2.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_INTAKE_POWER);
-                intakeLiftState = LiftableIntakePosition.LOW;
                 break;
             case EJECTING:
                 mIntakeMotor.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_EJECT_POWER);
                 mIntakeMotor2.set(NeptuneConstants.NEPTUNE_INTAKE_MOTOR_EJECT_POWER);
-                intakeLiftState = LiftableIntakePosition.RAISE;
                 break;
             case NEUTRAL:
-                intakeLiftState = LiftableIntakePosition.RAISE;
-                mIntakeLiftPosition = NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS;
                 mIntakeMotor.stopMotor();
                 mIntakeMotor2.stopMotor();
                 break;

@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
+import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
@@ -74,7 +75,11 @@ public class Teleop extends CommandOpMode {
             neptune.intake.setIntakeState(IntakeSubsystem.IntakeState.INTAKING);
             neptune.intake.setIntakeLiftPositionPercentage(neptune.intakeTrigger.getTriggerValue());
         }));
-        neptune.intakeTrigger.whenInactive(new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL));
+
+        neptune.intakeTrigger.whenInactive( new InstantCommand(() -> {
+            neptune.intake.setIntakeState(IntakeSubsystem.IntakeState.NEUTRAL);
+            neptune.intake.setIntakeLiftPositionPercentage(0);
+        }));
 
 
 

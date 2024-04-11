@@ -10,7 +10,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 public class Trajectories {
 
 
-    private static final boolean TRAJECTORY_SPEED_SLOW = true;
+    private static final boolean TRAJECTORY_SPEED_SLOW = false;
 
     public enum PropPlacement {
         LEFT,
@@ -25,23 +25,23 @@ public class Trajectories {
 
     }
     //Start locations
-    public static Pose2d AUStart = new Pose2d(40, 63, Math.toRadians(90)); //complete
-    public static Pose2d BDStart = new Pose2d(-12, 62, Math.toRadians(90)); //complete
+    public static Pose2d AUStart = new Pose2d(40, 63, Math.toRadians(270)); //complete
+    public static Pose2d BDStart = new Pose2d(-12, 62, Math.toRadians(270)); //complete
 
     //Spike locations for Backdrop side
-    Pose2d BDCenterSpike =new Pose2d(-24, 24, Math.toRadians(180)); //complete
-    Pose2d BDLeftSpike = new Pose2d(-12, 32, Math.toRadians(180)); //complete
-    Pose2d BDRightSpike = new Pose2d(-36, 32, Math.toRadians(180)); //complete
+    Pose2d BDCenterSpike =new Pose2d(-24, 24, Math.toRadians(0)); //complete
+    Pose2d BDLeftSpike = new Pose2d(-8, 32, Math.toRadians(0)); //complete
+    Pose2d BDRightSpike = new Pose2d(-32, 32, Math.toRadians(0)); //complete
 
     //Spike locations for Audience side
-    Pose2d AUCenterSpike =new Pose2d(48, 24, Math.toRadians(0)); //complete
-    Pose2d AULeftSpike = new Pose2d(56, 32, Math.toRadians(0)); //complete
-    Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(0)); //complete
+    Pose2d AUCenterSpike =new Pose2d(48, 24, Math.toRadians(180)); //complete
+    Pose2d AULeftSpike = new Pose2d(56, 32, Math.toRadians(180)); //complete
+    Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(180)); //complete
 
     //Backdrop locations
-    Pose2d CenterBackdrop = new Pose2d(-32, 32, Math.toRadians(0)); //complete
-    Pose2d LeftBackdrop = new Pose2d(-32, 26, Math.toRadians(0)); //complete   ||  uh could be moved a bit more left imo
-    Pose2d RightBackdrop = new Pose2d(-32, 38, Math.toRadians(0)); //complete
+    Pose2d CenterBackdrop = new Pose2d(-32, 35, Math.toRadians(0)); //complete
+    Pose2d LeftBackdrop = new Pose2d(-32, 29, Math.toRadians(0)); //complete   ||  uh could be moved a bit more left imo
+    Pose2d RightBackdrop = new Pose2d(-32, 41, Math.toRadians(0)); //complete
 
     //Stack locations
     Pose2d OuterStack = new Pose2d(60, 36, Math.toRadians(0));  //complete
@@ -50,19 +50,19 @@ public class Trajectories {
 
     //Stage midpoint locations
     Pose2d AUIn = new Pose2d(36, 10, Math.toRadians(0)); // complete
-    Pose2d AUOut = new Pose2d(48, 60, Math.toRadians(0)); //complete
+    Pose2d AUOut = new Pose2d(48, 55, Math.toRadians(0)); //complete
     Pose2d BDIn = new Pose2d(-36, 10, Math.toRadians(0)); //complete
-    Pose2d BDOut = new Pose2d(-24, 60, Math.toRadians(0)); //complete
+    Pose2d BDOut = new Pose2d(-24, 55, Math.toRadians(0)); //complete
 
     //Parking spot for BD side
-    Pose2d ParkPosition = new Pose2d(-48, 60, Math.toRadians(0)); //complete
+    Pose2d ParkPosition = new Pose2d(-48, 55, Math.toRadians(0)); //complete
     //Both left or right
     Pose2d spikeOrigin = AUCenterSpike;
     Pose2d backdropOrigin = CenterBackdrop;
-    Pose2d stackOrigin = InnerStack;
+    Pose2d stackOrigin = OuterStack;
     //Both in or out
-    Pose2d AUInOutOrigin = AUIn;
-    Pose2d BDInOutOrigin = BDIn;
+    Pose2d AUInOutOrigin = AUOut;
+    Pose2d BDInOutOrigin = BDOut;
 
     public int targettedAprilTag;
 
