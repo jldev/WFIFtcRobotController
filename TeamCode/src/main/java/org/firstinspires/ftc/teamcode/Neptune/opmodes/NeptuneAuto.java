@@ -14,6 +14,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
@@ -87,12 +88,12 @@ public class NeptuneAuto {
             opMode.telemetry.addData("Back ", neptune.distanceSensor.getDistance(DistanceUnit.INCH));
             opMode.telemetry.addData("Left ", neptune.leftDistanceSensor.getDistance(DistanceUnit.INCH));
             opMode.telemetry.addData("Right ", neptune.rightDistanceSensor.getDistance(DistanceUnit.INCH));
-            neptune.vision.addTelemetry(opMode.telemetry);
+//            neptune.vision.addTelemetry(opMode.telemetry);
             opMode.telemetry.update();
         }));
 
         DetectPawnCommand detectPawnCommand = new DetectPawnCommand(neptune.vision);
-        DetectAprilTagCommand detectAprilTagCommand = new DetectAprilTagCommand(neptune.vision, trajectories.targettedAprilTag);
+//        DetectAprilTagCommand detectAprilTagCommand = new DetectAprilTagCommand(neptune.vision, trajectories.targettedAprilTag);
 
         opMode.schedule(new SequentialCommandGroup(
                 new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.P5),
@@ -107,13 +108,20 @@ public class NeptuneAuto {
                             new SequentialCommandGroup(
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
                                     new IntakeEjectCommand(neptune.intake).withTimeout(NeptuneConstants.NEPTUNE_INTAKE_EJECT_TIME),
-                                    new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL),
-                                    getSpikeToBackdropCommandGroup(trajectories),
-                                    getBackdropAdjustmentCommand(neptune, trajectories),
-                                    new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
-                                    new WaitCommand(500),
-                                    new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED),
-                                    new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
+                                    new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL).whenFinished(() -> {
+                                        opMode.schedule(getSpikeToBackdropCommandGroup(trajectories).whenFinished(() -> {
+                                            opMode.schedule(getBackdropAdjustmentCommand(neptune, trajectories, opMode.telemetry).whenFinished(() -> {
+                                                opMode.schedule(
+                                                        new SequentialCommandGroup(
+                                                        new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
+                                                        new WaitCommand(500),
+                                                        new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED),
+                                                        new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS))
+                                                );
+                                            }));
+                                        }));
+                                    })
+
                             ).whenFinished(() -> {
                                 if (neptune.fieldPos == Neptune.FieldPos.BD) {
                                     if (!mStacks) {
@@ -144,7 +152,7 @@ public class NeptuneAuto {
         ));
     }
 
-    private Command getBackdropAdjustmentCommand(Neptune neptune, Trajectories trajectories) {
+    private SequentialCommandGroup getBackdropAdjustmentCommand(Neptune neptune, Trajectories trajectories, Telemetry telemetry) {
         DistanceSensor ds;
         MecanumDriveSubsystem.DriveDirection direction;
         if (neptune.allianceColor == Neptune.AllianceColor.BLUE) {
@@ -153,11 +161,12 @@ public class NeptuneAuto {
             ds = neptune.leftDistanceSensor;
         }
 
-        double wantedDistanceFromWall = 72 - Math.abs(trajectories.backdrop.getY());
+        double wantedDistanceFromWall = 72 - Math.abs(trajectories.backdrop.getY()) - 7;
 
         double currentDistance = ds.getDistance(DistanceUnit.INCH);
 
-
+        telemetry.addData("Wanted Distance", wantedDistanceFromWall);
+        telemetry.addData("Current Distance", currentDistance);
 
         if (ds == neptune.rightDistanceSensor)
         {
@@ -179,11 +188,11 @@ public class NeptuneAuto {
             }
         }
 
-
+        telemetry.addData("Direction", direction);
+        telemetry.update();
         return new SequentialCommandGroup(
-                new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, neptune.distanceSensor, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP),
-                // the left right adjustment needs to be here
-                new WallLocalizerCommand(neptune, direction, neptune.distanceSensor, wantedDistanceFromWall)
+                new WallLocalizerCommand(neptune, direction, ds, wantedDistanceFromWall),
+                new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, neptune.distanceSensor, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP)
         );
     }
 }
