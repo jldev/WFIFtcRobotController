@@ -59,10 +59,13 @@ public class Neptune {
     public final SwitchReader magSwitchButton;
 
     public final DistanceSensor distanceSensor;
+    public DistanceSensor leftDistanceSensor;
+    public DistanceSensor rightDistanceSensor;
     public final GamepadTriggerAsButton manualSlideButtonUp;
     public final GamepadTriggerAsButton manualSlideButtonDown;
     public final GamepadTriggerAsButton intakeTrigger;
     public Pose2d startPos;
+
 
     public enum FieldPos {
         AU,
@@ -105,6 +108,8 @@ public class Neptune {
         hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
         launcher = new DroneLauncherSubsytem(opMode.hardwareMap.get(Servo.class, "droneLauncher"));
         distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        leftDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "leftDistance");
+        rightDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "rightDistance");
         indicatorSubsytem = new IndicatorSubsytem(this);
         int ledCount = 6;
         for(Integer i = 0; i< ledCount; i++)

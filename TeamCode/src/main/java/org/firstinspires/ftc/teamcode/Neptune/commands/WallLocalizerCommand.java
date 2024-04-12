@@ -7,14 +7,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.MecanumDriveSubsystem;
 
-public class EndDistanceDriveCommand extends CommandBase {
+public class WallLocalizerCommand extends CommandBase {
 
     private final Neptune neptune;
     private final MecanumDriveSubsystem.DriveDirection direction;
     private final double endDistance;
     private final DistanceSensor distanceSensor;
 
-    public EndDistanceDriveCommand(Neptune neptune, MecanumDriveSubsystem.DriveDirection direction, DistanceSensor sensor, double endDistance ) {
+    private final double inchesThreshold = 1.0;
+
+    public WallLocalizerCommand(Neptune neptune, MecanumDriveSubsystem.DriveDirection direction, DistanceSensor sensor, double endDistance ) {
         this.neptune = neptune;
         this.direction = direction;
         this.distanceSensor = sensor;
@@ -38,6 +40,8 @@ public class EndDistanceDriveCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return distanceSensor.getDistance(DistanceUnit.INCH) < this.endDistance;
+        double currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
+        return  (currentDistance < (this.endDistance + inchesThreshold) &&
+                currentDistance > (this.endDistance - inchesThreshold));
     }
 }
