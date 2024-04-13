@@ -108,8 +108,7 @@ public class Neptune {
         hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
         launcher = new DroneLauncherSubsytem(opMode.hardwareMap.get(Servo.class, "droneLauncher"));
         distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
-        leftDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "leftDistance");
-        rightDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "rightDistance");
+
         indicatorSubsytem = new IndicatorSubsytem(this);
         int ledCount = 6;
         for(Integer i = 0; i< ledCount; i++)
@@ -125,6 +124,8 @@ public class Neptune {
         // register subsystems
         if (opModeType == OpModeType.AUTO){
             vision = new VisionSubsystem(opMode, TFOD_MODEL_ASSET, LABELS);
+            leftDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "leftDistance");
+            rightDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "rightDistance");
             opMode.register(vision);
         }
 

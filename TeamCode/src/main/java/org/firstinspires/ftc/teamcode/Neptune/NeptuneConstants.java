@@ -15,7 +15,7 @@ public class NeptuneConstants {
     public static double NEPTUNE_INTAKE_SERVO_P2 = .75;
     public static double NEPTUNE_INTAKE_SERVO_P3 = .75;
     public static double NEPTUNE_INTAKE_SERVO_P4 = .75;
-    public static double NEPTUNE_INTAKE_SERVO_P5 = .75;
+    public static double NEPTUNE_INTAKE_SERVO_P5 = .6;
     public static double MAX_SLIDE_MOTOR_POWER = 1.0;
     public static double MAX_VBAR_MOTOR_POWER = 0.8;
     public static double NEPTUNE_INTAKE_MOTOR_INTAKE_POWER = 1.0;
@@ -26,7 +26,7 @@ public class NeptuneConstants {
     public static int NEPTUNE_SLIDE_POS2 = 900;
     public static int NEPTUNE_SLIDE_POS3 = 1400;
     public static double NEPTUNE_SLIDE_MOTOR_POS_COEFFICIENT = .02;
-    public static int NEPTUNE_SLIDE_MOTOR_POS_TOLERANCE = 100;
+    public static int NEPTUNE_SLIDE_MOTOR_POS_TOLERANCE = 50;
     public static double NEPTUNE_VBAR_TARGET_POSITION_UP = 0.40;
     public static double NEPTUNE_VBAR_TARGET_POSITION_DOWN = 1.0;
     public static double NEPTUNE_HANG_REST_POS= 1.0;

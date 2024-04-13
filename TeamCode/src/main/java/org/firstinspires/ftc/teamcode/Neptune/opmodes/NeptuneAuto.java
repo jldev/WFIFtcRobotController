@@ -113,10 +113,41 @@ public class NeptuneAuto {
                                             opMode.schedule(getBackdropAdjustmentCommand(neptune, trajectories, opMode.telemetry).whenFinished(() -> {
                                                 opMode.schedule(
                                                         new SequentialCommandGroup(
-                                                        new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
-                                                        new WaitCommand(500),
-                                                        new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED),
-                                                        new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS))
+                                                            new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
+                                                            new WaitCommand(500),
+                                                            new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED),
+                                                            new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
+                                                        ).whenFinished(()->{
+                                                            if(mStacks) {
+                                                                if (neptune.allianceColor == Neptune.AllianceColor.BLUE) {
+                                                                    opMode.schedule(new SequentialCommandGroup(
+                                                                            new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.RIGHT, neptune.rightDistanceSensor, 3),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 90),
+                                                                            new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.LEFT, neptune.rightDistanceSensor, 29),
+                                                                            new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 6),
+                                                                            new WaitCommand(200),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 6),
+                                                                            new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.RIGHT, neptune.rightDistanceSensor, 3),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 90)
+
+                                                                    ));
+                                                                } else {
+                                                                    opMode.schedule(new SequentialCommandGroup(
+                                                                            new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.LEFT, neptune.leftDistanceSensor, 3),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 90),
+                                                                            new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.RIGHT, neptune.leftDistanceSensor, 29),
+                                                                            new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 6),
+                                                                            new WaitCommand(200),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 6),
+                                                                            new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.LEFT, neptune.leftDistanceSensor, 3),
+                                                                            new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 90)
+
+                                                                    ));
+                                                                }
+                                                            }
+                                                        })
                                                 );
                                             }));
                                         }));
