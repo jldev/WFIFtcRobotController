@@ -33,37 +33,37 @@ public class Neptune {
     public final IntakeSubsystem intake;
     public final SlidesSubsystem slides;
 
-    public final DroneLauncherSubsytem launcher;
+    public DroneLauncherSubsytem launcher;
 
-    public  final IndicatorSubsytem indicatorSubsytem;
+    public IndicatorSubsytem indicatorSubsytem;
 
-    public final HangSubsystem hang;
-    public final GamepadEx driverOp;
-    public final GamepadEx gunnerOp;
-    public final Servo hangServo;
-    public final Servo hangServo2;
-    public final MotorEx hangMotor;
-    public final GamepadButton liftButton;
-    public final GamepadButton liftButtonDown;
-    public final GamepadButton outtakeButton;
-    public final GamepadButton intakeButton;
-    public final GamepadButton hangButtonUp;
-    public final GamepadButton hangButtonDown;
-    public final GamepadButton hangArmButtonUp;
-    public final GamepadButton intakeReverseButton;
+    public HangSubsystem hang;
+    public GamepadEx driverOp;
+    public GamepadEx gunnerOp;
+    public Servo hangServo;
+    public Servo hangServo2;
+    public MotorEx hangMotor;
+    public GamepadButton liftButton;
+    public GamepadButton liftButtonDown;
+    public GamepadButton outtakeButton;
+    public GamepadButton intakeButton;
+    public GamepadButton hangButtonUp;
+    public GamepadButton hangButtonDown;
+    public GamepadButton hangArmButtonUp;
+    public GamepadButton intakeReverseButton;
 
-    public final GamepadButton droneLauncherButton;
+    public GamepadButton droneLauncherButton;
 
-    public final GamepadButton droneLauncherButton2;
+    public GamepadButton droneLauncherButton2;
 
     public final SwitchReader magSwitchButton;
 
     public final DistanceSensor distanceSensor;
     public DistanceSensor leftDistanceSensor;
     public DistanceSensor rightDistanceSensor;
-    public final GamepadTriggerAsButton manualSlideButtonUp;
-    public final GamepadTriggerAsButton manualSlideButtonDown;
-    public final GamepadTriggerAsButton intakeTrigger;
+    public GamepadTriggerAsButton manualSlideButtonUp;
+    public GamepadTriggerAsButton manualSlideButtonDown;
+    public GamepadTriggerAsButton intakeTrigger;
     public Pose2d startPos;
 
 
@@ -101,25 +101,8 @@ public class Neptune {
                 opMode.hardwareMap.get(Servo.class, "intakeServo1"), opMode.hardwareMap.get(Servo.class, "intakeServo2"));
         slides = new SlidesSubsystem(this, new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 opMode.hardwareMap.get(Servo.class, "vbarServo"),  opMode, opMode.hardwareMap.get(AnalogInput.class, "vbarAnalog"));
-        driverOp = new GamepadEx(opMode.gamepad1);
-        gunnerOp = new GamepadEx(opMode.gamepad2);
-        hangServo = opMode.hardwareMap.get(Servo.class, "hangServo1");
-        hangServo2 = opMode.hardwareMap.get(Servo.class, "hangServo2");
-        hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
-        launcher = new DroneLauncherSubsytem(opMode.hardwareMap.get(Servo.class, "droneLauncher"));
+
         distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
-
-        indicatorSubsytem = new IndicatorSubsytem(this);
-        int ledCount = 6;
-        for(Integer i = 0; i< ledCount; i++)
-        {
-            indicatorSubsytem.registerLED(opMode.hardwareMap.get(LED.class, "led" + i.toString()), i % 2);
-        }
-
-
-        hang = new HangSubsystem(hangServo,hangServo2,hangMotor);
-
-//        hangController = new PIDSlidesController(new SimpleLinearLift(hangServo));
 
         // register subsystems
         if (opModeType == OpModeType.AUTO){
@@ -127,34 +110,53 @@ public class Neptune {
             leftDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "leftDistance");
             rightDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "rightDistance");
             opMode.register(vision);
+        } else {
+            driverOp = new GamepadEx(opMode.gamepad1);
+            gunnerOp = new GamepadEx(opMode.gamepad2);
+
+            hangServo = opMode.hardwareMap.get(Servo.class, "hangServo1");
+            hangServo2 = opMode.hardwareMap.get(Servo.class, "hangServo2");
+            hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
+
+            indicatorSubsytem = new IndicatorSubsytem(this);
+            int ledCount = 6;
+            for(int i = 0; i< ledCount; i++)
+            {
+                indicatorSubsytem.registerLED(opMode.hardwareMap.get(LED.class, "led" + Integer.toString(i)), i % 2);
+            }
+
+            launcher = new DroneLauncherSubsytem(opMode.hardwareMap.get(Servo.class, "droneLauncher"));
+            hang = new HangSubsystem(hangServo,hangServo2,hangMotor);
+
+            opMode.register(hang);
+            opMode.register(launcher);
+            opMode.register(indicatorSubsytem);
+
+            // driver button setup
+            intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
+            intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
+            intakeTrigger = new GamepadTriggerAsButton(driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, 0.05);
+            hangArmButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.X);
+            hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+            hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
+
+
+            // gunner button setup
+            liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
+            liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
+            outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
+            droneLauncherButton = new GamepadButton(gunnerOp, GamepadKeys.Button.LEFT_BUMPER);
+            droneLauncherButton2 = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
+
+            manualSlideButtonUp = new GamepadTriggerAsButton(gunnerOp, GamepadKeys.Trigger.LEFT_TRIGGER, NeptuneConstants.TRIGGER_THRESHOLD);
+            manualSlideButtonDown = new GamepadTriggerAsButton(gunnerOp, GamepadKeys.Trigger.RIGHT_TRIGGER, NeptuneConstants.TRIGGER_THRESHOLD);
+
         }
 
         opMode.register(drive);
         opMode.register(outtake);
         opMode.register(intake);
         opMode.register(slides);
-        opMode.register(hang);
-        opMode.register(launcher);
-        opMode.register(indicatorSubsytem);
-
-        // driver button setup
-        intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
-        intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
-        intakeTrigger = new GamepadTriggerAsButton(driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, 0.05);
-        hangArmButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.X);
-        hangButtonUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
-        hangButtonDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
-
-
-        // gunner button setup
-        liftButton = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
-        liftButtonDown = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
-        outtakeButton = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
-        droneLauncherButton = new GamepadButton(gunnerOp, GamepadKeys.Button.LEFT_BUMPER);
-        droneLauncherButton2 = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
-
-        manualSlideButtonUp = new GamepadTriggerAsButton(gunnerOp, GamepadKeys.Trigger.LEFT_TRIGGER, NeptuneConstants.TRIGGER_THRESHOLD);
-        manualSlideButtonDown = new GamepadTriggerAsButton(gunnerOp, GamepadKeys.Trigger.RIGHT_TRIGGER, NeptuneConstants.TRIGGER_THRESHOLD);
 
         // pseudo buttons
         magSwitchButton = new SwitchReader(opMode.hardwareMap, false);

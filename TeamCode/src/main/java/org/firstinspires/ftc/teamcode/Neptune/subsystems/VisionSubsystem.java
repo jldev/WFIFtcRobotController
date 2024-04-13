@@ -183,6 +183,8 @@ public class VisionSubsystem  extends SubsystemBase {
 //        }
     }
     public void stop() {
+        visionPortal.setProcessorEnabled(aprilTag, false);
+        visionPortal.setProcessorEnabled(tfod, false);
 //        if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
 //            visionPortal.stopStreaming();
 //        }

@@ -26,13 +26,14 @@ public class WallLocalizerCommand extends CommandBase {
 
     @Override
     public void initialize() {
+
     }
 
 
     @Override
     public void execute(){
-        double delta = endDistance - distanceSensor.getDistance(DistanceUnit.INCH);
-        this.neptune.drive.driveDirection(direction, delta/2);
+        double delta = distanceSensor.getDistance(DistanceUnit.INCH) - endDistance;
+        this.neptune.drive.driveDirection(direction, delta);
     }
     @Override
     public void end(boolean interrupted) {
