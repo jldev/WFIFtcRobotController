@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Neptune.commands;
 
+import android.hardware.Sensor;
+
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.hardware.SensorDistanceEx;
+import com.arcrobotics.ftclib.hardware.SensorRevTOFDistance;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -33,17 +37,20 @@ public class WallLocalizerCommand extends CommandBase {
     @Override
     public void execute(){
         double delta = distanceSensor.getDistance(DistanceUnit.INCH) - endDistance;
+//        neptune.mOpMode.telemetry.addData("Wall Driving Distance = ", delta);
+//        neptune.mOpMode.telemetry.update();
         this.neptune.drive.driveDirection(direction, delta);
     }
     @Override
     public void end(boolean interrupted) {
-        this.neptune.drive.stop();
+
     }
 
     @Override
     public boolean isFinished() {
-        double currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
-        return  (currentDistance < (this.endDistance + inchesThreshold) &&
-                currentDistance > (this.endDistance - inchesThreshold));
+        return true;
+//        double currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
+//        return  (currentDistance < (this.endDistance + inchesThreshold) &&
+//                currentDistance > (this.endDistance - inchesThreshold));
     }
 }

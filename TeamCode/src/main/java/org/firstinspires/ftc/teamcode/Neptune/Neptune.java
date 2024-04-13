@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.SensorRevTOFDistance;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -58,9 +59,8 @@ public class Neptune {
 
     public final SwitchReader magSwitchButton;
 
-    public final DistanceSensor distanceSensor;
-    public DistanceSensor leftDistanceSensor;
-    public DistanceSensor rightDistanceSensor;
+    public DistanceSensor distanceSensor;
+    public DistanceSensor wallDistanceSensor;
     public GamepadTriggerAsButton manualSlideButtonUp;
     public GamepadTriggerAsButton manualSlideButtonDown;
     public GamepadTriggerAsButton intakeTrigger;
@@ -91,9 +91,10 @@ public class Neptune {
     private static final String[] LABELS = {
             "Pawn",
     };
-    public Neptune(CommandOpMode opMode, OpModeType opModeType) {
+    public Neptune(CommandOpMode opMode, OpModeType opModeType, AllianceColor ac) {
         mOpMode = opMode;
         mOpModeType = opModeType;
+        allianceColor = ac;
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         outtake = new OutakeSubsystem(opMode.hardwareMap.get(Servo.class, "outtakeServo"));
         intake = new IntakeSubsystem(this, new MotorEx(opMode.hardwareMap, "intakeMotor", 537.6,340),
@@ -102,13 +103,17 @@ public class Neptune {
         slides = new SlidesSubsystem(this, new MotorEx(opMode.hardwareMap, "slideMotor", Motor.GoBILDA.RPM_312),
                 opMode.hardwareMap.get(Servo.class, "vbarServo"),  opMode, opMode.hardwareMap.get(AnalogInput.class, "vbarAnalog"));
 
-        distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
+//        distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
 
         // register subsystems
         if (opModeType == OpModeType.AUTO){
             vision = new VisionSubsystem(opMode, TFOD_MODEL_ASSET, LABELS);
-            leftDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "leftDistance");
-            rightDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "rightDistance");
+            distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
+            if (allianceColor == AllianceColor.BLUE){
+                wallDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class,  "rightDistance");
+            } else {
+                wallDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class,  "leftDistance");
+            }
             opMode.register(vision);
         } else {
             driverOp = new GamepadEx(opMode.gamepad1);
@@ -118,20 +123,21 @@ public class Neptune {
             hangServo2 = opMode.hardwareMap.get(Servo.class, "hangServo2");
             hangMotor = new MotorEx(opMode.hardwareMap,"hangMotor", Motor.GoBILDA.RPM_312);
 
-            indicatorSubsytem = new IndicatorSubsytem(this);
-            int ledCount = 6;
-            for(int i = 0; i< ledCount; i++)
-            {
-                indicatorSubsytem.registerLED(opMode.hardwareMap.get(LED.class, "led" + Integer.toString(i)), i % 2);
-            }
+//            indicatorSubsytem = new IndicatorSubsytem(this);
+//            int ledCount = 6;
+//            for(int i = 0; i< ledCount; i++)
+//            {
+//                indicatorSubsytem.registerLED(opMode.hardwareMap.get(LED.class, "led" + Integer.toString(i)), i % 2);
+//            }
 
             launcher = new DroneLauncherSubsytem(opMode.hardwareMap.get(Servo.class, "droneLauncher"));
             hang = new HangSubsystem(hangServo,hangServo2,hangMotor);
 
             opMode.register(hang);
             opMode.register(launcher);
-            opMode.register(indicatorSubsytem);
-
+            //Taking this out because of delay in tele
+//            opMode.register(indicatorSubsytem);
+//
             // driver button setup
             intakeReverseButton = new GamepadButton(driverOp, GamepadKeys.Button.RIGHT_BUMPER);
             intakeButton = new GamepadButton(driverOp, GamepadKeys.Button.LEFT_BUMPER);
@@ -160,7 +166,7 @@ public class Neptune {
 
         // pseudo buttons
         magSwitchButton = new SwitchReader(opMode.hardwareMap, false);
-        magSwitchButton.whileActiveContinuous(new InstantCommand(slides::stopMotorResetEncoder));
+        magSwitchButton.whenPressed(new InstantCommand(slides::stopMotorResetEncoder));
     }
 
 

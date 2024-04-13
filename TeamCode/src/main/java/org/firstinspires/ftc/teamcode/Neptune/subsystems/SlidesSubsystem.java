@@ -194,8 +194,9 @@ public class SlidesSubsystem extends SubsystemBase {
     public void stopMotorResetEncoder() {
 //        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
 //        mNeptune.mOpMode.telemetry.update();
-        mSlideMotor.encoder.reset();
         mSlideMotor.set(0);
+        mSlideMotor.setRunMode(Motor.RunMode.PositionControl);
+        mSlideMotor.resetEncoder();
     }
     public void manualSlideControl(ManualControlDirection direction){
         // anytime the user want to manual control we need to be in the manual state

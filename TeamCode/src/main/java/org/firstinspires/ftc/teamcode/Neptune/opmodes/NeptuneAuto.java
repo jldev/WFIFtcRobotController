@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Neptune.opmodes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -43,7 +44,7 @@ public class NeptuneAuto {
 
     public NeptuneAuto(CommandOpMode commandOpMode, Neptune.FieldPos startingPosition, Neptune.AllianceColor allianceColor) {
         opMode = commandOpMode;
-        neptune = new Neptune(opMode, Neptune.OpModeType.AUTO);
+        neptune = new Neptune(opMode, Neptune.OpModeType.AUTO, allianceColor);
         neptune.setStartPosition(startingPosition, allianceColor);
         trajectories = new Trajectories(neptune);
     }
@@ -57,12 +58,14 @@ public class NeptuneAuto {
                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.BDInOut)),
                     new WaitCommand(NeptuneConstants.WAIT_FOR_ALLIANCE_PARTNER_TO_CLEAR_MS),
                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
-                    new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
+                    new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
+                    new WaitCommand(500)
             );
         } else {
             spikeToBackdropCommandGroup = new SequentialCommandGroup(
                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
-                    new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1)
+                    new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
+                    new WaitCommand(500)
             );
         }
         return spikeToBackdropCommandGroup;
@@ -71,10 +74,12 @@ public class NeptuneAuto {
     public void run() {
 
 //        opMode.schedule(new RunCommand(() -> {
+//            neptune.slides.addTelemetry(opMode.telemetry);
+//
 //            //neptune.drive.addTelemetry(telemetry);
+//            opMode.telemetry.addData("Wall ", neptune.wallDistanceSensor.getDistance(DistanceUnit.INCH));
 //            opMode.telemetry.addData("Back ", neptune.distanceSensor.getDistance(DistanceUnit.INCH));
-//            opMode.telemetry.addData("Left ", neptune.leftDistanceSensor.getDistance(DistanceUnit.INCH));
-//            opMode.telemetry.addData("Right ", neptune.rightDistanceSensor.getDistance(DistanceUnit.INCH));
+////            opMode.telemetry.addData("Right ", neptune.rightDistanceSensor.getDistance(DistanceUnit.INCH));
 ////            neptune.vision.addTelemetry(opMode.telemetry);
 //            opMode.telemetry.update();
 //        }));
@@ -107,25 +112,23 @@ public class NeptuneAuto {
                                             opMode.schedule(getBackdropAdjustmentCommand(neptune, trajectories.backdrop, opMode.telemetry).whenFinished(() -> {
                                                 opMode.schedule(
                                                         depositPixelGroup.whenFinished(()->{
-                                                            DistanceSensor distanceSensor;
+
                                                             MecanumDriveSubsystem.DriveDirection wallDirection;
                                                             if(neptune.allianceColor == Neptune.AllianceColor.BLUE){
-                                                                distanceSensor = neptune.rightDistanceSensor;
                                                                 wallDirection = MecanumDriveSubsystem.DriveDirection.RIGHT;
                                                             } else {
-                                                                distanceSensor = neptune.leftDistanceSensor;
                                                                 wallDirection = MecanumDriveSubsystem.DriveDirection.LEFT;
                                                             }
                                                             if(mStacks) {
                                                                 opMode.schedule(new SequentialCommandGroup(
-                                                                        new WallLocalizerCommand(neptune, wallDirection, distanceSensor, 3),
+                                                                        new WallLocalizerCommand(neptune, wallDirection, neptune.wallDistanceSensor, 3),
                                                                         new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 90),
-                                                                        new WallLocalizerCommand(neptune, wallDirection, distanceSensor, 29),
+                                                                        new WallLocalizerCommand(neptune, wallDirection, neptune.wallDistanceSensor, 29),
                                                                         new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.INTAKING),
                                                                         new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 6),
                                                                         new WaitCommand(200),
                                                                         new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 6),
-                                                                        new WallLocalizerCommand(neptune, wallDirection, distanceSensor, 3),
+                                                                        new WallLocalizerCommand(neptune, wallDirection, neptune.wallDistanceSensor, 3),
                                                                         new SimpleDriveCommand(neptune.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 90)
                                                                 ).whenFinished(()-> {
                                                                         Pose2d stackDropLocation = trajectories.CenterBackdrop;
@@ -138,17 +141,11 @@ public class NeptuneAuto {
                                                                         opMode.schedule(new SequentialCommandGroup(
                                                                                 getBackdropAdjustmentCommand(neptune, stackDropLocation, opMode.telemetry),
                                                                                 depositPixelGroup,
-                                                                                new WallLocalizerCommand(neptune, wallDirection, distanceSensor, 3)));
+                                                                                new WallLocalizerCommand(neptune, wallDirection, neptune.wallDistanceSensor, 3)));
                                                                     })
                                                                 );
                                                             } else { //not mStacks
-                                                                if(neptune.allianceColor == Neptune.AllianceColor.BLUE){
-                                                                    opMode.schedule(new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.RIGHT, neptune.rightDistanceSensor, 3));
-                                                                } else {
-                                                                    opMode.schedule(new WallLocalizerCommand(neptune, MecanumDriveSubsystem.DriveDirection.RIGHT, neptune.rightDistanceSensor, 3));
-
-                                                                }
-
+                                                                    opMode.schedule(new WallLocalizerCommand(neptune, wallDirection, neptune.wallDistanceSensor, 3));
                                                             }
                                                         })
                                                 );
@@ -162,45 +159,44 @@ public class NeptuneAuto {
     }
 
     private SequentialCommandGroup getBackdropAdjustmentCommand(Neptune neptune, Pose2d backdropLocation, Telemetry telemetry) {
-        DistanceSensor ds;
         MecanumDriveSubsystem.DriveDirection direction;
         if (neptune.allianceColor == Neptune.AllianceColor.BLUE) {
-            ds = neptune.rightDistanceSensor;
+            direction = MecanumDriveSubsystem.DriveDirection.RIGHT;
         } else {
-            ds = neptune.leftDistanceSensor;
+            direction = MecanumDriveSubsystem.DriveDirection.LEFT;
         }
 
         double wantedDistanceFromWall = 72 - Math.abs(backdropLocation.getY()) - 7;
 
-        double currentDistance = ds.getDistance(DistanceUnit.INCH);
+//        double currentDistance = neptune.wallDistanceSensor.getDistance(DistanceUnit.INCH);
 
-        telemetry.addData("Wanted Distance", wantedDistanceFromWall);
-        telemetry.addData("Current Distance", currentDistance);
+//        telemetry.addData("Wanted Distance", wantedDistanceFromWall);
+//        telemetry.addData("Current Distance", currentDistance);
 
-        if (ds == neptune.rightDistanceSensor)
-        {
-            if (wantedDistanceFromWall > currentDistance)
-            {
-                direction = MecanumDriveSubsystem.DriveDirection.LEFT;
-            } else
-            {
-                direction = MecanumDriveSubsystem.DriveDirection.RIGHT;
-            }
-        } else
-        {
-            if(wantedDistanceFromWall > currentDistance)
-            {
-                direction = MecanumDriveSubsystem.DriveDirection.RIGHT;
-            } else
-            {
-                direction = MecanumDriveSubsystem.DriveDirection.LEFT;
-            }
-        }
+//        if (ds == neptune.rightDistanceSensor)
+//        {
+//            if (wantedDistanceFromWall > currentDistance)
+//            {
+//                direction = MecanumDriveSubsystem.DriveDirection.LEFT;
+//            } else
+//            {
+//                direction = MecanumDriveSubsystem.DriveDirection.RIGHT;
+//            }
+//        } else
+//        {
+//            if(wantedDistanceFromWall > currentDistance)
+//            {
+//                direction = MecanumDriveSubsystem.DriveDirection.RIGHT;
+//            } else
+//            {
+//                direction = MecanumDriveSubsystem.DriveDirection.LEFT;
+//            }
+//        }
 
-        telemetry.addData("Direction", direction);
-        telemetry.update();
+//        telemetry.addData("Direction", direction);
+//        telemetry.update();
         return new SequentialCommandGroup(
-                new WallLocalizerCommand(neptune, direction, ds, wantedDistanceFromWall),
+                new WallLocalizerCommand(neptune, direction, neptune.wallDistanceSensor, wantedDistanceFromWall),
                 new EndDistanceDriveCommand(neptune, MecanumDriveSubsystem.DriveDirection.BACKWARD, neptune.distanceSensor, NeptuneConstants.NEPTUNE_WANTED_DISTANCE_FROM_BACKDROP)
         );
     }

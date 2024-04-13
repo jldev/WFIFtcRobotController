@@ -25,7 +25,7 @@ public class Trajectories {
 
     }
     //Start locations
-    public static Pose2d AUStart = new Pose2d(40, 63, Math.toRadians(270)); //complete
+    public static Pose2d AUStart = new Pose2d(40, 62, Math.toRadians(270)); //complete
     public static Pose2d BDStart = new Pose2d(-12, 62, Math.toRadians(270)); //complete
 
     //Spike locations for Backdrop side
@@ -59,10 +59,10 @@ public class Trajectories {
     //Both left or right
     Pose2d spikeOrigin = AUCenterSpike;
     Pose2d backdropOrigin = CenterBackdrop;
-    Pose2d stackOrigin = OuterStack;
+    Pose2d stackOrigin = InnerStack;
     //Both in or out
-    Pose2d AUInOutOrigin = AUOut;
-    Pose2d BDInOutOrigin = BDOut;
+    Pose2d AUInOutOrigin = AUIn;
+    Pose2d BDInOutOrigin = BDIn;
 
     public int targettedAprilTag;
 

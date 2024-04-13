@@ -24,7 +24,7 @@ public class Teleop extends CommandOpMode {
 
     @Override
     public void initialize() {
-        neptune = new Neptune(this, Neptune.OpModeType.TELEOP);
+        neptune = new Neptune(this, Neptune.OpModeType.TELEOP, Neptune.AllianceColor.RED);
 
         schedule(new RunCommand(() -> {
             //neptune.drive.addTelemetry(telemetry);
