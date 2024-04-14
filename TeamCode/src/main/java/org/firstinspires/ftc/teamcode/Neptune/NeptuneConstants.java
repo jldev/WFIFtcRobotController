@@ -42,7 +42,7 @@ public class NeptuneConstants {
     public static double SLIDE_kI = 0.00;
     public static double SLIDE_kD = 0.8;
     public static double SLIDE_kF = 0;
-    public static double OUTAKE_OPEN_POSITION = 0.5;
+    public static double OUTAKE_OPEN_POSITION = 0.7;
     public static double OUTAKE_CLOSED_POSITION = 0.0;
     public static double AUTOOUTAKE_OPEN_POSITION = 0.4;
     public static double AUTOOUTAKE_CLOSED_POSITION = 0.70;
