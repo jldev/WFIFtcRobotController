@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.VisionSubsystem;
 public class Neptune {
 
     public final OpModeType mOpModeType;
+    public MecanumDriveSubsystem.DriveDirection wallDirection;
     public VisionSubsystem vision;
     public final MecanumDriveSubsystem drive;
     public final OutakeSubsystem outtake;
@@ -111,8 +112,10 @@ public class Neptune {
             distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distanceSensor");
             if (allianceColor == AllianceColor.BLUE){
                 wallDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class,  "rightDistance");
+                wallDirection = MecanumDriveSubsystem.DriveDirection.RIGHT;
             } else {
                 wallDistanceSensor = opMode.hardwareMap.get(DistanceSensor.class,  "leftDistance");
+                wallDirection = MecanumDriveSubsystem.DriveDirection.LEFT;
             }
             opMode.register(vision);
         } else {

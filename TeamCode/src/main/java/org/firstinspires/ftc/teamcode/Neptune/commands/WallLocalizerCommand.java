@@ -18,7 +18,7 @@ public class WallLocalizerCommand extends CommandBase {
     private final double endDistance;
     private final DistanceSensor distanceSensor;
 
-    private final double inchesThreshold = 1.0;
+    private final double inchesThreshold = 3.0;
 
     public WallLocalizerCommand(Neptune neptune, MecanumDriveSubsystem.DriveDirection direction, DistanceSensor sensor, double endDistance ) {
         this.neptune = neptune;
@@ -36,7 +36,11 @@ public class WallLocalizerCommand extends CommandBase {
 
     @Override
     public void execute(){
-        double delta = distanceSensor.getDistance(DistanceUnit.INCH) - endDistance;
+        double currentDistance = DistanceSensor.distanceOutOfRange;
+        while(currentDistance > 300){
+            currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
+        }
+        double delta = currentDistance - endDistance;
 //        neptune.mOpMode.telemetry.addData("Wall Driving Distance = ", delta);
 //        neptune.mOpMode.telemetry.update();
         this.neptune.drive.driveDirection(direction, delta);
@@ -48,9 +52,12 @@ public class WallLocalizerCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;
-//        double currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
-//        return  (currentDistance < (this.endDistance + inchesThreshold) &&
-//                currentDistance > (this.endDistance - inchesThreshold));
+//        return true;
+        double currentDistance = DistanceSensor.distanceOutOfRange;
+        while(currentDistance > 300){
+            currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
+        }
+        return  (currentDistance < (this.endDistance + inchesThreshold) &&
+                currentDistance > (this.endDistance - inchesThreshold));
     }
 }

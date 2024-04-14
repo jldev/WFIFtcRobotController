@@ -10,7 +10,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 public class Trajectories {
 
 
-    private static final boolean TRAJECTORY_SPEED_SLOW = false;
+    private static final boolean TRAJECTORY_SPEED_SLOW = true;
 
     public enum PropPlacement {
         LEFT,
@@ -35,7 +35,7 @@ public class Trajectories {
 
     //Spike locations for Audience side
     Pose2d AUCenterSpike =new Pose2d(48, 24, Math.toRadians(180)); //complete
-    Pose2d AULeftSpike = new Pose2d(56, 32, Math.toRadians(180)); //complete
+    Pose2d AULeftSpike = new Pose2d(38, 32, Math.toRadians(0)); //complete
     Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(180)); //complete
 
     //Backdrop locations
@@ -55,7 +55,7 @@ public class Trajectories {
     Pose2d BDOut = new Pose2d(-24, 55, Math.toRadians(0)); //complete
 
     //Parking spot for BD side
-    Pose2d ParkPosition = new Pose2d(-48, 55, Math.toRadians(0)); //complete
+    Pose2d ParkPosition = new Pose2d(-48, 65, Math.toRadians(0)); //complete
     //Both left or right
     Pose2d spikeOrigin = AUCenterSpike;
     Pose2d backdropOrigin = CenterBackdrop;
@@ -130,7 +130,10 @@ public class Trajectories {
             if(spikeOrigin == AURightSpike)
             {spikeOrigin = AULeftSpike; backdropOrigin = LeftBackdrop; stackOrigin = InnerStack;} //flips right to left
 
-            else if(spikeOrigin == AULeftSpike) {spikeOrigin = AURightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;}//flips left to right
+            else if(spikeOrigin == AULeftSpike) {
+                spikeOrigin = AURightSpike; backdropOrigin = RightBackdrop; stackOrigin = InnerStack;
+
+            }//flips left to right
         }
         spike = new Pose2d(spikeOrigin.getX(), redBlue * spikeOrigin.getY(), spikeOrigin.getHeading());
         stack = new Pose2d(stackOrigin.getX(), redBlue * stackOrigin.getY(), stackOrigin.getHeading());
