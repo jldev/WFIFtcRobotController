@@ -65,7 +65,7 @@ public class NeptuneAuto {
             spikeToBackdropCommandGroup = new SequentialCommandGroup(
                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.backdrop)),
                     new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.POSITION_1),
-                    new WaitCommand(500)
+                    new WaitCommand(250)
             );
         }
         return spikeToBackdropCommandGroup;
@@ -89,14 +89,14 @@ public class NeptuneAuto {
 
         SequentialCommandGroup depositPixelGroup = new SequentialCommandGroup(
                         new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.OPENED),
-                        new WaitCommand(1000),
+                        new WaitCommand(800),
                         new OutakeStateCommand(neptune.outtake, OutakeSubsystem.OutakeState.CLOSED),
                         new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS)
                 );
 
         opMode.schedule(new SequentialCommandGroup(
                 new IntakeLiftCommand(neptune.intake, IntakeSubsystem.LiftableIntakePosition.P5),
-                detectPawnCommand.withTimeout(3500).whenFinished(() -> {
+                detectPawnCommand.withTimeout(1000).whenFinished(() -> {
                     Trajectories.PropPlacement pawnLocation = detectPawnCommand.getPropLocation(neptune);
                     opMode.telemetry.addData("Pawn Location:", pawnLocation);
                     opMode.telemetry.update();
@@ -137,8 +137,14 @@ public class NeptuneAuto {
                                                                                 new WallLocalizerCommand(neptune, neptune.wallDirection, neptune.wallDistanceSensor, 3)));
                                                                     })
                                                                 );
-                                                            } else { //not mStacks
-                                                                    opMode.schedule(new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.park)));
+                                                            } else {
+                                                                opMode.schedule(new SequentialCommandGroup(
+                                                                       new SlidePositionCommand(neptune.slides, SlidesSubsystem.SlidesPosition.HOME_POS),
+                                                                       new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.park))
+                                                                        ));
+                                                                //not mStacks
+
+
                                                             }
                                                         })
                                                 );

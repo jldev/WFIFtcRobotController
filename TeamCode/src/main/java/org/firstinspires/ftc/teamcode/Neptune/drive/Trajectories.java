@@ -30,13 +30,13 @@ public class Trajectories {
 
     //Spike locations for Backdrop side
     Pose2d BDCenterSpike =new Pose2d(-24, 24, Math.toRadians(0)); //complete
-    Pose2d BDLeftSpike = new Pose2d(-8, 32, Math.toRadians(0)); //complete
+    Pose2d BDLeftSpike = new Pose2d(-10, 32, Math.toRadians(0)); //complete
     Pose2d BDRightSpike = new Pose2d(-32, 32, Math.toRadians(0)); //complete
 
     //Spike locations for Audience side
-    Pose2d AUCenterSpike =new Pose2d(48, 24, Math.toRadians(180)); //complete
-    Pose2d AULeftSpike = new Pose2d(38, 32, Math.toRadians(0)); //complete
-    Pose2d AURightSpike = new Pose2d(34, 32, Math.toRadians(180)); //complete
+    Pose2d AUCenterSpike =new Pose2d(47, 24, Math.toRadians(180)); //complete
+    Pose2d AULeftSpike = new Pose2d(37, 32, Math.toRadians(0)); //complete
+    Pose2d AURightSpike = new Pose2d(33, 32, Math.toRadians(180)); //complete
 
     //Backdrop locations
     public Pose2d CenterBackdrop = new Pose2d(-32, 35, Math.toRadians(0)); //complete
@@ -55,7 +55,7 @@ public class Trajectories {
     Pose2d BDOut = new Pose2d(-24, 55, Math.toRadians(0)); //complete
 
     //Parking spot for BD side
-    Pose2d ParkPosition = new Pose2d(-48, 65, Math.toRadians(0)); //complete
+    Pose2d ParkPosition = new Pose2d(-48, 60, Math.toRadians(0)); //complete
     //Both left or right
     Pose2d spikeOrigin = AUCenterSpike;
     Pose2d backdropOrigin = CenterBackdrop;
