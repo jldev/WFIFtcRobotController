@@ -29,7 +29,7 @@ public class EndDistanceDriveCommand extends CommandBase {
 
     @Override
     public void execute(){
-        this.neptune.drive.driveDirection(direction, 0.5);
+        this.neptune.drive.driveDirection(direction, 0.8);
     }
     @Override
     public void end(boolean interrupted) {
