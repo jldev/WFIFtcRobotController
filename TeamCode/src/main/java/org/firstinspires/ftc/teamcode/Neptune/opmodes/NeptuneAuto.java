@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Neptune.Neptune;
 import org.firstinspires.ftc.teamcode.Neptune.NeptuneConstants;
 import org.firstinspires.ftc.teamcode.Neptune.commands.DetectPawnCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.EndDistanceDriveCommand;
-import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeEjectCommand;
+//import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeEjectCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeLiftCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.IntakeStateCommand;
 import org.firstinspires.ftc.teamcode.Neptune.commands.OutakeStateCommand;
@@ -106,7 +106,7 @@ public class NeptuneAuto {
                     opMode.schedule(
                             new SequentialCommandGroup(
                                     new TrajectoryFollowerCommand(neptune.drive, trajectories.getTrajectory(trajectories.spike)),
-                                    new IntakeEjectCommand(neptune.intake).withTimeout(NeptuneConstants.NEPTUNE_INTAKE_EJECT_TIME),
+//                                    new IntakeEjectCommand(neptune.intake).withTimeout(NeptuneConstants.NEPTUNE_INTAKE_EJECT_TIME),
                                     new IntakeStateCommand(neptune.intake, IntakeSubsystem.IntakeState.NEUTRAL).whenFinished(() -> {
                                         opMode.schedule(getSpikeToBackdropCommandGroup(trajectories).whenFinished(() -> {
                                             opMode.schedule(getBackdropAdjustmentCommand(neptune, trajectories.backdrop, opMode.telemetry).whenFinished(() -> {

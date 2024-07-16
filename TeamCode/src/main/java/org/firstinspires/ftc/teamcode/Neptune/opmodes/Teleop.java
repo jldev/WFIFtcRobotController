@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Neptune.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.OutakeSubsystem;
 import org.firstinspires.ftc.teamcode.Neptune.subsystems.SlidesSubsystem;
 
-@TeleOp(name = "Teleop")
+@TeleOp(name = "TeleopNeptune")
 public class Teleop extends CommandOpMode {
 
     private Neptune neptune;

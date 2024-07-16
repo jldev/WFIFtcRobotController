@@ -11,7 +11,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @Autonomous(name = "rr_test")
-@Disabled
 public class rr_test extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;
     private AprilTagProcessor aprilTag;
@@ -30,7 +29,11 @@ public class rr_test extends LinearOpMode {
         telemetry.update();
         {
             Trajectory trajectory = drive.trajectoryBuilder(new Pose2d())
+                    .strafeLeft(12)
                     .forward(50)
+                    .strafeRight(24)
+                    .back(50)
+                    .strafeLeft(12)
                     .build();
 
             waitForStart();

@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.roadrunner;
+package org.firstinspires.ftc.teamcode.KitBot.drive;
 
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kV;
-import static org.firstinspires.ftc.teamcode.roadrunner.StandardTrackingWheelLocalizer.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.KitBot.drive.StandardTrackingWheelLocalizer.encoderTicksToInches;
 
 import androidx.annotation.NonNull;
 
@@ -30,7 +30,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -41,7 +40,6 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.roadrunner.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
@@ -61,14 +59,17 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public static double LATERAL_MULTIPLIER = 1.0169;
 
-    public static double VX_WEIGHT = 1;
-    public static double VY_WEIGHT = 1;
-    public static double OMEGA_WEIGHT = 1;
+    public static double VX_WEIGHT = 1.5;
+    public static double VY_WEIGHT = 1.5;
+    public static double OMEGA_WEIGHT = 1.5;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
+
+    private static final TrajectoryVelocityConstraint SLOW_VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL*.5, MAX_ANG_VEL*.5, TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint SLOW_ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
 
@@ -147,6 +148,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
+    public TrajectoryBuilder trajectoryBuilderSlow(Pose2d startPose, boolean reversed) {
+        return new TrajectoryBuilder(startPose, reversed, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT);
+    }
+
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
         return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
@@ -163,10 +168,50 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
+    public TrajectorySequenceBuilder trajectorySequenceBuilderSlow(Pose2d startPose) {
+        return new TrajectorySequenceBuilder(
+                startPose,
+                SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT,
+                MAX_ANG_VEL, MAX_ANG_ACCEL
+        );
+    }
+
     public void turnAsync(double angle) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(
                 trajectorySequenceBuilder(getPoseEstimate())
                         .turn(angle)
+                        .build()
+        );
+    }
+
+    public void left(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .strafeLeft(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .build()
+        );
+    }
+
+    public void right(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .strafeRight(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .build()
+        );
+    }
+
+    public void forward(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .forward(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .build()
+        );
+    }
+
+    public void reverse(double inches){
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .back(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
                         .build()
         );
     }
@@ -297,12 +342,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-        return 0.0; //imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) 0.0;//imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
