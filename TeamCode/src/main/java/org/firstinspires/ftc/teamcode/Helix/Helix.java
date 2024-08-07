@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
@@ -23,9 +24,15 @@ public class Helix {
     public Pose2d startPos;
 
 
+    // Swerb
+
+    public final AnalogInput SwerbModule_A;
+    public final Servo swerbo_a;
+
+
 
     //subsystems
-    public final IntakeSubsystem intake;
+//    public final IntakeSubsystem intake;
 
 
     public enum FieldPos {
@@ -49,6 +56,9 @@ public class Helix {
     public GamepadButton instakeGripperButton;
     public GamepadButton intakeLiftButton;
 
+    public GamepadButton swerbLeft;
+    public GamepadButton swerbRight;
+
 
 
 
@@ -69,12 +79,15 @@ public class Helix {
         gunnerOp = new GamepadEx(opMode.gamepad2);
 
         //subsystems
-        intake = new IntakeSubsystem(this,
-                opMode.hardwareMap.get(Servo.class, "liftServo"),
-                opMode.hardwareMap.get(Servo.class, "gripperServo"));
+//        intake = new IntakeSubsystem(this,
+//                opMode.hardwareMap.get(Servo.class, "liftServo"),
+//                opMode.hardwareMap.get(Servo.class, "gripperServo"));
+        //swerb
+        SwerbModule_A = opMode.hardwareMap.get(AnalogInput.class, "swerbModule_A");
+        swerbo_a = opMode.hardwareMap.get(Servo.class, "swerbo_a");
 
         opMode.register(drive);
-        opMode.register(intake);
+//        opMode.register(intake);
 
 
 
@@ -83,6 +96,9 @@ public class Helix {
         //gunner setup
         instakeGripperButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         intakeLiftButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.B);
+
+        swerbLeft = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_LEFT);
+        swerbRight = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_RIGHT);
     }
 
 

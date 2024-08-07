@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Helix.opmodes;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Helix.Helix;
@@ -34,12 +35,33 @@ public class Teleop extends CommandOpMode {
 
 
 
+
+        helix.swerbLeft.whileHeld(new InstantCommand(() -> {
+            helix.swerbo_a.setPosition(helix.swerbo_a.getPosition() + .02);
+        }));
+
+        helix.swerbRight.whileHeld(new InstantCommand(() -> {
+            helix.swerbo_a.setPosition(helix.swerbo_a.getPosition() - .02);
+        }));
+
+
+
+
         //         INTAKE
 
-        helix.instakeGripperButton.whileHeld(helix.intake.setGripperOpen());
-        helix.instakeGripperButton.whenReleased(helix.intake.setGripperClosed());
 
-        helix.intakeLiftButton.whenPressed(helix.intake.setLift());
+//        helix.instakeGripperButton.whileHeld(helix.intake.setGripperOpen());
+//        helix.instakeGripperButton.whenReleased(helix.intake.setGripperClosed());
+//
+//        helix.intakeLiftButton.whenPressed(helix.intake.setLift());
+
+
+
+
+        schedule(new RunCommand(() -> {
+            telemetry.addLine(String.format("swerbRotation - %.8f", helix.SwerbModule_A.getVoltage()));
+            telemetry.update();
+        }));
 
 
     }
