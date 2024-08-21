@@ -6,8 +6,10 @@ import com.acmerobotics.dashboard.config.Config;
 public class HelixConstants {
 
 
-    public  static double LIFT_POS_0 = 0.8f;
-    public  static double LIFT_POS_1 = 0.6f;
+    public  static double LIFT_POS_0 = 0.975f;
+    public  static double LIFT_POS_1 = 0.9f;
+
+    public static double LIFT_POS_2 = 0.5f;
 
     public static double GRIPPER_CLOSED_VALUE = 0.2f;
 

@@ -10,33 +10,26 @@ import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 public class IntakeSubsystem extends SubsystemBase {
 
 
-
     private final Servo mLiftServo;
     private final Servo mGripperServo;
     private double mIntakeLiftPosition = 0.0;
     private boolean intakeAutoControl = false;
 
-    public IntakeSubsystem(Helix helix, Servo liftServo, Servo gripperServo){
+    private Helix mHelix;
+
+    public IntakeSubsystem(Helix helix, Servo liftServo, Servo gripperServo) {
         mLiftServo = liftServo;
         mGripperServo = gripperServo;
         mLiftServo.setDirection(Servo.Direction.REVERSE);
         mIntakeLiftPosition = HelixConstants.LIFT_POS_0;
         mLiftServo.setPosition(mIntakeLiftPosition);
         mGripperServo.setPosition(mIntakeLiftPosition);
+        mHelix = helix;
 
-        if (helix.mOpModeType == Helix.OpModeType.AUTO){
+        if (helix.mOpModeType == Helix.OpModeType.AUTO) {
             intakeAutoControl = true;
         }
 
-
-    }
-
-    public InstantCommand setLift() {
-        if(liftState == LiftState.P0)
-            return new InstantCommand(() -> liftState = LiftState.P0 );
-
-        else
-            return new InstantCommand(() -> liftState = LiftState.P1 );
 
     }
 
@@ -50,18 +43,18 @@ public class IntakeSubsystem extends SubsystemBase {
     public enum LiftState {
         P0,
         P1,
+        P2,
     }
-
-
 
 
     GripperState gripperState = GripperState.CLOSED;
     LiftState liftState = LiftState.P0;
+
     @Override
-    public void periodic(){
+    public void periodic() {
 
 
-        switch(gripperState) {
+        switch (gripperState) {
             case OPEN:
                 mGripperServo.setPosition(HelixConstants.GRIPPER_OPEN_VALUE);
                 break;
@@ -69,54 +62,37 @@ public class IntakeSubsystem extends SubsystemBase {
                 mGripperServo.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
                 break;
         }
-            switch (liftState) {
-                case P0:
-                    mIntakeLiftPosition = HelixConstants.LIFT_POS_0;
-                    break;
-                case P1:
-                    mIntakeLiftPosition = HelixConstants.LIFT_POS_1;
-                    break;
-            }
-        mLiftServo.setPosition(mIntakeLiftPosition);
+
     }
 
-    public boolean intakeFull(){
+    public boolean intakeFull() {
         return false;
     }
 
 
-
-
-    public InstantCommand setGripperOpen(){
-        return new InstantCommand(() -> gripperState = GripperState.OPEN );
-    }
-    public InstantCommand setGripperClosed(){
-        return new InstantCommand(() -> gripperState = GripperState.CLOSED );
+    public InstantCommand setGripperOpen() {
+        return new InstantCommand(() -> gripperState = GripperState.OPEN);
     }
 
-    public InstantCommand setLiftP0(){
-        return new InstantCommand(() -> liftState = LiftState.P0);
-    }
-    public InstantCommand setLiftP1(){
-        return new InstantCommand(() -> liftState = LiftState.P1);
+    public InstantCommand setGripperClosed() {
+        return new InstantCommand(() -> gripperState = GripperState.CLOSED);
     }
 
+    public void setLift() {
+        mHelix.mOpMode.telemetry.addLine("put a string in there " + mHelix.mOpMode.getRuntime());
+        mHelix.mOpMode.telemetry.update();
 
-
-
-
-
-    public void setGripperState(GripperState state){
-        gripperState = state;
+        if (liftState == LiftState.P0) {
+            liftState = LiftState.P1;
+            mLiftServo.setPosition(HelixConstants.LIFT_POS_1);
+        }
+        else if (liftState == LiftState.P1) {
+            liftState = LiftState.P2;
+            mLiftServo.setPosition(HelixConstants.LIFT_POS_2);
+        }
+        else if (liftState == LiftState.P2) {
+            liftState = LiftState.P0;
+            mLiftServo.setPosition(HelixConstants.LIFT_POS_0);
+        }
     }
-
-    public void setLiftState(LiftState position){
-        liftState = position;
-    }
-
-//    public void setIntakeLiftPositionPercentage(double percentage){
-//        double servoPosition = NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS +
-//                (percentage * (NeptuneConstants.NEPTUNE_INTAKE_SERVO_POS2 - NeptuneConstants.NEPTUNE_INTAKE_SERVO_INITIAL_POS));
-//        mIntakeLiftPosition = servoPosition;
-//    }
 }

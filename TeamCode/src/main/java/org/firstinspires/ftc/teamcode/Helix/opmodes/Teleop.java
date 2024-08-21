@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Helix.Helix;
+import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 import org.firstinspires.ftc.teamcode.Helix.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 
@@ -39,7 +40,7 @@ public class Teleop extends CommandOpMode {
         helix.instakeGripperButton.whileHeld(helix.intake.setGripperOpen());
         helix.instakeGripperButton.whenReleased(helix.intake.setGripperClosed());
 
-        helix.intakeLiftButton.whenPressed(helix.intake.setLift());
+        helix.intakeLiftButton.toggleWhenPressed(new InstantCommand(() -> helix.intake.setLift()));
 
 
     }
