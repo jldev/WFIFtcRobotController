@@ -78,7 +78,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return new InstantCommand(() -> gripperState = GripperState.CLOSED);
     }
 
-    public void setLift() {
+    public void cycleLift() {
         mHelix.mOpMode.telemetry.addLine("put a string in there " + mHelix.mOpMode.getRuntime());
         mHelix.mOpMode.telemetry.update();
 
@@ -94,5 +94,11 @@ public class IntakeSubsystem extends SubsystemBase {
             liftState = LiftState.P0;
             mLiftServo.setPosition(HelixConstants.LIFT_POS_0);
         }
+    }
+
+    // temp logic
+    public void setLift(double position)
+    {
+        mLiftServo.setPosition(HelixConstants.LIFT_POS_1);
     }
 }

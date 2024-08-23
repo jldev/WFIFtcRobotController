@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.Helix.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
 
@@ -20,7 +19,7 @@ public class Helix {
 
     public GamepadEx driverOp;
     public GamepadEx gunnerOp;
-    public Pose2d startPos;
+    public Pose2d currentPos;
 
 
 
@@ -93,19 +92,20 @@ public class Helix {
         this.fieldPos = fp;
         this.allianceColor = ac;
 
+        this.currentPos = new Pose2d(0, 0, Math.toRadians(0));
 
-        if (fp == FieldPos.BD){
-            this.startPos = Trajectories.BDStart;
-        }
-        else if (fp == FieldPos.AU){
-            this.startPos = Trajectories.AUStart;
+//        if (fp == FieldPos.BD){
+//            this.startPos = Trajectories.BDStart;
+//        }
+//        else if (fp == FieldPos.AU){
+//            this.startPos = Trajectories.AUStart;
+//
+//        }
+//
+//        if(ac == AllianceColor.BLUE){
+//            this.startPos = new Pose2d(this.startPos.getX(), -this.startPos.getY(), -this.startPos.getHeading());
+//        }
 
-        }
-
-        if(ac == AllianceColor.BLUE){
-            this.startPos = new Pose2d(this.startPos.getX(), -this.startPos.getY(), -this.startPos.getHeading());
-        }
-
-        drive.setPoseEstimate(this.startPos);
+        drive.setPoseEstimate(this.currentPos);
     }
 }
