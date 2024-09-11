@@ -92,7 +92,7 @@ public class Helix {
         this.fieldPos = fp;
         this.allianceColor = ac;
 
-        this.currentPos = new Pose2d(0, 0, Math.toRadians(0));
+        this.currentPos = new Pose2d(12, -62, Math.toRadians(90));
 
 //        if (fp == FieldPos.BD){
 //            this.startPos = Trajectories.BDStart;

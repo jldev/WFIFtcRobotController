@@ -20,6 +20,10 @@ public class DetectPawnCommand extends CommandBase {
         this.visionSubsystem.setMode(VisionSubsystem.VisionMode.TENSORFLOW);
     }
     @Override
+    public void perodic(){
+
+    }
+    @Override
     public void end(boolean interrupted) {
         visionSubsystem.stop();
     }

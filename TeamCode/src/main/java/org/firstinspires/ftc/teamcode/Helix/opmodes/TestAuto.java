@@ -5,16 +5,18 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Helix.Helix;
-import org.firstinspires.ftc.teamcode.Helix.Helix;
 
 @Config
 @Autonomous(group = "drive", name = "Test Auto")
 public class TestAuto extends CommandOpMode {
-    HelixAuto helixAUto;
+    HelixAuto helixAuto;
     @Override
     public void initialize() {
+        helixAuto = new HelixAuto(this, Helix.FieldPos.AU, Helix.AllianceColor.RED);
+    }
 
-        helixAUto = new HelixAuto(this, Helix.FieldPos.AU, Helix.AllianceColor.RED);
-        helixAUto.run();
+    @Override
+    public void run(){
+        helixAuto.run();
     }
 }
