@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.commands.TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.Helix.drive.Trajectories;
+import org.firstinspires.ftc.teamcode.Helix.commands.SimpleDriveCommand;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
 
 public class HelixAuto {
 
@@ -34,8 +36,9 @@ public class HelixAuto {
     private SequentialCommandGroup driveTest(Trajectories trajectories) {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> helix.intake.setLift(.2)),
-                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint1)),
-                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint2))
+                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 24)
+//                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint1)),
+//                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint2))
                 );
     }
 
