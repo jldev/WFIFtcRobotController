@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.util.WebHandlerManager;
 import org.firstinspires.ftc.ftccommon.external.WebHandlerRegistrar;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.roadrunner.DriveConstants;
-import org.firstinspires.ftc.teamcode.G3GSS.GSTEST;
 import org.firstinspires.ftc.teamcode.roadrunner.StandardTrackingWheelLocalizer;
 
 import java.io.File;
@@ -64,14 +63,6 @@ public final class LogFiles  {
         public double maxAccel = DriveConstants.MAX_ACCEL;
         public double maxAngVel = DriveConstants.MAX_ANG_VEL;
         public double maxAngAccel = DriveConstants.MAX_ANG_ACCEL;
-
-        public double mecTransP = GSTEST.TRANSLATIONAL_PID.kP;
-        public double mecTransI = GSTEST.TRANSLATIONAL_PID.kI;
-        public double mecTransD = GSTEST.TRANSLATIONAL_PID.kD;
-        public double mecHeadingP = GSTEST.HEADING_PID.kP;
-        public double mecHeadingI = GSTEST.HEADING_PID.kI;
-        public double mecHeadingD = GSTEST.HEADING_PID.kD;
-        public double mecLateralMultiplier = GSTEST.LATERAL_MULTIPLIER;
 
 //        public double tankAxialP = SampleTankDrive.AXIAL_PID.kP;
 //        public double tankAxialI = SampleTankDrive.AXIAL_PID.kI;

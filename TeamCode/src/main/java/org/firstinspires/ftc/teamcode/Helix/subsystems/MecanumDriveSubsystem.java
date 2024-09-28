@@ -126,6 +126,9 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         return drive.isBusy();
     }
 
+    public void waitForIdle(){
+        drive.waitForIdle();
+    }
     public void turn(double radians) {
         drive.turnAsync(radians);
     }

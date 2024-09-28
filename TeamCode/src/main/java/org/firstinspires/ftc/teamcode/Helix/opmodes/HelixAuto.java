@@ -3,21 +3,26 @@ package org.firstinspires.ftc.teamcode.Helix.opmodes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
+import org.firstinspires.ftc.teamcode.Helix.commands.CenterOnSpecimenCommand;
 import org.firstinspires.ftc.teamcode.Helix.commands.SimpleDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.commands.TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.Helix.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HelixAuto {
 
-    public final Helix helix;
-    public final Trajectories trajectories;
+    public Helix helix;
+    public Trajectories trajectories;
 
-    private final CommandOpMode opMode;
+    private CommandOpMode opMode;
 
 
     public Pose2d desiredPosition;
@@ -35,6 +40,10 @@ public class HelixAuto {
         helix = new Helix(opMode, Helix.OpModeType.AUTO, allianceColor);
         helix.setStartPosition(startingPosition, allianceColor);
         trajectories = new Trajectories(helix);
+        helix.limelight.pipelineSwitch(0);
+        helix.limelight.start();
+//        opMode.schedule(new CenterOnSpecimenCommand(helix));
+        opMode.schedule(new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.RIGHT, 12));
     }
 
     private SequentialCommandGroup driveTest(Trajectories trajectories) {
@@ -54,26 +63,57 @@ public class HelixAuto {
     public void run() {
         Task currentState = Task.DRIVETO;
 
-        while(opMode.isStarted()){
-            switch (currentState){
 
-                case DRIVETO:
-                    new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(desiredPosition));
-                    break;
-                case RETRIEVE_SPECIMEN:
-                    break;
-                case DEPOSIT_SPECIMEN:
-                    break;
-                case RETRIEVE_SAMPLE:
-                    break;
-                case DEPOSIT_SAMPLE:
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + currentState);
-            }
+
+
+
+
+//                if(xAngle < -8f)
+//
+//                {
+//                    helix.drive.driveDirection(MecanumDriveSubsystem.DriveDirection.LEFT, 1.5);
+//                    opMode.telemetry.addData("XAngle within big threshold", xAngle);
+//                } else if (xAngle < -2.5) {
+//                    helix.drive.driveDirection(MecanumDriveSubsystem.DriveDirection.LEFT, .35);
+//                    opMode.telemetry.addData("XAngle within small threshold", xAngle);
+//                } else
+//                {
+//                    opMode.telemetry.addLine("Destination reached");
+//                }
+//
+//
+//                if(xAngle > 8f)
+//                {
+//                    helix.drive.driveDirection(MecanumDriveSubsystem.DriveDirection.RIGHT, 1.5);
+//                    opMode.telemetry.addData("XAngle within big threshold", xAngle);
+//                } else if (xAngle > 2.5) {
+//                    helix.drive.driveDirection(MecanumDriveSubsystem.DriveDirection.RIGHT, .35);
+//                    opMode.telemetry.addData("XAngle within small threshold", xAngle);
+//                } else
+//                {
+//                    opMode.telemetry.addLine("Destination reached");
+//                }
+//                opMode.telemetry.update();
+
+                //make center -- like get it working then try to make a class idfk im screwed.
+
+
+        switch (currentState) {
+
+            case DRIVETO:
+//                    new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(desiredPosition));
+                break;
+            case RETRIEVE_SPECIMEN:
+                break;
+            case DEPOSIT_SPECIMEN:
+                break;
+            case RETRIEVE_SAMPLE:
+                break;
+            case DEPOSIT_SAMPLE:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + currentState);
         }
-        //opMode.schedule(driveTest(trajectories));
-        //opMode.run();
     }
 
 
@@ -95,10 +135,10 @@ public class HelixAuto {
         }
     }
 
-    private ArrayList<Task> taskList = new ArrayList<Task>()
-    {
-        HelixAuto.Task.TRAJECTORY,
-
-    };
+//    private ArrayList<Task> taskList = new ArrayList<Task>()
+//    {
+//        HelixAuto.Task.TRAJECTORY,
+//
+//    };
 
 }

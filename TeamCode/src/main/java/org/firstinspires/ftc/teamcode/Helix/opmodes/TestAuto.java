@@ -17,6 +17,11 @@ public class TestAuto extends CommandOpMode {
 
     @Override
     public void run(){
-        helixAuto.run();
+        waitForStart();
+        while (opModeIsActive()) {
+            helixAuto.run();
+            super.run();
+        }
+
     }
 }

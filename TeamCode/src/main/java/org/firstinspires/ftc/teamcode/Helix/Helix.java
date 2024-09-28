@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
@@ -16,6 +17,7 @@ public class Helix {
     public final OpModeType mOpModeType;
 
     public final MecanumDriveSubsystem drive;
+    public final Limelight3A limelight;
 
     public GamepadEx driverOp;
     public GamepadEx gunnerOp;
@@ -66,7 +68,7 @@ public class Helix {
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
-
+        limelight = opMode.hardwareMap.get(Limelight3A.class, "limelight");
         //subsystems
         intake = new IntakeSubsystem(this,
                 opMode.hardwareMap.get(Servo.class, "liftServo"),

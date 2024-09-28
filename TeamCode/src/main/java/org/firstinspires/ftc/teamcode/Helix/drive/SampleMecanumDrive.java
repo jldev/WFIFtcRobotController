@@ -59,9 +59,9 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public static double LATERAL_MULTIPLIER = 1.0169;
 
-    public static double VX_WEIGHT = 1.5;
-    public static double VY_WEIGHT = 1.5;
-    public static double OMEGA_WEIGHT = 1.5;
+    public static double VX_WEIGHT = 1.0;
+    public static double VY_WEIGHT = 1.0;
+    public static double OMEGA_WEIGHT = 1.0;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -187,7 +187,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void left(double inches){
         trajectorySequenceRunner.followTrajectorySequenceAsync(
                 trajectorySequenceBuilder(getPoseEstimate())
-                        .strafeLeft(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .strafeLeft(inches, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                         .build()
         );
     }
@@ -195,7 +195,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void right(double inches){
         trajectorySequenceRunner.followTrajectorySequenceAsync(
                 trajectorySequenceBuilder(getPoseEstimate())
-                        .strafeRight(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .strafeRight(inches, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                         .build()
         );
     }
@@ -203,7 +203,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void forward(double inches){
         trajectorySequenceRunner.followTrajectorySequenceAsync(
                 trajectorySequenceBuilder(getPoseEstimate())
-                        .forward(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .forward(inches, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                         .build()
         );
     }
@@ -211,7 +211,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void reverse(double inches){
         trajectorySequenceRunner.followTrajectorySequenceAsync(
                 trajectorySequenceBuilder(getPoseEstimate())
-                        .back(inches, VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+                        .back(inches, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                         .build()
         );
     }
