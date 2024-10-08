@@ -42,8 +42,7 @@ public class HelixAuto {
         trajectories = new Trajectories(helix);
         helix.limelight.pipelineSwitch(0);
         helix.limelight.start();
-//        opMode.schedule(new CenterOnSpecimenCommand(helix));
-        opMode.schedule(new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.RIGHT, 12));
+        opMode.schedule(new CenterOnSpecimenCommand(helix));
     }
 
     private SequentialCommandGroup driveTest(Trajectories trajectories) {

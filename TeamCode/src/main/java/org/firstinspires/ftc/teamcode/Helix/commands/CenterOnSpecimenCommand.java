@@ -27,22 +27,28 @@ public class CenterOnSpecimenCommand extends CommandBase {
 
             for (LLResultTypes.ColorResult cr : colorResults) {
                 double xAngle = cr.getTargetXDegrees();
+                double yAngle = cr.getTargetYDegrees();
 
-                if (xAngle < 1.3f && xAngle > -1.3f) {
+                double distanceFromWall = 1.5 / Math.tan(Math.toRadians(yAngle));
+
+
+
+
+
+                if (xAngle < 0.75f && xAngle > -0.75f) {
                     done = true;
                     continue;
                 }
 
                 //cant remember how to print :(
 
-                //     "24" is distance from wall
-                double driveDistance = 24 / Math.tan(Math.toRadians(90 - xAngle));
+                double driveDistance = distanceFromWall / Math.tan(Math.toRadians(90 - xAngle));
 
                 if (!helix.drive.isBusy()) {
-                    if (xAngle < 4.0f && xAngle > -4.0f) {
-                        if (xAngle < 3.0f && xAngle > 0.0f) {
+                    if (xAngle < 3.0f && xAngle > -3.0f) {
+                        if (xAngle < 2.0f && xAngle > 0.0f) {
                             helix.drive.driveDirection(MecanumDriveSubsystem.DriveDirection.RIGHT, .33f);
-                        } else if (xAngle > -3.0f && xAngle < 0.0f) {
+                        } else if (xAngle > -2.0f && xAngle < 0.0f) {
                             helix.drive.driveDirection(MecanumDriveSubsystem.DriveDirection.LEFT, .33f);
                         }
                     } else {
@@ -50,12 +56,13 @@ public class CenterOnSpecimenCommand extends CommandBase {
                     }
                 }
 
+                helix.mOpMode.telemetry.addLine("X Angle : " + xAngle);
+                helix.mOpMode.telemetry.addLine("Y Angle : " + yAngle);
+                helix.mOpMode.telemetry.addLine("Wall Distance : " + distanceFromWall);
                 helix.mOpMode.telemetry.addLine("Drive Distance : " + driveDistance);
                 helix.mOpMode.telemetry.update();
 
                 helix.drive.waitForIdle();
-                done = true;
-                return;
 
             }
         }
