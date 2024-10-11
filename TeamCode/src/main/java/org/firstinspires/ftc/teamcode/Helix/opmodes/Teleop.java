@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 import org.firstinspires.ftc.teamcode.Helix.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
 
 
 //values
@@ -41,6 +42,13 @@ public class Teleop extends CommandOpMode {
         helix.instakeGripperButton.whenReleased(helix.intake.setGripperClosed());
 
         helix.intakeLiftButton.toggleWhenPressed(new InstantCommand(() -> helix.intake.cycleLift()));
+
+        //         SLIDES
+        // Manual Slides Button
+        helix.tempSlideUpButton.whileHeld(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.UP);}));
+        helix.tempSlideUpButton.whenReleased(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.OFF);}));
+        helix.tempSlideDownButton.whileHeld(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.DOWN);}));
+        helix.tempSlideDownButton.whenReleased(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.OFF);}));
 
 
     }
