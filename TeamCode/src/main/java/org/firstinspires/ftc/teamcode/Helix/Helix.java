@@ -59,6 +59,11 @@ public class Helix {
     public GamepadButton tempSlideUpButton;
     public GamepadButton tempSlideDownButton;
 
+    public GamepadButton home_slidePreset;
+    public GamepadButton wall_slidePreset;
+    public GamepadButton hang_slidePreset;
+    public GamepadButton basket_slidePreset;
+
 
 
 
@@ -88,7 +93,7 @@ public class Helix {
 
         //     slides
         slides = new SlideSubsystem(this,
-                new MotorEx(opMode.hardwareMap, "slideVerticalMotor"),
+                new MotorEx(opMode.hardwareMap, "slideVerticalMotor", Motor.GoBILDA.RPM_312),
                 opMode,
                 HelixConstants.SLIDES_PID_POS_COEFFICIENT,
                 HelixConstants.SLIDES_PID_TOLERANCE
@@ -102,11 +107,22 @@ public class Helix {
 
 
 
-        //gunner setup
-        instakeGripperButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.X);
-        intakeLiftButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.B);
+        //       gunner setup
+
+           //intake
+        instakeGripperButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_RIGHT);
+        intakeLiftButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_LEFT);     // these are temp - gunner's out of buttons
+
+           //slide manual
         tempSlideUpButton = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
         tempSlideDownButton = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
+
+           //slidePresets
+        home_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.A);
+        wall_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
+        hang_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
+        basket_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
+
     }
 
 

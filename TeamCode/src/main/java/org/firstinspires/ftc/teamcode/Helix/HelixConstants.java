@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.Helix;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 
 @Config
 public class HelixConstants {
 
 
-    public static double SLIDE_MOTOR_MANUAL_POWER = 0.25;
+    public static double SLIDE_SPEED = 1.0;
 
     public static double SLIDES_PID_TOLERANCE = 50;
     public static double SLIDES_PID_POS_COEFFICIENT = .5;
@@ -19,5 +18,12 @@ public class HelixConstants {
     public static double GRIPPER_CLOSED_VALUE = 0.2f;
 
     public static double GRIPPER_OPEN_VALUE = 0.5f;
+
+    //    slide positions
+
+    public static int SLIDE_HOME = 0;
+    public static int SLIDE_WALL = 100;
+    public static int SLIDE_HANG = 200;
+    public static int SLIDE_BASKET = 300;
     
 }

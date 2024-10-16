@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Helix.opmodes;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Helix.Helix;
@@ -21,6 +22,11 @@ public class Teleop extends CommandOpMode {
     @Override
     public void initialize() {
         helix = new Helix(this, Helix.OpModeType.TELEOP, Helix.AllianceColor.RED);
+
+        this.schedule(new RunCommand(() -> {
+            helix.slides.addTelemetry(telemetry);
+            telemetry.update();
+        }));
 
         // Drive control
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
@@ -43,13 +49,21 @@ public class Teleop extends CommandOpMode {
 
         helix.intakeLiftButton.toggleWhenPressed(new InstantCommand(() -> helix.intake.cycleLift()));
 
+
+
         //         SLIDES
+
         // Manual Slides Button
         helix.tempSlideUpButton.whileHeld(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.UP);}));
         helix.tempSlideUpButton.whenReleased(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.OFF);}));
         helix.tempSlideDownButton.whileHeld(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.DOWN);}));
         helix.tempSlideDownButton.whenReleased(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.OFF);}));
 
+        // Slide Presets
+        helix.home_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.HOME;}));
+        helix.wall_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.WALL;}));
+        helix.hang_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.HANG;}));
+        helix.basket_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.BASKET;}));
 
     }
 

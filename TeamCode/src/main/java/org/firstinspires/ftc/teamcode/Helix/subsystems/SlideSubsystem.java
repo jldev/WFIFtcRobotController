@@ -3,18 +3,13 @@ package org.firstinspires.ftc.teamcode.Helix.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
-
-import java.util.function.BooleanSupplier;
 
 public class SlideSubsystem extends SubsystemBase {
     //private final Trigger encoderStopTrigger;
@@ -36,17 +31,16 @@ public class SlideSubsystem extends SubsystemBase {
     }
     public enum SlidePosition{
         HOME,
-        TEMP_UP,
+        WALL,
+        HANG,
+        BASKET
     }
 
-    public enum VBarPosition {
-        UP,
-        DOWN
-    }
+
 
     SlideSubsystemState mState;
 
-    private SlidePosition slidePosition;
+    public SlidePosition slidePosition;
 
     private final MotorEx mSlideMotor;
 
@@ -62,7 +56,7 @@ public class SlideSubsystem extends SubsystemBase {
         mSlideMotor.resetEncoder();
         slidePosition = SlidePosition.HOME;
         mSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        mSlideMotor.encoder.setDirection(Motor.Direction.REVERSE);
+        mSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
         mState = SlideSubsystemState.AUTO;
     }
 
@@ -70,7 +64,26 @@ public class SlideSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         if (mState == SlideSubsystemState.AUTO){
+            if(!mSlideMotor.atTargetPosition()){
+//                mSlideMotor.set(HelixConstants.SLIDE_SPEED);
+            } else {
+                mSlideMotor.set(0);
+                switch (slidePosition) {
+                    case HOME:
+                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_HOME);
+                        break;
+                    case WALL:
+                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_WALL);
+                        break;
+                    case HANG:
+                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_HANG);
+                        break;
+                    case BASKET:
+                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_BASKET);
+                        break;
+                }
 
+            }
         }
     }
 
@@ -87,16 +100,16 @@ public class SlideSubsystem extends SubsystemBase {
     }
 
 
-    public void changeToSlidePosition(){
-        switch(slidePosition){
-            case HOME:
-                //go down
-                break;
-            case TEMP_UP:
-                //go up
-                break;
-        }
-    }
+//    public void changeToSlidePosition(){
+//        switch(slidePosition){
+//            case HOME:
+//                //go down
+//                break;
+//            case TEMP_UP:
+//                //go up
+//                break;
+//        }
+//    }
 
 
 
@@ -121,13 +134,14 @@ public class SlideSubsystem extends SubsystemBase {
         changeSlideState(SlideSubsystemState.MANUAL);
         switch (direction){
             case UP:
-                mSlideMotor.set(HelixConstants.SLIDE_MOTOR_MANUAL_POWER);
+                mSlideMotor.set(HelixConstants.SLIDE_SPEED);
                 break;
             case DOWN:
-                mSlideMotor.set(-HelixConstants.SLIDE_MOTOR_MANUAL_POWER);
+                mSlideMotor.set(-HelixConstants.SLIDE_SPEED);
                 break;
             case OFF:
                 mSlideMotor.set(0);
+                changeSlideState(SlideSubsystemState.AUTO);
                 break;
         }
 
