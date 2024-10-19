@@ -60,10 +60,10 @@ public class Teleop extends CommandOpMode {
         helix.tempSlideDownButton.whenReleased(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.OFF);}));
 
         // Slide Presets
-        helix.home_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.HOME;}));
-        helix.wall_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.WALL;}));
-        helix.hang_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.HANG;}));
-        helix.basket_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.slidePosition = SlideSubsystem.SlidePosition.BASKET;}));
+        helix.home_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HOME);}));
+        helix.wall_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.WALL);}));
+        helix.hang_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HANG);}));
+        helix.basket_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.BASKET);}));
 
     }
 

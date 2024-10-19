@@ -18,6 +18,7 @@ public class SlideSubsystem extends SubsystemBase {
     private int mVBarMotorTargetPosition;
 
     private final CommandOpMode mOpMode;
+    private ManualControlDirection mManualDirection;
 
     public enum SlideSubsystemState {
         AUTO,
@@ -48,13 +49,14 @@ public class SlideSubsystem extends SubsystemBase {
         mHelix = helix;
         mSlideMotor = slideMotor;
         mOpMode = opmode;
+        mSlideMotor.stopAndResetEncoder();
         mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
         mSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         mSlideMotor.setPositionCoefficient(pos_coefficient);
         mSlideMotor.setPositionTolerance(pos_tolerance);
-        mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
-        mSlideMotor.resetEncoder();
+        mSlideMotor.setTargetPosition(0);
         slidePosition = SlidePosition.HOME;
+        mSlideMotorTargetPosition = 0;
         mSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         mSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
         mState = SlideSubsystemState.AUTO;
@@ -65,24 +67,36 @@ public class SlideSubsystem extends SubsystemBase {
     public void periodic(){
         if (mState == SlideSubsystemState.AUTO){
             if(!mSlideMotor.atTargetPosition()){
-//                mSlideMotor.set(HelixConstants.SLIDE_SPEED);
+                mSlideMotor.set(HelixConstants.SLIDE_SPEED);
             } else {
-                mSlideMotor.set(0);
+                mSlideMotor.set(0.001);
                 switch (slidePosition) {
                     case HOME:
-                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_HOME);
+                        mSlideMotorTargetPosition = HelixConstants.SLIDE_HOME;
                         break;
                     case WALL:
-                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_WALL);
+                        mSlideMotorTargetPosition = HelixConstants.SLIDE_WALL;
                         break;
                     case HANG:
-                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_HANG);
+                        mSlideMotorTargetPosition = HelixConstants.SLIDE_HANG;
                         break;
                     case BASKET:
-                        mSlideMotor.setTargetPosition(HelixConstants.SLIDE_BASKET);
+                        mSlideMotorTargetPosition = HelixConstants.SLIDE_BASKET;
                         break;
                 }
-
+                mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
+            }
+        } else {
+            switch (mManualDirection){
+                case UP:
+                    mSlideMotor.set(HelixConstants.SLIDE_SPEED);
+                    break;
+                case DOWN:
+                    mSlideMotor.set(-HelixConstants.SLIDE_SPEED);
+                    break;
+                case OFF:
+                    mSlideMotor.set(0);
+                    break;
             }
         }
     }
@@ -100,16 +114,10 @@ public class SlideSubsystem extends SubsystemBase {
     }
 
 
-//    public void changeToSlidePosition(){
-//        switch(slidePosition){
-//            case HOME:
-//                //go down
-//                break;
-//            case TEMP_UP:
-//                //go up
-//                break;
-//        }
-//    }
+    public void changeToSlidePosition(SlidePosition pos){
+        slidePosition = pos;
+        changeSlideState(SlideSubsystemState.AUTO);
+    }
 
 
 
@@ -132,24 +140,15 @@ public class SlideSubsystem extends SubsystemBase {
     public void manualSlideControl(ManualControlDirection direction){
         // anytime the user want to manual control we need to be in the manual state
         changeSlideState(SlideSubsystemState.MANUAL);
-        switch (direction){
-            case UP:
-                mSlideMotor.set(HelixConstants.SLIDE_SPEED);
-                break;
-            case DOWN:
-                mSlideMotor.set(-HelixConstants.SLIDE_SPEED);
-                break;
-            case OFF:
-                mSlideMotor.set(0);
-                changeSlideState(SlideSubsystemState.AUTO);
-                break;
-        }
+        mManualDirection = direction;
+
 
     }
     public boolean isBusy (){
         return !mSlideMotor.atTargetPosition();
     }
     public void addTelemetry(Telemetry telemetry){
+        telemetry.addLine(String.format("Slide State - %s", mState));
         telemetry.addLine(String.format("slide_setting - %s", slidePosition.toString()));
         telemetry.addLine(String.format("current_position - %d", mSlideMotor.getCurrentPosition()));
         telemetry.addLine(String.format("current_power %.2f", mSlideMotor.motor.getPower()));
