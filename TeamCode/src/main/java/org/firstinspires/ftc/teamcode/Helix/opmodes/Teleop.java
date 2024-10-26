@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 import org.firstinspires.ftc.teamcode.Helix.commands.MecanumDriveCommand;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
 
@@ -64,6 +65,14 @@ public class Teleop extends CommandOpMode {
         helix.wall_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.WALL);}));
         helix.hang_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HANG);}));
         helix.basket_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.BASKET);}));
+
+
+
+        //    HANG
+        helix.hangRaise.whileHeld(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.UP);}));
+        helix.hangRaise.whenReleased(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.OFF);}));
+        helix.hangLower.whileHeld(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.DOWN);}));
+        helix.hangLower.whenReleased(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.OFF);}));
 
     }
 

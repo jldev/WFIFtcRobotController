@@ -13,6 +13,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
@@ -33,6 +34,7 @@ public class Helix {
     //subsystems
     public final IntakeSubsystem intake;
     public final SlideSubsystem slides;
+    public final HangSubsystem hang;
 
 
     public enum FieldPos {
@@ -51,7 +53,10 @@ public class Helix {
 
 
 
-    //           BUTTONSSSSS
+           //           BUTTONSSSSS
+
+
+    // Gunner
 
     public GamepadButton instakeGripperButton;
     public GamepadButton intakeLiftButton;
@@ -63,6 +68,12 @@ public class Helix {
     public GamepadButton wall_slidePreset;
     public GamepadButton hang_slidePreset;
     public GamepadButton basket_slidePreset;
+
+
+    // Driver
+
+    public GamepadButton hangRaise;
+    public GamepadButton hangLower;
 
 
 
@@ -99,9 +110,21 @@ public class Helix {
                 HelixConstants.SLIDES_PID_TOLERANCE
                 );
 
+
+
+
+        //     hang
+        hang = new HangSubsystem(this,
+                new MotorEx(opMode.hardwareMap, "hangMotor", Motor.GoBILDA.RPM_435),
+                opMode,
+                HelixConstants.SLIDES_PID_POS_COEFFICIENT,
+                HelixConstants.SLIDES_PID_TOLERANCE
+        );
+
         opMode.register(drive);
         opMode.register(intake);
         opMode.register(slides);
+        opMode.register(hang);
 
 
 
@@ -122,6 +145,13 @@ public class Helix {
         wall_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         hang_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
         basket_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
+
+
+        //     driver setup
+
+           //hang
+        hangRaise = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
+        hangLower = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
 
     }
 
