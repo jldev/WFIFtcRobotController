@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Helix.opmodes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -11,8 +13,10 @@ import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.commands.CenterOnSpecimenCommand;
 import org.firstinspires.ftc.teamcode.Helix.commands.SimpleDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.commands.TrajectoryFollowerCommand;
+import org.firstinspires.ftc.teamcode.Helix.commands.TrajectorySequenceFollowerCommand;
 import org.firstinspires.ftc.teamcode.Helix.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,10 +66,21 @@ public class HelixAuto {
     public void run() {
         Task currentState = Task.DRIVETO;
 
+        Pose2d startPos = new Pose2d(14, -62, Math.toRadians(90));
+        helix.setStartPosition(startPos);
+        TrajectorySequence initialTrajectory = helix.drive.trajectorySequenceBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(10, -36))
+                .lineToConstantHeading(new Vector2d(34, -36))
+                .lineToConstantHeading(new Vector2d(34, -9))
+                .lineToConstantHeading(new Vector2d(44, -9))
+                .turn(Math.toRadians(90))
+                .lineToConstantHeading(new Vector2d(44, -50))
+                .lineToConstantHeading(new Vector2d(44, -9))
+                .lineToConstantHeading(new Vector2d(56, -9))
+                .lineToConstantHeading(new Vector2d(56, -50))
+                .build();
 
-
-
-
+        opMode.schedule(new TrajectorySequenceFollowerCommand(helix.drive, initialTrajectory));
 
 //                if(xAngle < -8f)
 //
