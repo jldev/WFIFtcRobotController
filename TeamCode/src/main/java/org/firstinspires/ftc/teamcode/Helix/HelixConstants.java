@@ -7,6 +7,7 @@ public class HelixConstants {
 
 
     public static double SLIDE_SPEED = 1.0;
+    public static double PIVOT_SPEED = 1.0;
 
     public static double SLIDES_PID_TOLERANCE = 50;
     public static double SLIDES_PID_POS_COEFFICIENT = .85;

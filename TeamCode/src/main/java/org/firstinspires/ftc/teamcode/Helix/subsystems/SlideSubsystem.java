@@ -17,8 +17,8 @@ public class SlideSubsystem extends SubsystemBase {
     private int mVBarMotorTargetPosition;
 
     private final CommandOpMode mOpMode;
-    private VerticalManualControlDirection mVerticalManualDirection;
-    private HorizontalManualControlDirection mHorizontalManualDirection;
+    private VerticalManualControlDirection mVerticalManualDirection = VerticalManualControlDirection.OFF;
+    private HorizontalManualControlDirection mHorizontalManualDirection = HorizontalManualControlDirection.OFF;
 
     public enum SlideSubsystemState {
         AUTO,
@@ -122,10 +122,10 @@ public class SlideSubsystem extends SubsystemBase {
 
             switch (mHorizontalManualDirection) {
                 case OUT:
-                    mHorizontalSlideMotor.set(HelixConstants.SLIDE_SPEED);
+                    mHorizontalSlideMotor.set(-HelixConstants.SLIDE_SPEED);
                     break;
                 case IN:
-                    mHorizontalSlideMotor.set(-HelixConstants.SLIDE_SPEED);
+                    mHorizontalSlideMotor.set(HelixConstants.SLIDE_SPEED);
                     break;
                 case OFF:
                     mHorizontalSlideMotor.set(0);
@@ -138,9 +138,11 @@ public class SlideSubsystem extends SubsystemBase {
         if (mState != newState){ //we need to change the state
             if (newState == SlideSubsystemState.AUTO){
                 mVerticalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
             } else {
                 //we are changing to MANUAL
                 mVerticalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
             }
         }
         mState = newState;

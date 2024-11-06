@@ -44,8 +44,8 @@ public class HelixAuto {
         helix = new Helix(opMode, Helix.OpModeType.AUTO, allianceColor);
         helix.setStartPosition(startingPosition, allianceColor);
         trajectories = new Trajectories(helix);
-        helix.limelight.pipelineSwitch(0);
-        helix.limelight.start();
+        //helix.limelight.pipelineSwitch(0);
+        //helix.limelight.start();
         opMode.schedule(new CenterOnSpecimenCommand(helix));
     }
 

@@ -21,7 +21,7 @@ public class Helix {
     public final OpModeType mOpModeType;
 
     public final MecanumDriveSubsystem drive;
-    public final Limelight3A limelight;
+    //public final Limelight3A limelight;
 
     public GamepadEx driverOp;
     public GamepadEx gunnerOp;
