@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Helix;
 
-import android.transition.Slide;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
@@ -61,8 +59,10 @@ public class Helix {
     public GamepadButton instakeGripperButton;
     public GamepadButton intakeLiftButton;
 
-    public GamepadButton tempSlideUpButton;
-    public GamepadButton tempSlideDownButton;
+    public GamepadButton verticleSlideUp;
+    public GamepadButton verticleSlideDown;
+    public GamepadButton horizontalSlideOut;
+    public GamepadButton horizontalSlideIn;
 
     public GamepadButton home_slidePreset;
     public GamepadButton wall_slidePreset;
@@ -92,7 +92,7 @@ public class Helix {
         drive = new MecanumDriveSubsystem(new SampleMecanumDrive(opMode.hardwareMap), false);
         driverOp = new GamepadEx(opMode.gamepad1);
         gunnerOp = new GamepadEx(opMode.gamepad2);
-        limelight = opMode.hardwareMap.get(Limelight3A.class, "limelight");
+//        limelight = opMode.hardwareMap.get(Limelight3A.class, "limelight");
 
 
         //subsystems      - intake
@@ -105,6 +105,7 @@ public class Helix {
         //     slides
         slides = new SlideSubsystem(this,
                 new MotorEx(opMode.hardwareMap, "slideVerticalMotor", Motor.GoBILDA.RPM_312),
+                new MotorEx(opMode.hardwareMap, "slideHorizontalMotor", Motor.GoBILDA.RPM_312),
                 opMode,
                 HelixConstants.SLIDES_PID_POS_COEFFICIENT,
                 HelixConstants.SLIDES_PID_TOLERANCE
@@ -137,8 +138,11 @@ public class Helix {
         intakeLiftButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_LEFT);     // these are temp - gunner's out of buttons
 
            //slide manual
-        tempSlideUpButton = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
-        tempSlideDownButton = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
+        verticleSlideUp = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
+        verticleSlideDown = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
+
+        horizontalSlideOut = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_LEFT);
+        horizontalSlideIn = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_RIGHT);
 
            //slidePresets
         home_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.A);

@@ -20,7 +20,7 @@ public class CenterOnSpecimenCommand extends CommandBase {
 
     @Override
     public void execute() {
-        LLResult result = helix.limelight.getLatestResult();
+        LLResult result = null; //helix.limelight.getLatestResult();
         if (result != null) {
             // Access color results
             List<LLResultTypes.ColorResult> colorResults = result.getColorResults();

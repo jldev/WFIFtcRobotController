@@ -35,6 +35,23 @@ public class HelixAuto {
         DEPOSIT_SAMPLE,
     }
 
+
+    //   TRAJECTORIES
+
+    Pose2d startPos1 = new Pose2d(0, -62, 0);
+    Pose2d startPos2 = new Pose2d(0, 0, 0);
+    Pose2d startPos3 = new Pose2d(0, 0, 0);
+
+    Pose2d hangPos = new Pose2d(0, 0, 0);
+
+    Pose2d samplePos1 = new Pose2d(0, 0, 0);
+    Pose2d samplePos2 = new Pose2d(0, 0, 0);
+    Pose2d observationPos  = new Pose2d(0, 0, 0);
+    Pose2d wallSpecimenPos = new Pose2d(0, 0, 0);
+
+
+
+
     public HelixAuto(CommandOpMode commandOpMode, Helix.FieldPos startingPosition, Helix.AllianceColor allianceColor) {
         opMode = commandOpMode;
         helix = new Helix(opMode, Helix.OpModeType.AUTO, allianceColor);
@@ -51,7 +68,6 @@ public class HelixAuto {
 //                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint1)),
 //                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint2))
 
-
 //   Get basic auto working -- put Pose2ds in array and test PathTo
                 );
     }
@@ -62,8 +78,7 @@ public class HelixAuto {
     public void run() {
         Task currentState = Task.DRIVETO;
 
-
-
+//        helix.drive.trajectorySequenceBuilder()
 
 
 

@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 
@@ -18,18 +17,27 @@ public class SlideSubsystem extends SubsystemBase {
     private int mVBarMotorTargetPosition;
 
     private final CommandOpMode mOpMode;
-    private ManualControlDirection mManualDirection;
+    private VerticalManualControlDirection mVerticalManualDirection;
+    private HorizontalManualControlDirection mHorizontalManualDirection;
 
     public enum SlideSubsystemState {
         AUTO,
         MANUAL
     }
 
-    public enum ManualControlDirection{
+    public enum VerticalManualControlDirection {
         UP,
         DOWN,
         OFF
     }
+
+    public enum HorizontalManualControlDirection {
+        OUT,
+        IN,
+        OFF
+    }
+
+
     public enum SlidePosition{
         HOME,
         WALL,
@@ -43,33 +51,46 @@ public class SlideSubsystem extends SubsystemBase {
 
     public SlidePosition slidePosition;
 
-    private final MotorEx mSlideMotor;
+    private final MotorEx mVerticalSlideMotor;
+    private final MotorEx mHorizontalSlideMotor;
 
-    public SlideSubsystem(Helix helix, MotorEx slideMotor, CommandOpMode opmode, double pos_coefficient, double pos_tolerance) {
+    public SlideSubsystem(Helix helix, MotorEx verticalSlideMotor, MotorEx horizontalSlideMotor, CommandOpMode opmode, double pos_coefficient, double pos_tolerance) {
         mHelix = helix;
-        mSlideMotor = slideMotor;
+        mVerticalSlideMotor = verticalSlideMotor;
         mOpMode = opmode;
-        mSlideMotor.stopAndResetEncoder();
-        mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
-        mSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        mSlideMotor.setPositionCoefficient(pos_coefficient);
-        mSlideMotor.setPositionTolerance(pos_tolerance);
-        mSlideMotor.setTargetPosition(0);
+        mVerticalSlideMotor.stopAndResetEncoder();
+        mVerticalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+        mVerticalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        mVerticalSlideMotor.setPositionCoefficient(pos_coefficient);
+        mVerticalSlideMotor.setPositionTolerance(pos_tolerance);
+        mVerticalSlideMotor.setTargetPosition(0);
         slidePosition = SlidePosition.HOME;
         mSlideMotorTargetPosition = 0;
-        mSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        mSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
+        mVerticalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        mVerticalSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
         mState = SlideSubsystemState.AUTO;
+
+        mHorizontalSlideMotor = horizontalSlideMotor;
+        mHorizontalSlideMotor.stopAndResetEncoder();
+        mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+        mHorizontalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        mHorizontalSlideMotor.setPositionCoefficient(pos_coefficient);
+        mHorizontalSlideMotor.setPositionTolerance(pos_tolerance);
+        mHorizontalSlideMotor.setTargetPosition(0);
+        slidePosition = SlidePosition.HOME; // !! linked with vertical !!
+        mSlideMotorTargetPosition = 0; // !! linked with vertical !!
+        mHorizontalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        mHorizontalSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
     }
 
 
     @Override
-    public void periodic(){
-        if (mState == SlideSubsystemState.AUTO){
-            if(!mSlideMotor.atTargetPosition()){
-                mSlideMotor.set(HelixConstants.SLIDE_SPEED);
+    public void periodic() {
+        if (mState == SlideSubsystemState.AUTO) {
+            if (!mVerticalSlideMotor.atTargetPosition()) {
+                mVerticalSlideMotor.set(HelixConstants.SLIDE_SPEED);
             } else {
-                mSlideMotor.set(0.001);
+                mVerticalSlideMotor.set(0.001);
                 switch (slidePosition) {
                     case HOME:
                         mSlideMotorTargetPosition = HelixConstants.SLIDE_HOME;
@@ -84,18 +105,30 @@ public class SlideSubsystem extends SubsystemBase {
                         mSlideMotorTargetPosition = HelixConstants.SLIDE_BASKET;
                         break;
                 }
-                mSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
+                mVerticalSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
             }
         } else {
-            switch (mManualDirection){
+            switch (mVerticalManualDirection) {
                 case UP:
-                    mSlideMotor.set(HelixConstants.SLIDE_SPEED);
+                    mVerticalSlideMotor.set(HelixConstants.SLIDE_SPEED);
                     break;
                 case DOWN:
-                    mSlideMotor.set(-HelixConstants.SLIDE_SPEED);
+                    mVerticalSlideMotor.set(-HelixConstants.SLIDE_SPEED);
                     break;
                 case OFF:
-                    mSlideMotor.set(0);
+                    mVerticalSlideMotor.set(0);
+                    break;
+            }
+
+            switch (mHorizontalManualDirection) {
+                case OUT:
+                    mHorizontalSlideMotor.set(HelixConstants.SLIDE_SPEED);
+                    break;
+                case IN:
+                    mHorizontalSlideMotor.set(-HelixConstants.SLIDE_SPEED);
+                    break;
+                case OFF:
+                    mHorizontalSlideMotor.set(0);
                     break;
             }
         }
@@ -104,10 +137,10 @@ public class SlideSubsystem extends SubsystemBase {
     private void changeSlideState(SlideSubsystemState newState){
         if (mState != newState){ //we need to change the state
             if (newState == SlideSubsystemState.AUTO){
-                mSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
             } else {
                 //we are changing to MANUAL
-                mSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
             }
         }
         mState = newState;
@@ -133,27 +166,38 @@ public class SlideSubsystem extends SubsystemBase {
     public void stopMotorResetEncoder() {
 //        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
 //        mNeptune.mOpMode.telemetry.update();
-        mSlideMotor.set(0);
-        mSlideMotor.setRunMode(Motor.RunMode.PositionControl);
-        mSlideMotor.resetEncoder();
+        mVerticalSlideMotor.set(0);
+        mVerticalSlideMotor.setRunMode(Motor.RunMode.PositionControl);
+        mVerticalSlideMotor.resetEncoder();
     }
-    public void manualSlideControl(ManualControlDirection direction){
+
+
+
+
+    public void verticalManualSlideControl(VerticalManualControlDirection direction){
         // anytime the user want to manual control we need to be in the manual state
         changeSlideState(SlideSubsystemState.MANUAL);
-        mManualDirection = direction;
-
-
+        mVerticalManualDirection = direction;
     }
+
+    public void horizontalManualSlideControl(HorizontalManualControlDirection direction){
+
+        // anytime the user want to manual control we need to be in the manual state
+        changeSlideState(SlideSubsystemState.MANUAL);
+        mHorizontalManualDirection = direction;
+    }
+
+
     public boolean isBusy (){
-        return !mSlideMotor.atTargetPosition();
+        return !mVerticalSlideMotor.atTargetPosition();
     }
-    public void addTelemetry(Telemetry telemetry){
-        telemetry.addLine(String.format("Slide State - %s", mState));
-        telemetry.addLine(String.format("slide_setting - %s", slidePosition.toString()));
-        telemetry.addLine(String.format("current_position - %d", mSlideMotor.getCurrentPosition()));
-        telemetry.addLine(String.format("current_power %.2f", mSlideMotor.motor.getPower()));
-        telemetry.addLine(String.format("target_position %d", mSlideMotorTargetPosition));
-
-
-    }
+//    public void addTelemetry(Telemetry telemetry){
+//        telemetry.addLine(String.format("Slide State - %s", mState));
+//        telemetry.addLine(String.format("slide_setting - %s", slidePosition.toString()));
+//        telemetry.addLine(String.format("current_position - %d", mVerticalSlideMotor.getCurrentPosition()));
+//        telemetry.addLine(String.format("current_power %.2f", mVerticalSlideMotor.motor.getPower()));
+//        telemetry.addLine(String.format("target_position %d", mSlideMotorTargetPosition));
+//
+//
+//    }
 }

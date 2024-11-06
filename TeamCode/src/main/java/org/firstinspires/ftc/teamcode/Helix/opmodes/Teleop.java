@@ -5,15 +5,13 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Helix.Helix;
-import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 import org.firstinspires.ftc.teamcode.Helix.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
-import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
 
 
 //values
-import static org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem.GripperState.OPEN;
+
 
 @TeleOp(name = "Teleop")
 public class Teleop extends CommandOpMode {
@@ -25,7 +23,7 @@ public class Teleop extends CommandOpMode {
         helix = new Helix(this, Helix.OpModeType.TELEOP, Helix.AllianceColor.RED);
 
         this.schedule(new RunCommand(() -> {
-            helix.slides.addTelemetry(telemetry);
+//            helix.slides.addTelemetry(telemetry);
             telemetry.update();
         }));
 
@@ -55,10 +53,17 @@ public class Teleop extends CommandOpMode {
         //         SLIDES
 
         // Manual Slides Button
-        helix.tempSlideUpButton.whileHeld(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.UP);}));
-        helix.tempSlideUpButton.whenReleased(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.OFF);}));
-        helix.tempSlideDownButton.whileHeld(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.DOWN);}));
-        helix.tempSlideDownButton.whenReleased(new InstantCommand(() -> {helix.slides.manualSlideControl(SlideSubsystem.ManualControlDirection.OFF);}));
+        helix.verticleSlideUp.whileHeld(new InstantCommand(() -> {helix.slides.verticalManualSlideControl(SlideSubsystem.VerticalManualControlDirection.UP);}));
+        helix.verticleSlideUp.whenReleased(new InstantCommand(() -> {helix.slides.verticalManualSlideControl(SlideSubsystem.VerticalManualControlDirection.OFF);}));
+        helix.verticleSlideDown.whileHeld(new InstantCommand(() -> {helix.slides.verticalManualSlideControl(SlideSubsystem.VerticalManualControlDirection.DOWN);}));
+        helix.verticleSlideDown.whenReleased(new InstantCommand(() -> {helix.slides.verticalManualSlideControl(SlideSubsystem.VerticalManualControlDirection.OFF);}));
+
+        helix.horizontalSlideOut.whileHeld(new InstantCommand(() -> {helix.slides.horizontalManualSlideControl(SlideSubsystem.HorizontalManualControlDirection.OUT);}));
+        helix.horizontalSlideOut.whenReleased(new InstantCommand(() -> {helix.slides.horizontalManualSlideControl(SlideSubsystem.HorizontalManualControlDirection.OFF);}));
+        helix.horizontalSlideIn.whileHeld(new InstantCommand(() -> {helix.slides.horizontalManualSlideControl(SlideSubsystem.HorizontalManualControlDirection.IN);}));
+        helix.horizontalSlideIn.whenReleased(new InstantCommand(() -> {helix.slides.horizontalManualSlideControl(SlideSubsystem.HorizontalManualControlDirection.OFF);}));
+
+
 
         // Slide Presets
         helix.home_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HOME);}));
