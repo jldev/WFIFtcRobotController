@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Helix.opmodes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -11,8 +13,10 @@ import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.commands.CenterOnSpecimenCommand;
 import org.firstinspires.ftc.teamcode.Helix.commands.SimpleDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.commands.TrajectoryFollowerCommand;
+import org.firstinspires.ftc.teamcode.Helix.commands.TrajectorySequenceFollowerCommand;
 import org.firstinspires.ftc.teamcode.Helix.drive.Trajectories;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,23 +39,6 @@ public class HelixAuto {
         DEPOSIT_SAMPLE,
     }
 
-
-    //   TRAJECTORIES
-
-    Pose2d startPos1 = new Pose2d(0, -62, 0);
-    Pose2d startPos2 = new Pose2d(0, 0, 0);
-    Pose2d startPos3 = new Pose2d(0, 0, 0);
-
-    Pose2d hangPos = new Pose2d(0, 0, 0);
-
-    Pose2d samplePos1 = new Pose2d(0, 0, 0);
-    Pose2d samplePos2 = new Pose2d(0, 0, 0);
-    Pose2d observationPos  = new Pose2d(0, 0, 0);
-    Pose2d wallSpecimenPos = new Pose2d(0, 0, 0);
-
-
-
-
     public HelixAuto(CommandOpMode commandOpMode, Helix.FieldPos startingPosition, Helix.AllianceColor allianceColor) {
         opMode = commandOpMode;
         helix = new Helix(opMode, Helix.OpModeType.AUTO, allianceColor);
@@ -68,6 +55,7 @@ public class HelixAuto {
 //                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint1)),
 //                new TrajectoryFollowerCommand(helix.drive, trajectories.getTrajectory(trajectories.waypoint2))
 
+
 //   Get basic auto working -- put Pose2ds in array and test PathTo
                 );
     }
@@ -78,9 +66,21 @@ public class HelixAuto {
     public void run() {
         Task currentState = Task.DRIVETO;
 
-//        helix.drive.trajectorySequenceBuilder()
+        Pose2d startPos = new Pose2d(14, -62, Math.toRadians(90));
+        helix.setStartPosition(startPos);
+        TrajectorySequence initialTrajectory = helix.drive.trajectorySequenceBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(10, -36))
+                .lineToConstantHeading(new Vector2d(34, -36))
+                .lineToConstantHeading(new Vector2d(34, -9))
+                .lineToConstantHeading(new Vector2d(44, -9))
+                .turn(Math.toRadians(90))
+                .lineToConstantHeading(new Vector2d(44, -50))
+                .lineToConstantHeading(new Vector2d(44, -9))
+                .lineToConstantHeading(new Vector2d(56, -9))
+                .lineToConstantHeading(new Vector2d(56, -50))
+                .build();
 
-
+        opMode.schedule(new TrajectorySequenceFollowerCommand(helix.drive, initialTrajectory));
 
 //                if(xAngle < -8f)
 //

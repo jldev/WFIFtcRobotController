@@ -161,6 +161,10 @@ public class Helix {
 
 
 
+    public void setStartPosition(Pose2d pos){
+        this.currentPos = pos;
+        drive.setPoseEstimate(this.currentPos);
+    }
         //Start positions for each auto placement
     public void setStartPosition(FieldPos fp, AllianceColor ac) {
 
