@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
 
 
@@ -79,6 +80,12 @@ public class Teleop extends CommandOpMode {
         helix.hangLower.whileHeld(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.DOWN);}));
         helix.hangLower.whenReleased(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.OFF);}));
 
+
+        //   PIVOT
+        helix.pivotRaise.whileHeld(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.UP);}));
+        helix.pivotRaise.whenReleased(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.OFF);}));
+        helix.pivotLower.whileHeld(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.DOWN);}));
+        helix.pivotLower.whenReleased(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.OFF);}));
     }
 
 }

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
 
 public class Helix {
@@ -32,6 +33,7 @@ public class Helix {
     //subsystems
     public final IntakeSubsystem intake;
     public final SlideSubsystem slides;
+    public final PivotSubsystem pivot;
     public final HangSubsystem hang;
 
 
@@ -74,6 +76,8 @@ public class Helix {
 
     public GamepadButton hangRaise;
     public GamepadButton hangLower;
+    public GamepadButton pivotRaise;
+    public GamepadButton pivotLower;
 
 
 
@@ -110,6 +114,17 @@ public class Helix {
                 HelixConstants.SLIDES_PID_POS_COEFFICIENT,
                 HelixConstants.SLIDES_PID_TOLERANCE
                 );
+
+
+
+
+        //     pivot
+        pivot = new PivotSubsystem(this,
+                new MotorEx(opMode.hardwareMap, "pivotMotor", Motor.GoBILDA.RPM_312),
+                opMode,
+                HelixConstants.SLIDES_PID_POS_COEFFICIENT,
+                HelixConstants.SLIDES_PID_TOLERANCE
+        );
 
 
 
@@ -151,11 +166,19 @@ public class Helix {
         basket_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
 
 
+
         //     driver setup
 
            //hang
-        hangRaise = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
-        hangLower = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+        hangRaise = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_LEFT);
+        hangLower = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_RIGHT);
+        // !!we should change this to have a button to go all the way up, and a button to go all the way down
+
+
+           //pivot manual
+        pivotRaise = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
+        pivotLower = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+
 
     }
 

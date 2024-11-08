@@ -24,9 +24,23 @@ public class PivotSubsystem extends SubsystemBase {
         NULL,
     }
 
+    public enum PivotSubsystemState{
+        AUTO,
+        MANUAL
+    }
+
+    public enum PivotManualControlDirection {
+        DOWN,
+        UP,
+        OFF
+    }
+    private PivotSubsystem.PivotManualControlDirection mPivotManualControlDirection = PivotSubsystem.PivotManualControlDirection.OFF;
+
 
     public DesiredColor desiredColor;
     public DesiredColor lastDesiredColor;
+
+    PivotSubsystem.PivotSubsystemState mState;
 
     private final MotorEx mPivotMotor;
 
@@ -77,6 +91,27 @@ public class PivotSubsystem extends SubsystemBase {
     public void changeDesiredColor(DesiredColor color) {
         lastDesiredColor = desiredColor;
         desiredColor = color;
+    }
+
+
+
+    private void changeSlideState(PivotSubsystem.PivotSubsystemState newState){
+        if (mState != newState){ //we need to change the state
+            if (newState == PivotSubsystem.PivotSubsystemState.AUTO){
+                mPivotMotor.setRunMode(MotorEx.RunMode.PositionControl);
+            } else {
+                //we are changing to MANUAL
+                mPivotMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+            }
+        }
+        mState = newState;
+    }
+
+    public void pivotManualControl(PivotSubsystem.PivotManualControlDirection direction){
+
+        // anytime the user want to manual control we need to be in the manual state
+        changeSlideState(PivotSubsystem.PivotSubsystemState.MANUAL);
+        mPivotManualControlDirection = direction;
     }
 
 
