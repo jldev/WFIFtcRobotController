@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Helix.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -53,18 +55,25 @@ public class SlideSubsystem extends SubsystemBase {
     public SlidePosition horizontalPosition;
 
     private final MotorEx mVerticalSlideMotor;
+    private final PIDFController mVerticalPIDController;
     private final MotorEx mHorizontalSlideMotor;
+    private final PIDFController mHorizontalPIDController;
 
     public SlideSubsystem(Helix helix, MotorEx verticalSlideMotor, MotorEx horizontalSlideMotor, CommandOpMode opmode, double pos_coefficient, double pos_tolerance) {
         mHelix = helix;
         mVerticalSlideMotor = verticalSlideMotor;
         mOpMode = opmode;
+        mVerticalPIDController = new PIDFController(HelixConstants.VERTICAL_PID_P, HelixConstants.VERTICAL_PID_I,
+                HelixConstants.VERTICAL_PID_D, HelixConstants.VERTICAL_PID_F);
+        mVerticalPIDController.setTolerance(HelixConstants.SLIDES_PID_TOLERANCE);
+        mHorizontalPIDController = new PIDFController(HelixConstants.HORIZONTAL_PID_P, HelixConstants.HORIZONTAL_PID_I,
+                HelixConstants.HORIZONTAL_PID_D, HelixConstants.HORIZONTAL_PID_F);
+        mHorizontalPIDController.setTolerance(HelixConstants.SLIDES_PID_TOLERANCE)
+        ;
         mVerticalSlideMotor.stopAndResetEncoder();
-        mVerticalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+        mVerticalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
         mVerticalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        mVerticalSlideMotor.setPositionCoefficient(pos_coefficient);
-        mVerticalSlideMotor.setPositionTolerance(pos_tolerance);
-        mVerticalSlideMotor.setTargetPosition(0);
+        mVerticalPIDController.setSetPoint(0);
         verticlePosition = SlidePosition.HOME;
         mVerticleTargetPosiion = 0;
         mVerticalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -73,11 +82,9 @@ public class SlideSubsystem extends SubsystemBase {
 
         mHorizontalSlideMotor = horizontalSlideMotor;
         mHorizontalSlideMotor.stopAndResetEncoder();
-        mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+        mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
         mHorizontalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        mHorizontalSlideMotor.setPositionCoefficient(pos_coefficient);
-        mHorizontalSlideMotor.setPositionTolerance(pos_tolerance);
-        mHorizontalSlideMotor.setTargetPosition(0);
+        mHorizontalPIDController.setSetPoint(0);
         horizontalPosition = SlidePosition.HOME; // !! linked with vertical !!
         mHorizontalTargetPosiion = 0; // !! linked with vertical !!
         mHorizontalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -126,10 +133,28 @@ public class SlideSubsystem extends SubsystemBase {
                     break;
             }
         }
-        mVerticalSlideMotor.setTargetPosition(mVerticleTargetPosiion);
-        mHorizontalSlideMotor.setTargetPosition(mHorizontalTargetPosiion);
-        mVerticalSlideMotor.set(HelixConstants.SLIDE_SPEED);
-        mHorizontalSlideMotor.set(HelixConstants.SLIDE_SPEED);
+        /*
+            If we are running fast enough the below while loops could be removed so we
+            don't hold up the rest of the system, but for testing and tuning the PID controllers
+            this should work for now
+         */
+        mVerticalPIDController.setSetPoint(mVerticleTargetPosiion);
+        while (!mVerticalPIDController.atSetPoint()) {
+            double output = mVerticalPIDController.calculate(
+                    mVerticalSlideMotor.getCurrentPosition()  // the measured value
+            );
+            mVerticalSlideMotor.setVelocity(output);
+        }
+        mVerticalSlideMotor.stopMotor(); // stop the motor
+
+        mHorizontalPIDController.setSetPoint(mHorizontalTargetPosiion);
+        while (!mHorizontalPIDController.atSetPoint()) {
+            double output = mHorizontalPIDController.calculate(
+                    mHorizontalSlideMotor.getCurrentPosition()  // the measured value
+            );
+            mHorizontalSlideMotor.setVelocity(output);
+        }
+        mHorizontalSlideMotor.stopMotor(); // stop the motor
 
         mOpMode.telemetry.addData("vCurrent: ", mVerticalSlideMotor.encoder.getPosition());
         mOpMode.telemetry.addData("vTarget: ", mVerticleTargetPosiion);
@@ -138,16 +163,6 @@ public class SlideSubsystem extends SubsystemBase {
     }
 
     private void changeSlideState(SlideSubsystemState newState){
-//        if (mState != newState){ //we need to change the state
-//            if (newState == SlideSubsystemState.AUTO){
-//                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
-//                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
-//            } else {
-//                //we are changing to MANUAL
-//                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
-//                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
-//            }
-//        }
         mState = newState;
     }
 
@@ -171,9 +186,14 @@ public class SlideSubsystem extends SubsystemBase {
     public void stopMotorResetEncoder() {
 //        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
 //        mNeptune.mOpMode.telemetry.update();
-        mVerticalSlideMotor.set(0);
-        mVerticalSlideMotor.setRunMode(Motor.RunMode.PositionControl);
+        mVerticalPIDController.clearTotalError();
+        mVerticalPIDController.setSetPoint(0);
+        mVerticalSlideMotor.stopMotor();
         mVerticalSlideMotor.resetEncoder();
+        mHorizontalPIDController.clearTotalError();
+        mHorizontalPIDController.setSetPoint(0);
+        mHorizontalSlideMotor.stopMotor();
+        mHorizontalSlideMotor.resetEncoder();
     }
 
 
@@ -194,7 +214,7 @@ public class SlideSubsystem extends SubsystemBase {
 
 
     public boolean isBusy (){
-        return !mVerticalSlideMotor.atTargetPosition() || !mHorizontalSlideMotor.atTargetPosition();
+        return !mVerticalPIDController.atSetPoint() || !mHorizontalPIDController.atSetPoint();
     }
 //    public void addTelemetry(Telemetry telemetry){
 //        telemetry.addLine(String.format("Slide State - %s", mState));
