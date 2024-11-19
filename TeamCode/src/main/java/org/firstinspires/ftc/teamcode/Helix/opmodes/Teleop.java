@@ -42,13 +42,6 @@ public class Teleop extends CommandOpMode {
 
 
 
-        //         INTAKE
-
-        helix.instakeGripperButton.whileHeld(helix.intake.setGripperOpen());
-        helix.instakeGripperButton.whenReleased(helix.intake.setGripperClosed());
-
-        helix.intakeLiftButton.toggleWhenPressed(new InstantCommand(() -> helix.intake.cycleLift()));
-
 
 
         //         SLIDES

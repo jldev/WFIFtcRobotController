@@ -5,12 +5,14 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
@@ -31,10 +33,10 @@ public class Helix {
 
 
     //subsystems
-    public final IntakeSubsystem intake;
     public final SlideSubsystem slides;
     public final PivotSubsystem pivot;
     public final HangSubsystem hang;
+    public final ClawSubsystem claw;
 
 
     public enum FieldPos {
@@ -99,12 +101,6 @@ public class Helix {
 //        limelight = opMode.hardwareMap.get(Limelight3A.class, "limelight");
 
 
-        //subsystems      - intake
-        intake = new IntakeSubsystem(this,
-                opMode.hardwareMap.get(Servo.class, "liftServo"),
-                opMode.hardwareMap.get(Servo.class, "gripperServo"));
-
-
 
         //     slides
         slides = new SlideSubsystem(this,
@@ -137,10 +133,24 @@ public class Helix {
                 HelixConstants.SLIDES_PID_TOLERANCE
         );
 
+
+
+        //     claw
+        claw = new ClawSubsystem(this,
+                opMode,
+                opMode.hardwareMap.get(Servo.class, "yaw_1"),
+                opMode.hardwareMap.get(Servo.class, "pitch_2"),
+                opMode.hardwareMap.get(Servo.class, "grip_3"));
+
+
+
+
+
         opMode.register(drive);
-        opMode.register(intake);
         opMode.register(slides);
         opMode.register(hang);
+        opMode.register(pivot);
+        opMode.register(claw);
 
 
 
@@ -164,6 +174,14 @@ public class Helix {
         wall_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.X);
         hang_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.B);
         basket_slidePreset = new GamepadButton(gunnerOp, GamepadKeys.Button.Y);
+
+          //claw
+        // yaw = LTx
+        // pitch = LTy
+        // grip = RTy
+
+
+
 
 
 

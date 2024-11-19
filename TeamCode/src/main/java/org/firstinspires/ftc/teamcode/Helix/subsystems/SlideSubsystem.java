@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 public class SlideSubsystem extends SubsystemBase {
     //private final Trigger encoderStopTrigger;
     private final Helix mHelix;
-    private int mSlideMotorTargetPosition = 0;
-    private int mVBarMotorTargetPosition;
+    private int mVerticleTargetPosiion = 0;
+    private int mHorizontalTargetPosiion = 0;
 
     private final CommandOpMode mOpMode;
     private VerticalManualControlDirection mVerticalManualDirection = VerticalManualControlDirection.OFF;
@@ -49,7 +49,8 @@ public class SlideSubsystem extends SubsystemBase {
 
     SlideSubsystemState mState;
 
-    public SlidePosition slidePosition;
+    public SlidePosition verticlePosition;
+    public SlidePosition horizontalPosition;
 
     private final MotorEx mVerticalSlideMotor;
     private final MotorEx mHorizontalSlideMotor;
@@ -64,8 +65,8 @@ public class SlideSubsystem extends SubsystemBase {
         mVerticalSlideMotor.setPositionCoefficient(pos_coefficient);
         mVerticalSlideMotor.setPositionTolerance(pos_tolerance);
         mVerticalSlideMotor.setTargetPosition(0);
-        slidePosition = SlidePosition.HOME;
-        mSlideMotorTargetPosition = 0;
+        verticlePosition = SlidePosition.HOME;
+        mVerticleTargetPosiion = 0;
         mVerticalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         mVerticalSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
         mState = SlideSubsystemState.AUTO;
@@ -77,8 +78,8 @@ public class SlideSubsystem extends SubsystemBase {
         mHorizontalSlideMotor.setPositionCoefficient(pos_coefficient);
         mHorizontalSlideMotor.setPositionTolerance(pos_tolerance);
         mHorizontalSlideMotor.setTargetPosition(0);
-        slidePosition = SlidePosition.HOME; // !! linked with vertical !!
-        mSlideMotorTargetPosition = 0; // !! linked with vertical !!
+        horizontalPosition = SlidePosition.HOME; // !! linked with vertical !!
+        mHorizontalTargetPosiion = 0; // !! linked with vertical !!
         mHorizontalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         mHorizontalSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
     }
@@ -87,70 +88,72 @@ public class SlideSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (mState == SlideSubsystemState.AUTO) {
-            if (!mVerticalSlideMotor.atTargetPosition()) {
-                mVerticalSlideMotor.set(HelixConstants.SLIDE_SPEED);
-            } else {
-                mVerticalSlideMotor.set(0.001);
-                switch (slidePosition) {
+
+                switch (verticlePosition) {
                     case HOME:
-                        mSlideMotorTargetPosition = HelixConstants.SLIDE_HOME;
+                        mVerticleTargetPosiion = HelixConstants.SLIDE_HOME;
                         break;
                     case WALL:
-                        mSlideMotorTargetPosition = HelixConstants.SLIDE_WALL;
+                        mVerticleTargetPosiion = HelixConstants.SLIDE_WALL;
                         break;
                     case HANG:
-                        mSlideMotorTargetPosition = HelixConstants.SLIDE_HANG;
+                        mVerticleTargetPosiion = HelixConstants.SLIDE_HANG;
                         break;
                     case BASKET:
-                        mSlideMotorTargetPosition = HelixConstants.SLIDE_BASKET;
+                        mVerticleTargetPosiion = HelixConstants.SLIDE_BASKET;
                         break;
-                }
-                mVerticalSlideMotor.setTargetPosition(mSlideMotorTargetPosition);
             }
         } else {
             switch (mVerticalManualDirection) {
                 case UP:
-                    mVerticalSlideMotor.set(HelixConstants.SLIDE_SPEED);
+                    mVerticleTargetPosiion += HelixConstants.SLIDE_MANUAL_SPEED;
                     break;
                 case DOWN:
-                    mVerticalSlideMotor.set(-HelixConstants.SLIDE_SPEED);
+                    mVerticleTargetPosiion -= HelixConstants.SLIDE_MANUAL_SPEED;
                     break;
                 case OFF:
-                    mVerticalSlideMotor.set(0);
                     break;
             }
 
             switch (mHorizontalManualDirection) {
                 case OUT:
-                    mHorizontalSlideMotor.set(-HelixConstants.SLIDE_SPEED);
+                    mHorizontalTargetPosiion += HelixConstants.SLIDE_MANUAL_SPEED;
                     break;
                 case IN:
-                    mHorizontalSlideMotor.set(HelixConstants.SLIDE_SPEED);
+                    mHorizontalTargetPosiion -= HelixConstants.SLIDE_MANUAL_SPEED;
                     break;
                 case OFF:
-                    mHorizontalSlideMotor.set(0);
                     break;
             }
         }
+        mVerticalSlideMotor.setTargetPosition(mVerticleTargetPosiion);
+        mHorizontalSlideMotor.setTargetPosition(mHorizontalTargetPosiion);
+        mVerticalSlideMotor.set(HelixConstants.SLIDE_SPEED);
+        mHorizontalSlideMotor.set(HelixConstants.SLIDE_SPEED);
+
+        mOpMode.telemetry.addData("vCurrent: ", mVerticalSlideMotor.encoder.getPosition());
+        mOpMode.telemetry.addData("vTarget: ", mVerticleTargetPosiion);
+        mOpMode.telemetry.addData("hCurrent: ", mHorizontalSlideMotor.encoder.getPosition());
+        mOpMode.telemetry.addData("hTarget: ", mHorizontalTargetPosiion);
     }
 
     private void changeSlideState(SlideSubsystemState newState){
-        if (mState != newState){ //we need to change the state
-            if (newState == SlideSubsystemState.AUTO){
-                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
-                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
-            } else {
-                //we are changing to MANUAL
-                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
-                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
-            }
-        }
+//        if (mState != newState){ //we need to change the state
+//            if (newState == SlideSubsystemState.AUTO){
+//                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+//                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.PositionControl);
+//            } else {
+//                //we are changing to MANUAL
+//                mVerticalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+//                mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+//            }
+//        }
         mState = newState;
     }
 
 
     public void changeToSlidePosition(SlidePosition pos){
-        slidePosition = pos;
+        verticlePosition = pos;
         changeSlideState(SlideSubsystemState.AUTO);
     }
 
@@ -191,7 +194,7 @@ public class SlideSubsystem extends SubsystemBase {
 
 
     public boolean isBusy (){
-        return !mVerticalSlideMotor.atTargetPosition();
+        return !mVerticalSlideMotor.atTargetPosition() || !mHorizontalSlideMotor.atTargetPosition();
     }
 //    public void addTelemetry(Telemetry telemetry){
 //        telemetry.addLine(String.format("Slide State - %s", mState));
