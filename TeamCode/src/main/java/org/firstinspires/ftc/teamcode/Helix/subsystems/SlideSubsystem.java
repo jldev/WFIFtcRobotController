@@ -71,24 +71,28 @@ public class SlideSubsystem extends SubsystemBase {
         mHorizontalPIDController.setTolerance(HelixConstants.SLIDES_PID_TOLERANCE)
         ;
         mVerticalSlideMotor.stopAndResetEncoder();
-        mVerticalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+        mVerticalSlideMotor.setRunMode(MotorEx.RunMode.RawPower);
         mVerticalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         mVerticalPIDController.setSetPoint(0);
         verticlePosition = SlidePosition.HOME;
         mVerticleTargetPosiion = 0;
+        mVerticalSlideMotor.resetEncoder();
         mVerticalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         mVerticalSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
         mState = SlideSubsystemState.AUTO;
 
         mHorizontalSlideMotor = horizontalSlideMotor;
         mHorizontalSlideMotor.stopAndResetEncoder();
-        mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+        mHorizontalSlideMotor.setRunMode(MotorEx.RunMode.RawPower);
         mHorizontalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         mHorizontalPIDController.setSetPoint(0);
-        horizontalPosition = SlidePosition.HOME; // !! linked with vertical !!
-        mHorizontalTargetPosiion = 0; // !! linked with vertical !!
+        horizontalPosition = SlidePosition.HOME;
+        mHorizontalTargetPosiion = 0;
+        mHorizontalSlideMotor.resetEncoder();
         mHorizontalSlideMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         mHorizontalSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
+        opmode.telemetry.addLine("Slide Init");
+        opmode.telemetry.update();
     }
 
 
@@ -132,34 +136,39 @@ public class SlideSubsystem extends SubsystemBase {
                 case OFF:
                     break;
             }
-        }
-        /*
-            If we are running fast enough the below while loops could be removed so we
-            don't hold up the rest of the system, but for testing and tuning the PID controllers
-            this should work for now
-         */
-        mVerticalPIDController.setSetPoint(mVerticleTargetPosiion);
-        while (!mVerticalPIDController.atSetPoint()) {
-            double output = mVerticalPIDController.calculate(
-                    mVerticalSlideMotor.getCurrentPosition()  // the measured value
-            );
-            mVerticalSlideMotor.setVelocity(output);
-        }
-        mVerticalSlideMotor.stopMotor(); // stop the motor
 
-        mHorizontalPIDController.setSetPoint(mHorizontalTargetPosiion);
-        while (!mHorizontalPIDController.atSetPoint()) {
-            double output = mHorizontalPIDController.calculate(
-                    mHorizontalSlideMotor.getCurrentPosition()  // the measured value
-            );
-            mHorizontalSlideMotor.setVelocity(output);
+            if(mHorizontalTargetPosiion < 0.00)
+                mHorizontalTargetPosiion = 0;
+            if(mVerticleTargetPosiion < 0.00)
+                mVerticleTargetPosiion = 0;
         }
-        mHorizontalSlideMotor.stopMotor(); // stop the motor
-
         mOpMode.telemetry.addData("vCurrent: ", mVerticalSlideMotor.encoder.getPosition());
         mOpMode.telemetry.addData("vTarget: ", mVerticleTargetPosiion);
         mOpMode.telemetry.addData("hCurrent: ", mHorizontalSlideMotor.encoder.getPosition());
         mOpMode.telemetry.addData("hTarget: ", mHorizontalTargetPosiion);
+        mOpMode.telemetry.update();
+
+        mVerticalPIDController.setSetPoint(mVerticleTargetPosiion);
+        double output = mVerticalPIDController.calculate(
+                mVerticalSlideMotor.getCurrentPosition());
+        if (!mVerticalPIDController.atSetPoint()) {
+            mVerticalSlideMotor.set(output);
+        } else{
+            mVerticalSlideMotor.set(HelixConstants.SLIDE_LOCK_POWER);
+        }
+
+
+        mHorizontalPIDController.setSetPoint(mHorizontalTargetPosiion);
+        output = mHorizontalPIDController.calculate(
+                mHorizontalSlideMotor.getCurrentPosition());
+        if (!mHorizontalPIDController.atSetPoint()) {
+            mHorizontalSlideMotor.set(output);
+        } else{
+            mHorizontalSlideMotor.stopMotor(); // stop the motor
+        }
+
+
+
     }
 
     private void changeSlideState(SlideSubsystemState newState){
