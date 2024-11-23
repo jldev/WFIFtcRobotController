@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Helix.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,106 +14,117 @@ import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 public class PivotSubsystem extends SubsystemBase {
     //private final Trigger encoderStopTrigger;
     private final Helix mHelix;
+    private int mTargetPosiion = 0;
 
     private final CommandOpMode mOpMode;
+    private ManualControlDirection mManualDirection = ManualControlDirection.OFF;
 
-
-    public enum DesiredColor {
-        RED,
-        BLUE,
-        GREEN,
-        NULL,
-    }
-
-    public enum PivotSubsystemState{
+    public enum SlideSubsystemState {
         AUTO,
         MANUAL
     }
 
-    public enum PivotManualControlDirection {
-        DOWN,
+    public enum ManualControlDirection {
         UP,
+        DOWN,
         OFF
     }
-    private PivotSubsystem.PivotManualControlDirection mPivotManualControlDirection = PivotSubsystem.PivotManualControlDirection.OFF;
 
 
-    public DesiredColor desiredColor;
-    public DesiredColor lastDesiredColor;
+    public enum SlidePosition{
+        HOME,
+        WALL,
+        HANG,
+        BASKET
+    }
 
-    PivotSubsystem.PivotSubsystemState mState;
 
-    private final MotorEx mPivotMotor;
 
-    public PivotSubsystem(Helix helix, MotorEx pivotMotor, CommandOpMode opmode, double pos_coefficient, double pos_tolerance) {
+    SlideSubsystemState mState;
+
+    public SlidePosition verticlePosition;
+
+    private final MotorEx mVerticalSlideMotor;
+    private final PIDFController mVerticalPIDController;
+
+    public PivotSubsystem(Helix helix, MotorEx verticalSlideMotor, CommandOpMode opmode, double pos_coefficient, double pos_tolerance) {
         mHelix = helix;
-        mPivotMotor = pivotMotor;
+        mVerticalSlideMotor = verticalSlideMotor;
         mOpMode = opmode;
-        mPivotMotor.stopAndResetEncoder();
-        mPivotMotor.setRunMode(MotorEx.RunMode.PositionControl);
-        mPivotMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        mPivotMotor.setPositionCoefficient(pos_coefficient);
-        mPivotMotor.setPositionTolerance(pos_tolerance);
-        mPivotMotor.setTargetPosition(0);
-        desiredColor = DesiredColor.NULL;
-        lastDesiredColor = DesiredColor.NULL;
-        mPivotMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        mPivotMotor.encoder.setDirection(Motor.Direction.FORWARD);
+        mVerticalPIDController = new PIDFController(HelixConstants.PIVOT_PID_P, HelixConstants.PIVOT_PID_I,
+                HelixConstants.PIVOT_PID_D, HelixConstants.PIVOT_PID_F);
+        mVerticalPIDController.setTolerance(HelixConstants.SLIDES_PID_TOLERANCE);
+        ;
+        mVerticalSlideMotor.stopAndResetEncoder();
+        mVerticalSlideMotor.setRunMode(MotorEx.RunMode.RawPower);
+        mVerticalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        mVerticalPIDController.setSetPoint(0);
+        verticlePosition = SlidePosition.HOME;
+        mTargetPosiion = 0;
+        mVerticalSlideMotor.resetEncoder();
+        mVerticalSlideMotor.motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        mVerticalSlideMotor.encoder.setDirection(Motor.Direction.FORWARD);
+        mState = SlideSubsystemState.AUTO;
+        opmode.telemetry.addLine("Slide Init");
+        opmode.telemetry.update();
     }
 
 
     @Override
     public void periodic() {
-        mPivotMotor.set(0.001);
-        switch (desiredColor) {
-            case RED:
-                // +pivot until we get to red
-                mPivotMotor.set(HelixConstants.PIVOT_SPEED);
-                break;
-            case BLUE:
-                // -pivot until we get to blue
-                mPivotMotor.set(-HelixConstants.PIVOT_SPEED);
-                break;
-            case GREEN:
-                // if we were last at red, -pivot & if we were last at blue, +pivot
-                if (lastDesiredColor == DesiredColor.RED) {
-                    mPivotMotor.set(-HelixConstants.PIVOT_SPEED);
-                } else if (lastDesiredColor == DesiredColor.BLUE) {
-                    mPivotMotor.set(HelixConstants.PIVOT_SPEED);
-                }
-                break;
-            case NULL:
-                mPivotMotor.set(0);
-                break;
-        }
-    }
+        if (mState == SlideSubsystemState.AUTO) {
 
-
-    public void changeDesiredColor(DesiredColor color) {
-        lastDesiredColor = desiredColor;
-        desiredColor = color;
-    }
-
-
-
-    private void changeSlideState(PivotSubsystem.PivotSubsystemState newState){
-        if (mState != newState){ //we need to change the state
-            if (newState == PivotSubsystem.PivotSubsystemState.AUTO){
-                mPivotMotor.setRunMode(MotorEx.RunMode.PositionControl);
-            } else {
-                //we are changing to MANUAL
-                mPivotMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+                switch (verticlePosition) {
+                    case HOME:
+                        mTargetPosiion = HelixConstants.PIVOT_HOME;
+                        break;
+                    case WALL:
+                        mTargetPosiion = HelixConstants.PIVOT_HANG;
+                        break;
+                    case HANG:
+                        mTargetPosiion = HelixConstants.PIVOT_BASKET;
+                        break;
+                    case BASKET:
+                        mTargetPosiion = HelixConstants.PIVOT_SUB;
+                        break;
+            }
+        } else {
+            switch (mManualDirection) {
+                case UP:
+                    mTargetPosiion += HelixConstants.PIVOT_MANUAL_SPEED;
+                    break;
+                case DOWN:
+                    mTargetPosiion -= HelixConstants.PIVOT_MANUAL_SPEED;
+                    break;
+                case OFF:
+                    break;
             }
         }
+        mOpMode.telemetry.addData("pCurrent: ", mVerticalSlideMotor.encoder.getPosition());
+        mOpMode.telemetry.addData("pTarget: ", mTargetPosiion);
+        mOpMode.telemetry.update();
+
+        mVerticalPIDController.setSetPoint(mTargetPosiion);
+        double output = mVerticalPIDController.calculate(
+                mVerticalSlideMotor.getCurrentPosition());
+            mVerticalSlideMotor.set(output);
+
+
+
+    }
+
+    private void changeSlideState(SlideSubsystemState newState){
         mState = newState;
     }
 
-    public void pivotManualControl(PivotSubsystem.PivotManualControlDirection direction){
 
-        // anytime the user want to manual control we need to be in the manual state
-        changeSlideState(PivotSubsystem.PivotSubsystemState.MANUAL);
-        mPivotManualControlDirection = direction;
+    public void changeToSlidePosition(SlidePosition pos){
+        verticlePosition = pos;
+        changeSlideState(SlideSubsystemState.AUTO);
     }
+
+
+
 
 
 //    public void moveToPosition(SlidesPosition position){
@@ -125,14 +137,24 @@ public class PivotSubsystem extends SubsystemBase {
     public void stopMotorResetEncoder() {
 //        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
 //        mNeptune.mOpMode.telemetry.update();
-        mPivotMotor.set(0);
-        mPivotMotor.setRunMode(Motor.RunMode.PositionControl);
-        mPivotMotor.resetEncoder();
+        mVerticalPIDController.clearTotalError();
+        mVerticalPIDController.setSetPoint(0);
+        mVerticalSlideMotor.stopMotor();
+        mVerticalSlideMotor.resetEncoder();
     }
 
 
-    public boolean isBusy() {
-        return !mPivotMotor.atTargetPosition();
+
+
+    public void ManualPivotControl(ManualControlDirection direction){
+        // anytime the user want to manual control we need to be in the manual state
+        changeSlideState(SlideSubsystemState.MANUAL);
+        mManualDirection = direction;
+    }
+
+
+    public boolean isBusy (){
+        return !mVerticalPIDController.atSetPoint();
     }
 //    public void addTelemetry(Telemetry telemetry){
 //        telemetry.addLine(String.format("Slide State - %s", mState));

@@ -5,16 +5,13 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
-import org.firstinspires.ftc.teamcode.Helix.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
@@ -35,7 +32,7 @@ public class Helix {
     //subsystems
     public final SlideSubsystem slides;
     public final PivotSubsystem pivot;
-    public final HangSubsystem hang;
+//    public final HangSubsystem hang;
     public final ClawSubsystem claw;
 
 
@@ -81,6 +78,11 @@ public class Helix {
     public GamepadButton pivotRaise;
     public GamepadButton pivotLower;
 
+    public GamepadButton home_pivotPreset;
+    public GamepadButton wall_pivotPreset;
+    public GamepadButton hang_pivotPreset;
+    public GamepadButton basket_pivotPreset;
+
 
 
 
@@ -105,7 +107,7 @@ public class Helix {
         //     slides
         slides = new SlideSubsystem(this,
                 new MotorEx(opMode.hardwareMap, "slideVerticalMotor", Motor.GoBILDA.RPM_312),
-                new MotorEx(opMode.hardwareMap, "slideHorizontalMotor", Motor.GoBILDA.RPM_312),
+                new MotorEx(opMode.hardwareMap, "slideHorizontalMotor", Motor.GoBILDA.RPM_1150),
                 opMode,
                 HelixConstants.SLIDES_PID_POS_COEFFICIENT,
                 HelixConstants.SLIDES_PID_TOLERANCE
@@ -116,7 +118,7 @@ public class Helix {
 
         //     pivot
         pivot = new PivotSubsystem(this,
-                new MotorEx(opMode.hardwareMap, "pivotMotor", Motor.GoBILDA.RPM_312),
+                new MotorEx(opMode.hardwareMap, "pivotMotor", Motor.GoBILDA.RPM_223),
                 opMode,
                 HelixConstants.SLIDES_PID_POS_COEFFICIENT,
                 HelixConstants.SLIDES_PID_TOLERANCE
@@ -126,12 +128,12 @@ public class Helix {
 
 
         //     hang
-        hang = new HangSubsystem(this,
-                new MotorEx(opMode.hardwareMap, "hangMotor", Motor.GoBILDA.RPM_435),
-                opMode,
-                HelixConstants.SLIDES_PID_POS_COEFFICIENT,
-                HelixConstants.SLIDES_PID_TOLERANCE
-        );
+//        hang = new HangSubsystem(this,
+//                new MotorEx(opMode.hardwareMap, "hangMotor", Motor.GoBILDA.RPM_435),
+//                opMode,
+//                HelixConstants.SLIDES_PID_POS_COEFFICIENT,
+//                HelixConstants.SLIDES_PID_TOLERANCE
+//        );
 
 
 
@@ -148,7 +150,7 @@ public class Helix {
 
         opMode.register(drive);
         opMode.register(slides);
-        opMode.register(hang);
+//        opMode.register(hang);
         opMode.register(pivot);
         opMode.register(claw);
 
@@ -193,6 +195,12 @@ public class Helix {
            //pivot manual
         pivotRaise = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
         pivotLower = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+
+           //pivotPresets
+        home_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.A);
+        wall_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.X);
+        hang_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.B);
+        basket_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.Y);
 
 
     }

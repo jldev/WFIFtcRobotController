@@ -118,9 +118,11 @@ public class SlideSubsystem extends SubsystemBase {
             switch (mVerticalManualDirection) {
                 case UP:
                     mVerticleTargetPosiion += HelixConstants.SLIDE_MANUAL_SPEED;
+                    mVerticalPIDController.setP(HelixConstants.VERTICAL_PID_P);
                     break;
                 case DOWN:
                     mVerticleTargetPosiion -= HelixConstants.SLIDE_MANUAL_SPEED;
+                    mVerticalPIDController.setP(0.015);
                     break;
                 case OFF:
                     break;
@@ -142,20 +144,16 @@ public class SlideSubsystem extends SubsystemBase {
             if(mVerticleTargetPosiion < 0.00)
                 mVerticleTargetPosiion = 0;
         }
-        mOpMode.telemetry.addData("vCurrent: ", mVerticalSlideMotor.encoder.getPosition());
-        mOpMode.telemetry.addData("vTarget: ", mVerticleTargetPosiion);
-        mOpMode.telemetry.addData("hCurrent: ", mHorizontalSlideMotor.encoder.getPosition());
-        mOpMode.telemetry.addData("hTarget: ", mHorizontalTargetPosiion);
+//        mOpMode.telemetry.addData("vCurrent: ", mVerticalSlideMotor.encoder.getPosition());
+//        mOpMode.telemetry.addData("vTarget: ", mVerticleTargetPosiion);
+//        mOpMode.telemetry.addData("hCurrent: ", mHorizontalSlideMotor.encoder.getPosition());
+//        mOpMode.telemetry.addData("hTarget: ", mHorizontalTargetPosiion);
         mOpMode.telemetry.update();
 
         mVerticalPIDController.setSetPoint(mVerticleTargetPosiion);
         double output = mVerticalPIDController.calculate(
                 mVerticalSlideMotor.getCurrentPosition());
-        if (!mVerticalPIDController.atSetPoint()) {
             mVerticalSlideMotor.set(output);
-        } else{
-            mVerticalSlideMotor.set(HelixConstants.SLIDE_LOCK_POWER);
-        }
 
 
         mHorizontalPIDController.setSetPoint(mHorizontalTargetPosiion);

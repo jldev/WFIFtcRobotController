@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.Helix;
+import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 
 public class ClawSubsystem extends SubsystemBase {
 
@@ -50,16 +51,16 @@ public class ClawSubsystem extends SubsystemBase {
         if(desiredYaw < 0.00)
             desiredYaw = 0.00;
 
-        if(desiredPitch > 1.00)
-            desiredPitch = 1.00;
-        if(desiredPitch < 0.00)
-            desiredPitch = 0.00;
+        if(desiredPitch > .75)
+            desiredPitch = .75;
+        if(desiredPitch < 0.18)
+            desiredPitch = 0.2;
 
 
 
-        mOpMode.telemetry.addData("Yaw:" , desiredYaw);
-        mOpMode.telemetry.addData("Pitch:" , desiredPitch);
-        mOpMode.telemetry.update();
+//        mOpMode.telemetry.addData("Yaw:" , desiredYaw);
+//        mOpMode.telemetry.addData("Pitch:" , desiredPitch);
+//        mOpMode.telemetry.update();
 
 
         yaw.setPosition(desiredYaw);
@@ -68,10 +69,10 @@ public class ClawSubsystem extends SubsystemBase {
 
         if(mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3)
         {
-            grip.setPosition(0);
+            grip.setPosition(HelixConstants.GRIPPER_OPEN_VALUE);
         } else
         {
-            grip.setPosition(1);
+            grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
         }
     }
 }

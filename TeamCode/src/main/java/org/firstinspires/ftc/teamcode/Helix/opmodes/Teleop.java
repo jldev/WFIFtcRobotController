@@ -68,17 +68,23 @@ public class Teleop extends CommandOpMode {
 
 
         //    HANG
-        helix.hangRaise.whileHeld(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.UP);}));
-        helix.hangRaise.whenReleased(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.OFF);}));
-        helix.hangLower.whileHeld(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.DOWN);}));
-        helix.hangLower.whenReleased(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.OFF);}));
+//        helix.hangRaise.whileHeld(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.UP);}));
+//        helix.hangRaise.whenReleased(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.OFF);}));
+//        helix.hangLower.whileHeld(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.DOWN);}));
+//        helix.hangLower.whenReleased(new InstantCommand(() -> {helix.hang.manualSlideControl(HangSubsystem.ManualControlDirection.OFF);}));
 
 
         //   PIVOT
-        helix.pivotRaise.whileHeld(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.UP);}));
-        helix.pivotRaise.whenReleased(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.OFF);}));
-        helix.pivotLower.whileHeld(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.DOWN);}));
-        helix.pivotLower.whenReleased(new InstantCommand(() -> {helix.pivot.pivotManualControl(PivotSubsystem.PivotManualControlDirection.OFF);}));
+        helix.pivotRaise.whileHeld(new InstantCommand(() -> {helix.pivot.ManualPivotControl(PivotSubsystem.ManualControlDirection.UP);}));
+        helix.pivotRaise.whenReleased(new InstantCommand(() -> {helix.pivot.ManualPivotControl(PivotSubsystem.ManualControlDirection.OFF);}));
+        helix.pivotLower.whileHeld(new InstantCommand(() -> {helix.pivot.ManualPivotControl(PivotSubsystem.ManualControlDirection.DOWN);}));
+        helix.pivotLower.whenReleased(new InstantCommand(() -> {helix.pivot.ManualPivotControl(PivotSubsystem.ManualControlDirection.OFF);}));
+
+        // Pivot Presets
+        helix.home_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HOME);}));
+        helix.wall_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.WALL);}));
+        helix.hang_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HANG);}));
+        helix.basket_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.BASKET);}));
     }
 
 }
