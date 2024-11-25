@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 
@@ -33,16 +34,16 @@ public class PivotSubsystem extends SubsystemBase {
 
     public enum SlidePosition{
         HOME,
-        WALL,
         HANG,
-        BASKET
+        BASKET,
+        SUB
     }
 
 
 
     SlideSubsystemState mState;
 
-    public SlidePosition verticlePosition;
+    public SlidePosition position;
 
     private final MotorEx mVerticalSlideMotor;
     private final PIDFController mVerticalPIDController;
@@ -59,7 +60,7 @@ public class PivotSubsystem extends SubsystemBase {
         mVerticalSlideMotor.setRunMode(MotorEx.RunMode.RawPower);
         mVerticalSlideMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         mVerticalPIDController.setSetPoint(0);
-        verticlePosition = SlidePosition.HOME;
+        position = SlidePosition.HOME;
         mTargetPosiion = 0;
         mVerticalSlideMotor.resetEncoder();
         mVerticalSlideMotor.motor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -74,17 +75,17 @@ public class PivotSubsystem extends SubsystemBase {
     public void periodic() {
         if (mState == SlideSubsystemState.AUTO) {
 
-                switch (verticlePosition) {
+                switch (position) {
                     case HOME:
                         mTargetPosiion = HelixConstants.PIVOT_HOME;
                         break;
-                    case WALL:
+                    case HANG:
                         mTargetPosiion = HelixConstants.PIVOT_HANG;
                         break;
-                    case HANG:
+                    case BASKET:
                         mTargetPosiion = HelixConstants.PIVOT_BASKET;
                         break;
-                    case BASKET:
+                    case SUB:
                         mTargetPosiion = HelixConstants.PIVOT_SUB;
                         break;
             }
@@ -100,9 +101,6 @@ public class PivotSubsystem extends SubsystemBase {
                     break;
             }
         }
-        mOpMode.telemetry.addData("pCurrent: ", mVerticalSlideMotor.encoder.getPosition());
-        mOpMode.telemetry.addData("pTarget: ", mTargetPosiion);
-        mOpMode.telemetry.update();
 
         mVerticalPIDController.setSetPoint(mTargetPosiion);
         double output = mVerticalPIDController.calculate(
@@ -119,7 +117,7 @@ public class PivotSubsystem extends SubsystemBase {
 
 
     public void changeToSlidePosition(SlidePosition pos){
-        verticlePosition = pos;
+        position = pos;
         changeSlideState(SlideSubsystemState.AUTO);
     }
 
@@ -156,13 +154,9 @@ public class PivotSubsystem extends SubsystemBase {
     public boolean isBusy (){
         return !mVerticalPIDController.atSetPoint();
     }
-//    public void addTelemetry(Telemetry telemetry){
-//        telemetry.addLine(String.format("Slide State - %s", mState));
-//        telemetry.addLine(String.format("slide_setting - %s", slidePosition.toString()));
-//        telemetry.addLine(String.format("current_position - %d", mVerticalSlideMotor.getCurrentPosition()));
-//        telemetry.addLine(String.format("current_power %.2f", mVerticalSlideMotor.motor.getPower()));
-//        telemetry.addLine(String.format("target_position %d", mSlideMotorTargetPosition));
-//
-//
-//    }
+
+    public void addTelemetry(Telemetry telemetry){
+        mOpMode.telemetry.addData("pCurrent: ", mVerticalSlideMotor.encoder.getPosition());
+        mOpMode.telemetry.addData("pTarget: ", mTargetPosiion);
+    }
 }

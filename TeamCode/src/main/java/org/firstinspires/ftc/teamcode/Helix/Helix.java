@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
@@ -79,9 +78,9 @@ public class Helix {
     public GamepadButton pivotLower;
 
     public GamepadButton home_pivotPreset;
-    public GamepadButton wall_pivotPreset;
     public GamepadButton hang_pivotPreset;
     public GamepadButton basket_pivotPreset;
+    public GamepadButton sub_pivotPreset;
 
 
 
@@ -197,10 +196,10 @@ public class Helix {
         pivotLower = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
 
            //pivotPresets
-        home_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.A);
-        wall_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.X);
+        home_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.X);
         hang_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.B);
         basket_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.Y);
+        sub_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.A);
 
 
     }

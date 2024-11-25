@@ -4,11 +4,11 @@ package org.firstinspires.ftc.teamcode.Helix.subsystems;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 
@@ -102,16 +102,20 @@ public class SlideSubsystem extends SubsystemBase {
 
                 switch (verticlePosition) {
                     case HOME:
-                        mVerticleTargetPosiion = HelixConstants.SLIDE_HOME;
+                        mVerticleTargetPosiion = HelixConstants.VERTICAL_SLIDE_HOME;
+                        mHorizontalTargetPosiion = HelixConstants.HORIZONTAL_SLIDE_HOME;
                         break;
                     case WALL:
-                        mVerticleTargetPosiion = HelixConstants.SLIDE_WALL;
+                        mVerticleTargetPosiion = HelixConstants.VERTICAL_SLIDE_WALL;
+                        mHorizontalTargetPosiion = HelixConstants.HORIZONTAL_SLIDE_WALL;
                         break;
                     case HANG:
-                        mVerticleTargetPosiion = HelixConstants.SLIDE_HANG;
+                        mVerticleTargetPosiion = HelixConstants.VERTICAL_SLIDE_HANG;
+                        mHorizontalTargetPosiion = HelixConstants.HORIZONTAL_SLIDE_HANG;
                         break;
                     case BASKET:
-                        mVerticleTargetPosiion = HelixConstants.SLIDE_BASKET;
+                        mVerticleTargetPosiion = HelixConstants.VERTICAL_SLIDE_BASKET;
+                        mHorizontalTargetPosiion = HelixConstants.HORIZONTAL_SLIDE_BASKET;
                         break;
             }
         } else {
@@ -144,11 +148,6 @@ public class SlideSubsystem extends SubsystemBase {
             if(mVerticleTargetPosiion < 0.00)
                 mVerticleTargetPosiion = 0;
         }
-//        mOpMode.telemetry.addData("vCurrent: ", mVerticalSlideMotor.encoder.getPosition());
-//        mOpMode.telemetry.addData("vTarget: ", mVerticleTargetPosiion);
-//        mOpMode.telemetry.addData("hCurrent: ", mHorizontalSlideMotor.encoder.getPosition());
-//        mOpMode.telemetry.addData("hTarget: ", mHorizontalTargetPosiion);
-        mOpMode.telemetry.update();
 
         mVerticalPIDController.setSetPoint(mVerticleTargetPosiion);
         double output = mVerticalPIDController.calculate(
@@ -223,13 +222,13 @@ public class SlideSubsystem extends SubsystemBase {
     public boolean isBusy (){
         return !mVerticalPIDController.atSetPoint() || !mHorizontalPIDController.atSetPoint();
     }
-//    public void addTelemetry(Telemetry telemetry){
-//        telemetry.addLine(String.format("Slide State - %s", mState));
-//        telemetry.addLine(String.format("slide_setting - %s", slidePosition.toString()));
-//        telemetry.addLine(String.format("current_position - %d", mVerticalSlideMotor.getCurrentPosition()));
-//        telemetry.addLine(String.format("current_power %.2f", mVerticalSlideMotor.motor.getPower()));
-//        telemetry.addLine(String.format("target_position %d", mSlideMotorTargetPosition));
-//
-//
-//    }
+
+    public void addTelemetry(Telemetry telemetry){
+        mOpMode.telemetry.addData("vCurrent: ", mVerticalSlideMotor.encoder.getPosition());
+        mOpMode.telemetry.addData("vTarget: ", mVerticleTargetPosiion);
+        mOpMode.telemetry.addData("hCurrent: ", mHorizontalSlideMotor.encoder.getPosition());
+        mOpMode.telemetry.addData("hTarget: ", mHorizontalTargetPosiion);
+
+
+    }
 }

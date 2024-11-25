@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class HelixConstants {
 
 
+
     public static double SLIDE_SPEED = 1.0;
     public static int SLIDE_MANUAL_SPEED = 25;
     public static double PIVOT_SPEED = 1.0;
@@ -31,22 +32,31 @@ public class HelixConstants {
 
     public static double LIFT_POS_2 = 0.5f;
 
-    public static double GRIPPER_CLOSED_VALUE = 0.85f;
+    //    vertical positions
 
-    public static double GRIPPER_OPEN_VALUE = 0.2f;
+    public static int VERTICAL_SLIDE_HOME = 0;
+    public static int VERTICAL_SLIDE_WALL = 1000;
+    public static int VERTICAL_SLIDE_HANG = 0;
+    public static int VERTICAL_SLIDE_BASKET = 3853;
 
-    //    slide positions
+    // horizontal positions
+    public static int HORIZONTAL_SLIDE_HOME = 0;
+    public static int HORIZONTAL_SLIDE_WALL = 0;
+    public static int HORIZONTAL_SLIDE_HANG = 0;
+    public static int HORIZONTAL_SLIDE_BASKET = 0;
 
-    public static int SLIDE_HOME = 0;
-    public static int SLIDE_WALL = 1000;
-    public static int SLIDE_HANG = 1500;
-    public static int SLIDE_BASKET = 3853;
+    //    pivot positions
 
-    //    slide positions
-
-    public static int PIVOT_HOME = 0;
+    public static int PIVOT_HOME = 50;
     public static int PIVOT_HANG = 300;
-    public static int PIVOT_BASKET = 600;
-    public static int PIVOT_SUB = -50;
+    public static int PIVOT_BASKET = 1100;
+    public static int PIVOT_SUB = -25;
+
+    //   claw positions
+
+    public static double GRIPPER_CLOSED_VALUE = 0.85f;
+    public static double GRIPPER_OPEN_VALUE = 0.2f;
+    public static double CLAW_YAW_INIT = 0.0f;
+    public static double CLAW_PITCH_INIT = 0.35f;
     
 }

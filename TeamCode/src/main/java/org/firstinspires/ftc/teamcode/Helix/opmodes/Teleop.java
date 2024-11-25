@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.commands.MecanumDriveCommand;
-import org.firstinspires.ftc.teamcode.Helix.subsystems.HangSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
 
@@ -24,7 +23,8 @@ public class Teleop extends CommandOpMode {
         helix = new Helix(this, Helix.OpModeType.TELEOP, Helix.AllianceColor.RED);
 
         this.schedule(new RunCommand(() -> {
-//            helix.slides.addTelemetry(telemetry);
+            helix.slides.addTelemetry(telemetry);
+            helix.pivot.addTelemetry(telemetry);
             telemetry.update();
         }));
 
@@ -62,7 +62,13 @@ public class Teleop extends CommandOpMode {
         // Slide Presets
         helix.home_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HOME);}));
         helix.wall_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.WALL);}));
-        helix.hang_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HANG);}));
+
+        helix.hang_slidePreset.whenPressed(new InstantCommand(() -> {
+            helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HANG);
+            helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HANG);
+
+        }));
+
         helix.basket_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.BASKET);}));
 
 
@@ -82,9 +88,9 @@ public class Teleop extends CommandOpMode {
 
         // Pivot Presets
         helix.home_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HOME);}));
-        helix.wall_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.WALL);}));
         helix.hang_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HANG);}));
         helix.basket_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.BASKET);}));
+        helix.sub_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.SUB);}));
     }
 
 }
