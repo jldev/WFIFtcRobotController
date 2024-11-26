@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
 
@@ -52,16 +53,18 @@ public class ClawSubsystem extends SubsystemBase {
         if(desiredYaw < 0.00)
             desiredYaw = 0.00;
 
-        if(desiredPitch > .75)
-            desiredPitch = .75;
-        if(desiredPitch < 0.18)
-            desiredPitch = 0.2;
+        if(desiredPitch > .58)
+            desiredPitch = .58;
+        if(desiredPitch < 0.00)
+            desiredPitch = 0.00;
+
+        mOpMode.telemetry.addData("Yaw:" , desiredYaw);
+        mOpMode.telemetry.addData("Pitch:" , desiredPitch);
 
 
 
-//        mOpMode.telemetry.addData("Yaw:" , desiredYaw);
-//        mOpMode.telemetry.addData("Pitch:" , desiredPitch);
-//        mOpMode.telemetry.update();
+
+
 
 
         yaw.setPosition(desiredYaw);

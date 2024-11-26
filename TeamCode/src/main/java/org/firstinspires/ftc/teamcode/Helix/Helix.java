@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Helix;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -27,6 +28,7 @@ public class Helix {
     public Pose2d currentPos;
 
 
+    public final SwitchReader magSwitchButton;
 
     //subsystems
     public final SlideSubsystem slides;
@@ -106,7 +108,7 @@ public class Helix {
         //     slides
         slides = new SlideSubsystem(this,
                 new MotorEx(opMode.hardwareMap, "slideVerticalMotor", Motor.GoBILDA.RPM_312),
-                new MotorEx(opMode.hardwareMap, "slideHorizontalMotor", Motor.GoBILDA.RPM_1150),
+                new MotorEx(opMode.hardwareMap, "slideHorizontalMotor", Motor.GoBILDA.RPM_435),
                 opMode,
                 HelixConstants.SLIDES_PID_POS_COEFFICIENT,
                 HelixConstants.SLIDES_PID_TOLERANCE
@@ -142,6 +144,12 @@ public class Helix {
                 opMode.hardwareMap.get(Servo.class, "yaw_1"),
                 opMode.hardwareMap.get(Servo.class, "pitch_2"),
                 opMode.hardwareMap.get(Servo.class, "grip_3"));
+
+
+
+        // pseudo buttons
+        magSwitchButton = new SwitchReader(opMode.hardwareMap, false, "vSwitch");
+        magSwitchButton.whenPressed(new InstantCommand(slides::stopMotorResetEncoder));
 
 
 

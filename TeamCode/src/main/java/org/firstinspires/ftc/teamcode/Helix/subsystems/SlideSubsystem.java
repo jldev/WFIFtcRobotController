@@ -192,14 +192,15 @@ public class SlideSubsystem extends SubsystemBase {
     public void stopMotorResetEncoder() {
 //        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
 //        mNeptune.mOpMode.telemetry.update();
-        mVerticalPIDController.clearTotalError();
         mVerticalPIDController.setSetPoint(0);
+        mVerticalPIDController.reset();
         mVerticalSlideMotor.stopMotor();
         mVerticalSlideMotor.resetEncoder();
-        mHorizontalPIDController.clearTotalError();
-        mHorizontalPIDController.setSetPoint(0);
-        mHorizontalSlideMotor.stopMotor();
-        mHorizontalSlideMotor.resetEncoder();
+
+//        mHorizontalPIDController.clearTotalError();
+//        mHorizontalPIDController.setSetPoint(0);
+//        mHorizontalSlideMotor.stopMotor();
+//        mHorizontalSlideMotor.resetEncoder();
     }
 
 
