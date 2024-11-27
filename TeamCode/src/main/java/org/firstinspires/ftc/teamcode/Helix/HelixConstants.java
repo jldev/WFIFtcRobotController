@@ -35,28 +35,34 @@ public class HelixConstants {
     //    vertical positions
 
     public static int VERTICAL_SLIDE_HOME = 0;
-    public static int VERTICAL_SLIDE_WALL = 1000;
+    public static int VERTICAL_SLIDE_WALL = 0;
     public static int VERTICAL_SLIDE_HANG = 0;
     public static int VERTICAL_SLIDE_BASKET = 3853;
 
     // horizontal positions
     public static int HORIZONTAL_SLIDE_HOME = 0;
     public static int HORIZONTAL_SLIDE_WALL = 0;
-    public static int HORIZONTAL_SLIDE_HANG = 0;
+    public static int HORIZONTAL_SLIDE_HANG = 475;
     public static int HORIZONTAL_SLIDE_BASKET = 0;
 
     //    pivot positions
 
     public static int PIVOT_HOME = 50;
-    public static int PIVOT_HANG = 300;
+    public static int PIVOT_HANG = 1020;
     public static int PIVOT_BASKET = 1100;
     public static int PIVOT_SUB = -25;
+    public static int PIVOT_WALL = 125;
 
     //   claw positions
 
-    public static double GRIPPER_CLOSED_VALUE = 0.85f;
+    public static double GRIPPER_CLOSED_VALUE = 0.8f;
     public static double GRIPPER_OPEN_VALUE = 0.2f;
     public static double CLAW_YAW_INIT = 0.0f;
     public static double CLAW_PITCH_INIT = 0.35f;
+
+    public static double YAW_HOME = 1;
+    public static double PITCH_HOME = 0;
+    public static double YAW_HANG = 0.0;
+    public static double PITCH_HANG = 0.55;
     
 }
