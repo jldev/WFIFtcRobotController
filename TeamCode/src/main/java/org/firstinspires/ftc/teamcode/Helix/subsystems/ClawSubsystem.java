@@ -36,7 +36,7 @@ public class ClawSubsystem extends SubsystemBase {
         MANUAL,
     }
 
-    private ClawState mState;
+//    private ClawState mState;
     private ClawControlState mControlState;
     private GripState mGripState;
 
@@ -56,7 +56,6 @@ public class ClawSubsystem extends SubsystemBase {
         pitch.setPosition(HelixConstants.CLAW_PITCH_INIT);
         grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
 
-        mState = ClawState.HOME;
         mControlState = ClawControlState.AUTO;
     }
 
@@ -66,6 +65,9 @@ public class ClawSubsystem extends SubsystemBase {
 //        desiredYaw = (mHelix.gunnerOp.getLeftX() / 2) + .5;
 //        desiredPitch = (mHelix.gunnerOp.getLeftY() / 2) + .5;
 
+
+           desiredYaw = yaw.getPosition();
+           desiredPitch = pitch.getPosition();
 
             if(Math.abs(mHelix.gunnerOp.getLeftX()) > 0.1 || Math.abs(mHelix.gunnerOp.getLeftY()) > 0.1)
             {
@@ -84,9 +86,9 @@ public class ClawSubsystem extends SubsystemBase {
             if (desiredPitch < 0.00)
                 desiredPitch = 0.00;
 
-            if (mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+            if ((mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3)) {
                 grip.setPosition(HelixConstants.GRIPPER_OPEN_VALUE);
-            } else {
+            } else if (mHelix.mOpModeType == Helix.OpModeType.TELEOP){
                 grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
             }
 
@@ -105,6 +107,14 @@ public class ClawSubsystem extends SubsystemBase {
 
 
 
+    public void SetClawGripState(GripState state){
+        mGripState = state;
+        if (mGripState == GripState.OPEN) {
+            grip.setPosition(HelixConstants.GRIPPER_OPEN_VALUE);
+        } else {
+            grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
+        }
+    }
 
     public void ChangeClawPositionTo(ClawState newClawState) {
         switch (newClawState) {
@@ -120,7 +130,8 @@ public class ClawSubsystem extends SubsystemBase {
 
                 break;
             case SUB:
-
+                yaw.setPosition(HelixConstants.YAW_SUB);
+                pitch.setPosition(HelixConstants.PITCH_SUB);
                 break;
         }
 

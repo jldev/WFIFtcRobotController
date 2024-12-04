@@ -61,21 +61,13 @@ public class Teleop extends CommandOpMode {
 
 
         //  Presets
-        helix.home_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HOME);}));
-        helix.wall_slidePreset.whenPressed(new InstantCommand(() -> {
-            helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.WALL);
-            helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HOME);
-            helix.claw.ChangeClawPositionTo(ClawSubsystem.ClawState.HOME);
-        }));
+        helix.home_slidePreset.whenPressed(helix.GoSub());
 
-        helix.hang_slidePreset.whenPressed(new InstantCommand(() -> {
-            helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HANG);
-            helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HANG);
-            helix.claw.ChangeClawPositionTo(ClawSubsystem.ClawState.HANG);
-        }));
+        helix.wall_slidePreset.whenPressed(helix.GoWall());
 
-        helix.basket_slidePreset.whenPressed(new InstantCommand(() -> {helix.slides.changeToSlidePosition(SlideSubsystem.SlidePosition.BASKET);}));
+        helix.hang_slidePreset.whenPressed(helix.GoHang());
 
+        helix.basket_slidePreset.whenPressed(helix.GoBasket());
 
 
         //    HANG

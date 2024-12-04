@@ -7,12 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 
 @Config
-@Autonomous(group = "drive", name = "Test Auto")
-public class TestAuto extends CommandOpMode {
+@Autonomous(group = "drive", name = "Red Specimen Sample")
+public class RedSpecimenSample extends CommandOpMode {
     HelixAuto helixAuto;
     @Override
     public void initialize() {
-        helixAuto = new HelixAuto(this, Helix.FieldPos.AU, Helix.AllianceColor.RED);
+        helixAuto = new HelixAuto(this, Helix.FieldPos.AU, Helix.AllianceColor.RED, Helix.Target.SPECIMENS);
+        helixAuto.helix.pushSamples = true;
     }
 
     @Override

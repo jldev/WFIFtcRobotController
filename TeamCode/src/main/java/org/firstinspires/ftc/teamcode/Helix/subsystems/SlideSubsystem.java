@@ -44,7 +44,8 @@ public class SlideSubsystem extends SubsystemBase {
         HOME,
         WALL,
         HANG,
-        BASKET
+        BASKET,
+        PRELOAD_BASKET
     }
 
 
@@ -116,6 +117,10 @@ public class SlideSubsystem extends SubsystemBase {
                     case BASKET:
                         mVerticleTargetPosiion = HelixConstants.VERTICAL_SLIDE_BASKET;
                         mHorizontalTargetPosiion = HelixConstants.HORIZONTAL_SLIDE_BASKET;
+                        break;
+                    case PRELOAD_BASKET:
+                        mVerticleTargetPosiion = HelixConstants.VERTICAL_PRELOAD_BASKET;
+                        mHorizontalTargetPosiion = HelixConstants.HORIZONTAL_PRELOAD_BASKET;
                         break;
             }
         } else {

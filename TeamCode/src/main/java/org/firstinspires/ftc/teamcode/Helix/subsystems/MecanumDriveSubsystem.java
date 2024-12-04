@@ -145,16 +145,8 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         drive.turnAsync(radians);
     }
 
-    public List<Double> getWheelVelocities() {
-        return drive.getWheelVelocities();
-    }
-
     public void stop() {
         drive(0, 0, 0);
-    }
-
-    public Pose2d getPoseVelocity() {
-        return drive.getPoseVelocity();
     }
 
     public Localizer getLocalizer() {

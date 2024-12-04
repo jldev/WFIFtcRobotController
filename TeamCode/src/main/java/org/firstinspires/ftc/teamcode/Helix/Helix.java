@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.Helix;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -29,6 +32,7 @@ public class Helix {
 
 
     public final SwitchReader magSwitchButton;
+    public final SwitchReader magSwitchButtonPivot;
 
     //subsystems
     public final SlideSubsystem slides;
@@ -50,6 +54,12 @@ public class Helix {
         RED,
         BLUE
     }
+    public enum Target {
+        SPECIMENS,
+        SAMPLES
+    }
+    public Target target = Target.SPECIMENS;
+    public boolean pushSamples = true;
 
 
 
@@ -151,7 +161,8 @@ public class Helix {
         magSwitchButton = new SwitchReader(opMode.hardwareMap, false, "vSwitch");
         magSwitchButton.whenPressed(new InstantCommand(slides::stopMotorResetEncoder));
 
-
+        magSwitchButtonPivot = new SwitchReader(opMode.hardwareMap, false, "pSwitch");
+        magSwitchButtonPivot.whenPressed(new InstantCommand(pivot::stopMotorResetEncoder));
 
 
 
@@ -172,8 +183,8 @@ public class Helix {
         intakeLiftButton =  new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_LEFT);     // these are temp - gunner's out of buttons
 
            //slide manual
-        verticleSlideUp = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
-        verticleSlideDown = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
+        verticleSlideUp = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
+        verticleSlideDown = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
 
         horizontalSlideOut = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_LEFT);
         horizontalSlideIn = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_RIGHT);
@@ -200,8 +211,8 @@ public class Helix {
 
 
            //pivot manual
-        pivotRaise = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_UP);
-        pivotLower = new GamepadButton(driverOp, GamepadKeys.Button.DPAD_DOWN);
+        pivotRaise = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_UP);
+        pivotLower = new GamepadButton(gunnerOp, GamepadKeys.Button.DPAD_DOWN);
 
            //pivotPresets
         home_pivotPreset = new GamepadButton(driverOp, GamepadKeys.Button.X);
@@ -239,5 +250,66 @@ public class Helix {
 //        }
 
         drive.setPoseEstimate(this.currentPos);
+    }
+
+    public Command GoSub() {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> claw.ChangeClawPositionTo(ClawSubsystem.ClawState.SUB)),
+                new WaitCommand(500),
+                new InstantCommand(() -> {
+                    slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HOME);
+                    pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.SUB);
+
+                })
+        );
+    }
+
+    public Command GoHang() {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> {
+                    slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HANG);
+                    pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HANG);
+
+                }),
+                new WaitCommand(500),
+                new InstantCommand(() -> claw.ChangeClawPositionTo(ClawSubsystem.ClawState.HANG))
+        );
+    }
+
+    public Command GoWall() {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> {
+                    slides.changeToSlidePosition(SlideSubsystem.SlidePosition.WALL);
+                }),
+                new WaitCommand(300),
+                new InstantCommand(() -> claw.ChangeClawPositionTo(ClawSubsystem.ClawState.HOME)),
+                new WaitCommand(500),
+                new InstantCommand(() -> {
+                    pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HOME);
+                })
+        );
+    }
+
+    public Command GoBasket() {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> {
+                    slides.changeToSlidePosition(SlideSubsystem.SlidePosition.BASKET);
+                    pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.BASKET);
+
+                }),
+                new WaitCommand(500),
+                new InstantCommand(() -> claw.ChangeClawPositionTo(ClawSubsystem.ClawState.BASKET))
+        );
+    }
+
+
+    public Command GoPreloadBasket() {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> {pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.PRELOAD_BASKET);}),
+                new WaitCommand(500),
+                new InstantCommand(() -> {
+                    claw.ChangeClawPositionTo(ClawSubsystem.ClawState.BASKET);
+                    slides.changeToSlidePosition(SlideSubsystem.SlidePosition.PRELOAD_BASKET);})
+        );
     }
 }

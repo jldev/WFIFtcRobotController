@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.roadrunner.opmode;
 
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.Helix.drive.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.Helix.drive.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.Helix.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.Helix.drive.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.Helix.drive.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.Helix.drive.DriveConstants.kV;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
 
 import java.util.Objects;
 
@@ -42,6 +42,7 @@ import java.util.Objects;
  * user to reset the position of the bot in the event that it drifts off the path.
  * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
  */
+@Disabled
 @Config
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {

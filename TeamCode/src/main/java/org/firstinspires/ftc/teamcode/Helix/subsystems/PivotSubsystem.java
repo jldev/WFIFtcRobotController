@@ -36,7 +36,8 @@ public class PivotSubsystem extends SubsystemBase {
         HOME,
         HANG,
         BASKET,
-        SUB
+        SUB,
+        PRELOAD_BASKET
     }
 
 
@@ -88,6 +89,9 @@ public class PivotSubsystem extends SubsystemBase {
                     case SUB:
                         mTargetPosiion = HelixConstants.PIVOT_SUB;
                         break;
+                    case PRELOAD_BASKET:
+                        mTargetPosiion = HelixConstants.PIVOT_PRELOAD_BASKET;
+                        break;
             }
         } else {
             switch (mManualDirection) {
@@ -133,10 +137,8 @@ public class PivotSubsystem extends SubsystemBase {
 
 
     public void stopMotorResetEncoder() {
-//        mNeptune.mOpMode.telemetry.addLine("Reset Encoder");
-//        mNeptune.mOpMode.telemetry.update();
-        mVerticalPIDController.clearTotalError();
         mVerticalPIDController.setSetPoint(0);
+        mVerticalPIDController.reset();
         mVerticalSlideMotor.stopMotor();
         mVerticalSlideMotor.resetEncoder();
     }
