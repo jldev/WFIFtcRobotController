@@ -102,11 +102,14 @@ public class HelixAuto {
                 opMode.schedule(
                         new SequentialCommandGroup(
                                 helix.GoPreloadBasket(),
-                                new WaitCommand(5000),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 5)
-                                        .whenFinished(() -> currentState = Task.PARK_BASKET)
+                                new WaitCommand(1500),
+                                new InstantCommand(() -> helix.claw.ChangeClawPositionTo(ClawSubsystem.ClawState.SUB)),
+                                new WaitCommand(500)
+                                .whenFinished(() -> {
+                                helix.claw.SetClawGripState(ClawSubsystem.GripState.OPEN);
+                                currentState = Task.PARK_BASKET;
+                            })
                         )
-
                 );
                 currentState = Task.WAIT_FOR_DRIVE;
                 break;
@@ -118,6 +121,9 @@ public class HelixAuto {
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 10),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 31),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 41),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 12),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 47),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 47),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 12),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 47)
                         )
@@ -139,10 +145,14 @@ public class HelixAuto {
                 break;
             case PARK_BASKET:
                 opMode.schedule(
-                        new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 5),
+                        new SequentialCommandGroup(
+                        new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 6),
                         helix.GoSub(),
-                        new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 50),
-                        new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 8)
+                        new WaitCommand(1000),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 6),
+                        new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.RIGHT, 50),
+                        new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 8)
+                        )
                 );
                 currentState = Task.WAIT_FOR_DRIVE;
                 break;

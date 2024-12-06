@@ -42,7 +42,7 @@ public class HelixConstants {
     public static int VERTICAL_SLIDE_WALL = 275;
     public static int VERTICAL_SLIDE_HANG = 0;
     public static int VERTICAL_SLIDE_BASKET = 3853;
-    public static int VERTICAL_PRELOAD_BASKET = 1450;
+    public static int VERTICAL_PRELOAD_BASKET = 1900;
 
     // horizontal positions
     public static int HORIZONTAL_SLIDE_HOME = 0;
@@ -58,7 +58,7 @@ public class HelixConstants {
     public static int PIVOT_BASKET = 1050;
     public static int PIVOT_SUB = 0;
     public static int PIVOT_WALL = 100;
-    public static int PIVOT_PRELOAD_BASKET = 275;
+    public static int PIVOT_PRELOAD_BASKET = 400;
 
     //   claw positions
 
