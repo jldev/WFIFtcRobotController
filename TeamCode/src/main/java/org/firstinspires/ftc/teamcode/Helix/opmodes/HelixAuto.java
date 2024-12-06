@@ -119,13 +119,13 @@ public class HelixAuto {
                                 helix.GoWall(),
                                 new WaitCommand(2000),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 10),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 31),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 33),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 41),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 12),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 47),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 47),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 56),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 56),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 12),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 47)
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 56)
                         )
                 );
                 currentState = Task.WAIT_FOR_DRIVE;

@@ -254,12 +254,14 @@ public class Helix {
 
     public Command GoSub() {
         return new SequentialCommandGroup(
+                new InstantCommand(() -> {
+                    slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HOME);
+                }),
+                new WaitCommand(300),
                 new InstantCommand(() -> claw.ChangeClawPositionTo(ClawSubsystem.ClawState.SUB)),
                 new WaitCommand(500),
                 new InstantCommand(() -> {
-                    slides.changeToSlidePosition(SlideSubsystem.SlidePosition.HOME);
                     pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.SUB);
-
                 })
         );
     }
