@@ -51,10 +51,12 @@ public class ClawSubsystem extends SubsystemBase {
         yaw = yaw_1;
         pitch = pitch_2;
         grip = grip_3;
-
-        yaw.setPosition(HelixConstants.CLAW_YAW_INIT);
-        pitch.setPosition(HelixConstants.CLAW_PITCH_INIT);
-        grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
+        if(helix.mOpModeType == Helix.OpModeType.AUTO)
+        {
+            yaw.setPosition(HelixConstants.CLAW_YAW_INIT);
+            pitch.setPosition(HelixConstants.CLAW_PITCH_INIT);
+            grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
+        }
 
         mControlState = ClawControlState.AUTO;
     }

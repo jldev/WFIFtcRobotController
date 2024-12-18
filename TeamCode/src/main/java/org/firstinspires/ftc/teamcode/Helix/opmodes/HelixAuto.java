@@ -104,11 +104,15 @@ public class HelixAuto {
                                 helix.GoPreloadBasket(),
                                 new WaitCommand(1500),
                                 new InstantCommand(() -> helix.claw.ChangeClawPositionTo(ClawSubsystem.ClawState.SUB)),
+                                new WaitCommand(500),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 4.5),
                                 new WaitCommand(500)
                                 .whenFinished(() -> {
                                 helix.claw.SetClawGripState(ClawSubsystem.GripState.OPEN);
-                                currentState = Task.PARK_BASKET;
-                            })
+                                //currentState = Task.PARK_BASKET;
+                            }),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 6),
+                                helix.GoSub()
                         )
                 );
                 currentState = Task.WAIT_FOR_DRIVE;
@@ -120,13 +124,12 @@ public class HelixAuto {
                                 new WaitCommand(2000),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 10),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 33),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 41),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 34),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 10),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 48),
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 48),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 12),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 56),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 56),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 12),
-                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 56)
-                        )
+                                new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 50)                        )
                 );
                 currentState = Task.WAIT_FOR_DRIVE;
                 break;
