@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
 
 /**
  * This is a simple teleop routine for debugging your motor configuration.
@@ -39,6 +38,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
  *
  * Uncomment the @Disabled tag below to use this opmode.
  */
+@Disabled
 @Config
 @TeleOp(group = "drive")
 public class MotorDirectionDebugger extends LinearOpMode {

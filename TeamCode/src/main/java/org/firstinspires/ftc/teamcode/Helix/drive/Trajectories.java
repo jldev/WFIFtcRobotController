@@ -14,14 +14,13 @@ public class Trajectories {
 
 
     public Pose2d waypoint0 = new Pose2d(0, 0, Math.toRadians(0));
-    public Pose2d waypoint1 = new Pose2d(24, 0, Math.toRadians(90));
-    public Pose2d waypoint2 = new Pose2d(0, 24, Math.toRadians(180));
+    public Pose2d waypoint1 = new Pose2d(10, -32, Math.toRadians(90));;
+    public Pose2d waypoint2 = new Pose2d(36, -60, Math.toRadians(315));
     private Helix mHelix;
 
 
 
     public Trajectories(Helix helix){
-        helix.currentPos = new Pose2d(0, 0, Math.toRadians(0)); // where we are currently
         mHelix = helix;
     }
 

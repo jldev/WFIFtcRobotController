@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Helix.subsystems;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.localization.Localizer;
+import com.acmerobotics.roadrunner.trajectory.BaseTrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.List;
  * state machine for the mecanum drive. All movement/following is async to fit the paradigm.
  */
 public class MecanumDriveSubsystem extends SubsystemBase {
+
+
 
     public enum DriveDirection{
         FORWARD,
@@ -118,28 +122,31 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         return drive.trajectorySequenceBuilderSlow(startPose);
     }
 
+    public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose){
+        return drive.trajectorySequenceBuilderSlow(startPose);
+    }
+
     public void followTrajectory(Trajectory trajectory) {
         drive.followTrajectory(trajectory);
+    }
+
+    public void followTrajectorySequence(TrajectorySequence sequence){
+        drive.followTrajectorySequenceAsync(sequence);
     }
 
     public boolean isBusy() {
         return drive.isBusy();
     }
 
+    public void waitForIdle(){
+        drive.waitForIdle();
+    }
     public void turn(double radians) {
         drive.turnAsync(radians);
     }
 
-    public List<Double> getWheelVelocities() {
-        return drive.getWheelVelocities();
-    }
-
     public void stop() {
         drive(0, 0, 0);
-    }
-
-    public Pose2d getPoseVelocity() {
-        return drive.getPoseVelocity();
     }
 
     public Localizer getLocalizer() {
