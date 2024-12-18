@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Helix.commands;
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;

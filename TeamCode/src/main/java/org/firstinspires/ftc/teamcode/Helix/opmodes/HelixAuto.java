@@ -60,9 +60,6 @@ public class HelixAuto {
 //        opMode.schedule(new CenterOnSpecimenCommand(helix));
     }
 
-
-
-
     public void run() {
         opMode.telemetry.addData("Current State", currentState);
         opMode.telemetry.addData("Run Count", runCount++);
