@@ -35,9 +35,6 @@ public class ClawSubsystem extends SubsystemBase {
         OPEN,
         CLOSED
     }
-
-    public boolean krakenEye;
-    private boolean krakenClaims;
     private GripState mGripState;
 
     private double desiredYaw;
@@ -45,6 +42,22 @@ public class ClawSubsystem extends SubsystemBase {
 
     private Limelight3A limelight;
 
+    public enum SampleColor{
+        RED,
+        BLUE,
+        YELLOW
+    }
+    public class KrakenEye {
+        // state variables
+        public boolean hasSample = false;
+        public boolean deployed = false;
+
+        public boolean doYouClaim(LLResultTypes.ColorResult cr) {
+            return Math.abs(cr.getTargetXDegrees()) < 5.00 && (cr.getTargetYDegrees() < 0.00);
+        }
+    }
+
+    private final KrakenEye krakenEye = new KrakenEye();
 
     public ClawSubsystem(Helix helix, CommandOpMode commandOpMode, Servo yaw_1, Servo pitch_2, Servo grip_3, Limelight3A limelight_) {
         mHelix = helix;
@@ -62,13 +75,6 @@ public class ClawSubsystem extends SubsystemBase {
             pitch.setPosition(HelixConstants.CLAW_PITCH_INIT);
             grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
         }
-
-        krakenEye = true;
-        krakenClaims = false;
-
-
-        helix.limelight.pipelineSwitch(0);
-        helix.limelight.start();
     }
 
     @Override
@@ -99,14 +105,13 @@ public class ClawSubsystem extends SubsystemBase {
 
         if ((mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3)) {
             SetClawGripState(GripState.OPEN);
-        } else if (mHelix.mOpModeType == Helix.OpModeType.TELEOP && !krakenEye) {
+        } else if (mHelix.mOpModeType == Helix.OpModeType.TELEOP && !krakenEye.deployed) {
             SetClawGripState(GripState.CLOSED);
         }
 
 
-        if ((mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > .3)) {
-           krakenEye = !krakenEye;
-           while(mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > .3);
+        if ((mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > .3) && !krakenEye.deployed) {
+           DeployTheKraken(SampleColor.RED);
         }
 
 
@@ -120,17 +125,11 @@ public class ClawSubsystem extends SubsystemBase {
         yaw.setPosition(desiredYaw);
         pitch.setPosition(desiredPitch);
 
-
-        if (krakenEye) {
-            if(!krakenClaims)
+        if (krakenEye.deployed) {
+            if(!krakenEye.hasSample)
             {
                 SetClawGripState(GripState.OPEN);
-            } else
-            {
-                SetClawGripState(GripState.CLOSED);
             }
-
-
 
             LLResult result = mHelix.limelight.getLatestResult();
             if (result != null) {
@@ -139,23 +138,50 @@ public class ClawSubsystem extends SubsystemBase {
                 for (LLResultTypes.ColorResult cr : colorResults) {
                     mOpMode.telemetry.addData("SAMPLE_X", cr.getTargetXDegrees());
                     mOpMode.telemetry.addData("SAMPLE_Y", cr.getTargetYDegrees());
-                    mOpMode.telemetry.addData("SAMPLE_Yaw", cr.getTargetPoseCameraSpace().getOrientation().getYaw());
+                    mOpMode.telemetry.addData("SAMPLE_Rotation", GetSampleRotation(cr.getTargetCorners()));
                     mOpMode.telemetry.update();
 
-                    if(Math.abs(cr.getTargetXDegrees()) <5.00 && cr.getTargetYDegrees() < 0.00)
-                    {
-                        krakenClaims = true;
-                    } else
-                    {
-                        krakenClaims = false;
+                    if(krakenEye.doYouClaim(cr)){
+                        SetClawGripState(GripState.CLOSED);
+                        krakenEye.hasSample = true;
+                        RecallTheKraken();
                     }
-
                 }
             }
         }
     }
 
+    public void DeployTheKraken(SampleColor color){
+        switch(color){
+            case RED:
+                mHelix.limelight.pipelineSwitch(0);
+                break;
+            case BLUE:
+                mHelix.limelight.pipelineSwitch(1);
+                break;
+            case YELLOW:
+                mHelix.limelight.pipelineSwitch(2);
+                break;
+        }
+        mHelix.limelight.start();
+        krakenEye.deployed = true;
+    }
 
+    public void RecallTheKraken(){
+        mHelix.limelight.shutdown();
+        krakenEye.deployed = false;
+    }
+    private double GetSampleRotation(List<List<Double>> corners){
+        if(corners.size() < 2){
+            return 0.0;
+        }
+        List<Double> bottomLeft = corners.get(0);
+        List<Double> topLeft = corners.get(1);
+        double adjacentSide = topLeft.get(1) - bottomLeft.get(1);
+        double oppositeSize = topLeft.get(0) - bottomLeft.get(0);
+        double angleRadians = Math.atan(oppositeSize/adjacentSide);
+        return Math.toDegrees(angleRadians);
+    }
 
     public void SetClawGripState(GripState state){
         mGripState = state;
