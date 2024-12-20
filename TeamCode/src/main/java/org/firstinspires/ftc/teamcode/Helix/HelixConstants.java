@@ -63,9 +63,9 @@ public class HelixConstants {
     //   claw positions
 
     public static double GRIPPER_CLOSED_VALUE = 0.8f;
-    public static double GRIPPER_OPEN_VALUE = 0.2f;
-    public static double CLAW_YAW_INIT = 0.5f;
-    public static double CLAW_PITCH_INIT = 0.55f;
+    public static double GRIPPER_OPEN_VALUE = 0.275f;
+    public static double CLAW_YAW_INIT = 1f;
+    public static double CLAW_PITCH_INIT = 0.5f;
 
     public static double YAW_HOME = 1;
     public static double PITCH_HOME = 0;

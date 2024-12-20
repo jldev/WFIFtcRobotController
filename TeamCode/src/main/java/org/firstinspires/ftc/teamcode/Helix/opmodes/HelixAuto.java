@@ -55,8 +55,8 @@ public class HelixAuto {
         helix.setStartPosition(startPos);
 
         trajectories = new Trajectories(helix);
-        //helix.limelight.pipelineSwitch(0);
-        //helix.limelight.start();
+//        helix.limelight.pipelineSwitch(0);
+//        helix.limelight.start();
 //        opMode.schedule(new CenterOnSpecimenCommand(helix));
     }
 

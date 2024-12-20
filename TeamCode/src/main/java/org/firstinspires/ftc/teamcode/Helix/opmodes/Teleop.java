@@ -23,11 +23,11 @@ public class Teleop extends CommandOpMode {
     public void initialize() {
         helix = new Helix(this, Helix.OpModeType.TELEOP, Helix.AllianceColor.RED);
 
-        this.schedule(new RunCommand(() -> {
-            helix.slides.addTelemetry(telemetry);
-            helix.pivot.addTelemetry(telemetry);
-            telemetry.update();
-        }));
+//        this.schedule(new RunCommand(() -> {
+//            helix.slides.addTelemetry(telemetry);
+//            helix.pivot.addTelemetry(telemetry);
+//            telemetry.update();
+//        }));
 
         // Drive control
         MecanumDriveCommand driveCommand = new MecanumDriveCommand(
