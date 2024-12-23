@@ -53,7 +53,7 @@ public class HelixConstants {
 
     //    pivot positions
 
-    public static int PIVOT_HOME = 100;
+    public static int PIVOT_HOME = 0;
     public static int PIVOT_HANG = 1020;
     public static int PIVOT_BASKET = 1050;
     public static int PIVOT_SUB = 0;

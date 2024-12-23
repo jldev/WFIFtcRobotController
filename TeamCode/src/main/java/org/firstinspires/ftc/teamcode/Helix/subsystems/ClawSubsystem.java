@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.HelixConstants;
+import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
 
 import java.util.List;
 
@@ -47,6 +48,8 @@ public class ClawSubsystem extends SubsystemBase {
         BLUE,
         YELLOW
     }
+    public SampleColor desiredColor = SampleColor.YELLOW;
+
     public class KrakenEye {
         // state variables
         public boolean hasSample = false;
@@ -75,6 +78,9 @@ public class ClawSubsystem extends SubsystemBase {
             pitch.setPosition(HelixConstants.CLAW_PITCH_INIT);
             grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
         }
+        yaw.setPosition(yaw.getPosition());
+        pitch.setPosition(pitch.getPosition());
+        grip.setPosition(grip.getPosition());
     }
 
     @Override
@@ -111,8 +117,20 @@ public class ClawSubsystem extends SubsystemBase {
 
 
         if ((mHelix.gunnerOp.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > .3) && !krakenEye.deployed) {
-           DeployTheKraken(SampleColor.RED);
+           DeployTheKraken(desiredColor);
         }
+
+        mOpMode.telemetry.addData("desiredColor", desiredColor);
+
+
+//        if(mHelix.gunnerOp.getButton(GamepadKeys.Button.LEFT_BUMPER))
+//        {
+//            switch (desiredColor) {
+//                case YELLOW: desiredColor = SampleColor.RED; break;
+//                case RED: desiredColor = SampleColor.BLUE; break;
+//                case BLUE: desiredColor = SampleColor.YELLOW; break;
+//            }
+//        }
 
 
         // After we get our positions from manual or auto - we set them here
@@ -124,6 +142,9 @@ public class ClawSubsystem extends SubsystemBase {
 
         yaw.setPosition(desiredYaw);
         pitch.setPosition(desiredPitch);
+
+        mOpMode.telemetry.addData("krakenDeployed", krakenEye.deployed);
+        mOpMode.telemetry.addData("krakenHasSample", krakenEye.hasSample);
 
         if (krakenEye.deployed) {
             if(!krakenEye.hasSample)
@@ -139,7 +160,6 @@ public class ClawSubsystem extends SubsystemBase {
                     mOpMode.telemetry.addData("SAMPLE_X", cr.getTargetXDegrees());
                     mOpMode.telemetry.addData("SAMPLE_Y", cr.getTargetYDegrees());
                     mOpMode.telemetry.addData("SAMPLE_Rotation", GetSampleRotation(cr.getTargetCorners()));
-                    mOpMode.telemetry.update();
 
                     if(krakenEye.doYouClaim(cr)){
                         SetClawGripState(GripState.CLOSED);
@@ -149,6 +169,7 @@ public class ClawSubsystem extends SubsystemBase {
                 }
             }
         }
+        mOpMode.telemetry.update();
     }
 
     public void DeployTheKraken(SampleColor color){
@@ -163,6 +184,7 @@ public class ClawSubsystem extends SubsystemBase {
                 mHelix.limelight.pipelineSwitch(2);
                 break;
         }
+        grip.setPosition(HelixConstants.GRIPPER_OPEN_VALUE);
         mHelix.limelight.start();
         krakenEye.deployed = true;
     }
@@ -187,6 +209,7 @@ public class ClawSubsystem extends SubsystemBase {
         mGripState = state;
         if (mGripState == GripState.OPEN) {
             grip.setPosition(HelixConstants.GRIPPER_OPEN_VALUE);
+            krakenEye.hasSample = false;
         } else {
             grip.setPosition(HelixConstants.GRIPPER_CLOSED_VALUE);
         }

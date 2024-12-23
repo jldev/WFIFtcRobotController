@@ -88,6 +88,23 @@ public class Teleop extends CommandOpMode {
         helix.hang_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.HANG);}));
         helix.basket_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.BASKET);}));
         helix.sub_pivotPreset.whenPressed(new InstantCommand(() -> {helix.pivot.changeToSlidePosition(PivotSubsystem.SlidePosition.SUB);}));
+
+
+        // Claw
+        helix.cycleDesiredSampleColor.whenPressed
+                ( new InstantCommand(() -> {
+                        switch (helix.claw.desiredColor) {
+                            case YELLOW:
+                                helix.claw.desiredColor = ClawSubsystem.SampleColor.RED;
+                                break;
+                            case RED:
+                                helix.claw.desiredColor = ClawSubsystem.SampleColor.BLUE;
+                                break;
+                            case BLUE:
+                                helix.claw.desiredColor = ClawSubsystem.SampleColor.YELLOW;
+                                break;
+                        }}
+                ));
     }
 
 }

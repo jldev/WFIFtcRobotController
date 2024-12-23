@@ -82,6 +82,8 @@ public class Helix {
     public GamepadButton hang_slidePreset;
     public GamepadButton basket_slidePreset;
 
+    public GamepadButton cycleDesiredSampleColor;
+
 
     // Driver
 
@@ -201,6 +203,8 @@ public class Helix {
         // yaw = LTx
         // pitch = LTy
         // grip = RTy
+
+        cycleDesiredSampleColor = new GamepadButton(gunnerOp, GamepadKeys.Button.LEFT_BUMPER);
 
 
 
