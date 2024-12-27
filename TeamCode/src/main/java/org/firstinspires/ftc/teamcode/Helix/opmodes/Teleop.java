@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Helix.Helix;
 import org.firstinspires.ftc.teamcode.Helix.commands.MecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.KrakenEyeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
 
@@ -93,15 +94,15 @@ public class Teleop extends CommandOpMode {
         // Claw
         helix.cycleDesiredSampleColor.whenPressed
                 ( new InstantCommand(() -> {
-                        switch (helix.claw.desiredColor) {
+                        switch (helix.krakenEye.desiredColor) {
                             case YELLOW:
-                                helix.claw.desiredColor = ClawSubsystem.SampleColor.RED;
+                                helix.krakenEye.desiredColor = KrakenEyeSubsystem.SampleColor.RED;
                                 break;
                             case RED:
-                                helix.claw.desiredColor = ClawSubsystem.SampleColor.BLUE;
+                                helix.krakenEye.desiredColor = KrakenEyeSubsystem.SampleColor.BLUE;
                                 break;
                             case BLUE:
-                                helix.claw.desiredColor = ClawSubsystem.SampleColor.YELLOW;
+                                helix.krakenEye.desiredColor = KrakenEyeSubsystem.SampleColor.YELLOW;
                                 break;
                         }}
                 ));

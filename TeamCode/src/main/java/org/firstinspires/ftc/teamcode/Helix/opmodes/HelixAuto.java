@@ -84,7 +84,7 @@ public class HelixAuto {
             case RETRIEVE_SPECIMEN:
                 break;
             case DEPOSIT_SPECIMEN:
-                helix.claw.SetClawGripState(ClawSubsystem.GripState.OPEN);
+                helix.claw.mGripState = ClawSubsystem.GripState.OPEN;
                 if(helix.pushSamples)
                 {
                     currentState = Task.PUSH_SAMPLES;
@@ -105,7 +105,7 @@ public class HelixAuto {
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 4.5),
                                 new WaitCommand(500)
                                 .whenFinished(() -> {
-                                helix.claw.SetClawGripState(ClawSubsystem.GripState.OPEN);
+                                    helix.claw.mGripState = ClawSubsystem.GripState.OPEN;
                                 //currentState = Task.PARK_BASKET;
                             }),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.BACKWARD, 6),
@@ -137,7 +137,7 @@ public class HelixAuto {
                                 new WaitCommand(2000),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.FORWARD, 18),
                                 new SimpleDriveCommand(helix.drive, MecanumDriveSubsystem.DriveDirection.LEFT, 48),
-                                new InstantCommand(() -> {helix.claw.SetClawGripState(ClawSubsystem.GripState.OPEN);}),
+                                new InstantCommand(() -> {helix.claw.mGripState = ClawSubsystem.GripState.OPEN;}),
                                 new WaitCommand(500).whenFinished(() -> currentState = Task.PARK_BASKET)
                         )
                 );

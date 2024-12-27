@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Helix.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.Helix.subsystems.KrakenEyeSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.Helix.subsystems.SlideSubsystem;
@@ -40,6 +41,7 @@ public class Helix {
     public final PivotSubsystem pivot;
 //    public final HangSubsystem hang;
     public final ClawSubsystem claw;
+    public final KrakenEyeSubsystem krakenEye;
 
 
     public enum FieldPos {
@@ -158,6 +160,9 @@ public class Helix {
                 opMode.hardwareMap.get(Servo.class, "pitch_2"),
                 opMode.hardwareMap.get(Servo.class, "grip_3"),
                 opMode.hardwareMap.get(Limelight3A.class, "limelight"));
+
+
+        krakenEye = new KrakenEyeSubsystem(this, mOpMode, claw, limelight);
 
 
 
